@@ -43,14 +43,14 @@ export class BeaconProvider {
         // start ranging
         this.ibeacon.startRangingBeaconsInRegion(this.region)
           .then(
-          () => {
-            resolve(true);
-          },
-          error => {
-            console.error('Failed to begin monitoring: ', error);
-            resolve(false);
-          }
-        );
+            () => {
+              resolve(true);
+            },
+            error => {
+              console.error('Failed to begin monitoring: ', error);
+              resolve(false);
+            }
+          );
 
       } else {
         console.error("This application needs to be running on a device");
@@ -179,7 +179,8 @@ export class BeaconProvider {
   }
 
   setRegion() {
-    this.region = this.ibeacon.BeaconRegion('deskBeacon', '74278BDA-B644-4520-8F0C-720EAF059935');
+    this.region = this.ibeacon.BeaconRegion('deskBeacon', 'A7AE2EB7-1F00-4168-B99B-A749BAC1CA64');
+    //this.region = this.ibeacon.BeaconRegion('deskBeacon', '74278BDA-B644-4520-8F0C-720EAF059935');
   }
 
   cleanLastTriggeredBeacon() {
@@ -224,9 +225,9 @@ export class BeaconProvider {
           handler: () => {
             this.events.publish('startRanging')
             console.log('Cancel clicked');
-            }
-          },
-          {
+          }
+        },
+        {
           text: messages['BUTTONS']['YES'],
           handler: () => {
             this.retrieveItemByBeacon(beaconNumber, exhibitionId)

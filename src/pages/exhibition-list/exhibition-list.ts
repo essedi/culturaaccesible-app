@@ -8,215 +8,219 @@ import { DownloadProvider } from '../../providers/downloader/downloader';
 
 @IonicPage()
 @Component({
-    selector: 'page-exhibition-list',
-    templateUrl: 'exhibition-list.html',
+  selector: 'page-exhibition-list',
+  templateUrl: 'exhibition-list.html',
 })
 export class ExhibitionList {
-    exhibitions: Array<Object>
-    allExhibitions: Array<Object>
-    hasExhibitions: boolean
-    storedData;
-    loading;
+  exhibitions: Array<Object>
+  allExhibitions: Array<Object>
+  hasExhibitions: boolean
+  storedData;
+  loading;
 
-    constructor(public navCtrl: NavController,
-                public alertCtrl: AlertController,
-                public navParams: NavParams,
-                public events: Events,
-                public platform: Platform,
-                public loadingCtrl: LoadingController,
-                public toastCtrl: ToastController,
-                private nativeStorage: NativeStorage,
-                public translate: TranslateService,
-                private service: ExhibitionsProvider,
-                private downloader: DownloadProvider) {
-    }
+  constructor(public navCtrl: NavController,
+              public alertCtrl: AlertController,
+              public navParams: NavParams,
+              public events: Events,
+              public platform: Platform,
+              public loadingCtrl: LoadingController,
+              public toastCtrl: ToastController,
+              private nativeStorage: NativeStorage,
+              public translate: TranslateService,
+              private service: ExhibitionsProvider,
+              private downloader: DownloadProvider) {
+  }
 
-    ionViewWillEnter() {
-      this.getStoredData()
-      this.events.publish('stopRanging')
-      this.events.publish('cleanLastTriggeredBeacon')
-    }
+  ionViewWillEnter() {
+    this.getStoredData()
+    this.events.publish('stopRanging')
+    this.events.publish('cleanLastTriggeredBeacon')
+  }
 
-    getStoredData() {
-      if (this.platform.is('cordova')) {
-        this.nativeStorage.keys().then((data) => {
-          this.storedData = data
-          this.setExhibtitions()
-        })
-      }else {
-        this.storedData = []
+  getStoredData() {
+    if (this.platform.is('cordova')) {
+      this.nativeStorage.keys().then((data) => {
+        this.storedData = data
         this.setExhibtitions()
+      })
+    }else {
+      this.storedData = []
+      this.setExhibtitions()
+    }
+  }
+
+  setExhibtitions() {
+    this.service.retrieveList().subscribe(exhibitions => {
+      console.log(exhibitions);
+      if(exhibitions.length > 0){
+        this.hasExhibitions = true
+        this.allExhibitions = exhibitions
+        console.log("show exibition ")
+        this.filterExhibitions()
+      }else {
+        this.showNoExhibitionMessage()
+      }
+    })
+  }
+
+  showNoExhibitionMessage() {
+    this.hasExhibitions = false
+  }
+
+  isDownloaded(exhibition) {
+    return this.storedData.some(id => id === exhibition.id)
+  }
+
+  filterExhibitions() {
+    let activeExhibitions: Array<Object> = []
+
+    for (let exhibition of this.allExhibitions) {
+      if (exhibition['show']) {
+        activeExhibitions.push(exhibition)
       }
     }
 
-    setExhibtitions() {
-      this.service.retrieveList().subscribe(exhibitions => {
-        if(exhibitions.length > 0){
-          this.hasExhibitions = true
-          this.allExhibitions = exhibitions
-          this.filterExhibitions()
-        }else {
-          this.showNoExhibitionMessage()
+    this.exhibitions = activeExhibitions
+  }
+
+  download(exhibition, isoCode) {
+    let lthis = this;
+    this.presentLoading()
+    this.service.download(exhibition.id, isoCode).subscribe(exhibition => {
+      this.extractItems(exhibition)
+    }, error => {
+      console.log(JSON.stringify(error))
+      lthis.loading.dismiss();
+    })
+  }
+
+  saveInLocal(exhibition) {
+    this.nativeStorage.setItem(exhibition.id, exhibition)
+      .then(
+        () => {
+          console.log('Stored item!')
+        },
+        error => {
+          console.error('Error storing item', error)
         }
+      );
+  }
+
+  extractItems(exhibition){
+    let items = []
+    exhibition.items.forEach(item => {
+      items.push(item)
+      item.children.forEach(child => {
+        items.push(child)
+        child.children.forEach(subchild => {
+          items.push(subchild)
+        })
       })
-    }
+    })
+    setTimeout(()=>{
+      this.nativeStorage.setItem(exhibition.id + '-items', items)
+      this.downloadMedia(exhibition, items)
+    }, 1500)
+  }
 
-    showNoExhibitionMessage() {
-        this.hasExhibitions = false
-    }
+  downloadMedia(exhibition, items) {
+    Promise.all(
+      items.map((object) => {
+        return this.downloader.download(object.video, object.id)
+      })
+    ).then((items) => {
+      this.saveInLocal(exhibition)
+      this.getStoredData()
+      this.loading.dismiss()
+    }).catch((error) => {
+      this.loading.dismiss()
+      this.presentError()
+    })
+  }
 
-    isDownloaded(exhibition) {
-        return this.storedData.some(id => id === exhibition.id)
-    }
-
-    filterExhibitions() {
-        let activeExhibitions: Array<Object> = []
-
-        for (let exhibition of this.allExhibitions) {
-            if (exhibition['show']) {
-                activeExhibitions.push(exhibition)
-            }
-        }
-
-        this.exhibitions = activeExhibitions
-    }
-
-    download(exhibition, isoCode) {
+  delete(exhibition) {
+    this.nativeStorage.remove(exhibition.id).then(() => {
       this.presentLoading()
-      this.service.download(exhibition.id, isoCode).subscribe(exhibition => {
-        this.extractItems(exhibition)
-      }, error => {
-        console.log(JSON.stringify(error))
-      })
+      this.getStoredData()
+    })
+    this.nativeStorage.getItem(exhibition.id + '-items').then(items => {
+      this.downloader.deleteMedia(items)
+    })
+    this.nativeStorage.remove(exhibition.id + '-items').then(done => {
+      this.loading.dismiss();
+    })
+  }
+
+  askLanguage(exhibition) {
+    let messages;
+
+    this.translate.get('EXHIBITIONS.LIST.ALERT').subscribe(data => {
+      messages = data
+    });
+
+    var isoCodeTranslations = {
+      'es': 'Castellano',
+      'cat': 'Valencià',
+      'en': 'English'
     }
 
-    saveInLocal(exhibition) {
-      this.nativeStorage.setItem(exhibition.id, exhibition)
-          .then(
-            () => {
-              console.log('Stored item!')
-            },
-            error => {
-              console.error('Error storing item', error)
-            }
-          );
-    }
-
-    extractItems(exhibition){
-      let items = []
-      exhibition.items.forEach(item => {
-        items.push(item)
-        item.children.forEach(child => {
-          items.push(child)
-          child.children.forEach(subchild => {
-            items.push(subchild)
-          })
-        })
-      })
-      setTimeout(()=>{
-        this.nativeStorage.setItem(exhibition.id + '-items', items)
-        this.downloadMedia(exhibition, items)
-      }, 1500)
-    }
-
-    downloadMedia(exhibition, items) {
-      Promise.all(
-        items.map((object) => {
-          return this.downloader.download(object.video, object.id)
-        })
-      ).then((items) => {
-        this.saveInLocal(exhibition)
-        this.getStoredData()
-        this.loading.dismiss()
-      }).catch((error) => {
-        this.loading.dismiss()
-        this.presentError()
-      })
-    }
-
-    delete(exhibition) {
-      this.nativeStorage.remove(exhibition.id).then(() => {
-        this.presentLoading()
-        this.getStoredData()
-      })
-      this.nativeStorage.getItem(exhibition.id + '-items').then(items => {
-        this.downloader.deleteMedia(items)
-      })
-      this.nativeStorage.remove(exhibition.id + '-items').then(done => {
-        this.loading.dismiss();
-      })
-    }
-
-    askLanguage(exhibition) {
-      let messages;
-
-      this.translate.get('EXHIBITIONS.LIST.ALERT').subscribe(data => {
-        messages = data
-      });
-
-      var isoCodeTranslations = {
-        'es': 'Castellano',
-        'cat': 'Valencià',
-        'en': 'English'
-      }
-
-      let alert = this.alertCtrl.create({
-        title: messages['TITLE'],
-        message: messages['BODY'],
-        buttons: [
-            {
-              text: messages['BUTTONS']['NO'],
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked');
-              }
-            },
-            {
-              text: messages['BUTTONS']['YES'],
-              handler: (isoCode) => {
-                this.download(exhibition, isoCode)
-              }
+    let alert = this.alertCtrl.create({
+      title: messages['TITLE'],
+      message: messages['BODY'],
+      buttons: [
+        {
+          text: messages['BUTTONS']['NO'],
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
           }
-        ]
-      });
-      exhibition.iso_codes.forEach((locale) => {
-        alert.addInput({type: 'radio', label: isoCodeTranslations[locale], value: locale})
-      })
-      alert.present();
-    }
+        },
+        {
+          text: messages['BUTTONS']['YES'],
+          handler: (isoCode) => {
+            this.download(exhibition, isoCode)
+          }
+        }
+      ]
+    });
+    exhibition.iso_codes.forEach((locale) => {
+      alert.addInput({type: 'radio', label: isoCodeTranslations[locale], value: locale})
+    })
+    alert.present();
+  }
 
-    presentLoading() {
-      this.loading = this.loadingCtrl.create({
-        content: 'Please wait...'
-      });
+  presentLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
 
-      this.loading.present();
-    }
+    this.loading.present();
+  }
 
-    presentError() {
-      let toast = this.toastCtrl.create({
-        message: 'Ha habido un error',
-        duration: 3000,
-        position: 'bottom',
-        cssClass: 'active'
-      });
+  presentError() {
+    let toast = this.toastCtrl.create({
+      message: 'Ha habido un error',
+      duration: 3000,
+      position: 'bottom',
+      cssClass: 'active'
+    });
 
-      toast.present();
-    }
+    toast.present();
+  }
 
-    goToDetail(exhibition) {
-      this.nativeStorage.getItem(exhibition.id)
-        .then(
-          exhibition => {
-            this.navCtrl.push('ExhibitionDetail', {exhibition: exhibition})
-          })
-        .catch(
-          error => {
-            this.askLanguage(exhibition)
-          });
-    }
+  goToDetail(exhibition) {
+    this.nativeStorage.getItem(exhibition.id)
+      .then(
+        exhibition => {
+          this.navCtrl.push('ExhibitionDetail', {exhibition: exhibition})
+        })
+      .catch(
+        error => {
+          this.askLanguage(exhibition)
+        });
+  }
 
-    goToMuseum(museumId) {
-        this.navCtrl.push('MuseumDetail', {id: museumId})
-    }
+  goToMuseum(museumId) {
+    this.navCtrl.push('MuseumDetail', {id: museumId})
+  }
 }

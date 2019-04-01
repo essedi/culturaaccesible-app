@@ -31,8 +31,7 @@
         "@ngx-translate/core": "^7.0.0",
         "@ngx-translate/http-loader": "^0.1.0",
         "com.unarin.cordova.beacon": "^3.7.0",
-        "cordova-android": "7.0.0",
-        "cordova-browser": "~4.1.0",
+        "cordova-android": "7.1.4",
         "cordova-ios": "^4.4.0",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-console": "^1.1.0",
@@ -91,12 +90,11 @@
             "cordova-plugin-nativestorage": {},
             "cordova-plugin-ionic": {
                 "APP_ID": "e51df5bc",
-                "CHANNEL_NAME": "Master",
+                "CHANNEL_NAME": "Essedi_branch",
                 "UPDATE_METHOD": "auto"
             }
         },
         "platforms": [
-            "browser",
             "ios",
             "android"
         ]
