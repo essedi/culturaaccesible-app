@@ -21,6 +21,7 @@ import { DownloadProvider } from '../providers/downloader/downloader';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
+import { HTTP } from '@ionic-native/http';
 
 export function createTranslateLoader(http: Http) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -59,6 +60,7 @@ export function createTranslateLoader(http: Http) {
         IBeacon,
         NativeStorage,
         FileTransfer,
+        HTTP,
         File
     ]
 })

@@ -14,8 +14,11 @@ export class BeaconProvider {
   beacons: Beacon[] = [];
   closestBeacon: Beacon;
   lastTriggeredBeaconNumber: number;
+  triggeredBeaconNumber: any[] = [];
   exhibition: any;
+  itemsExhibition: any[] = [];
   isInitialized: boolean = false;
+  stopReadBeacon: boolean = false;
 
   constructor(public platform: Platform,
               public events: Events,
@@ -94,14 +97,20 @@ export class BeaconProvider {
   }
 
   initializeBeacons(data) {
+    let lthis = this;
     this.beacons = [];
+    console.log(data);
 
     let beaconList = data.beacons;
+    console.log("set beacons")
     beaconList.forEach((beacon) => {
       let beaconObject = new Beacon(beacon);
+      console.log(beaconObject)
       this.beacons.push(beaconObject);
     });
+    console.log("set closests beacon")
     this.setClosestBeacon(data)
+    console.log(this.closestBeacon)
   }
 
   chooseListenAction(exhibitionBeaconNumber) {
@@ -117,18 +126,40 @@ export class BeaconProvider {
     return !this.closestBeacon || this.closestBeacon.minor == this.lastTriggeredBeaconNumber
   }
 
-  setClosestBeacon(data) {
-    this.closestBeacon = this.beacons.filter(beacon => beacon.proximity == 'ProximityImmediate')[0]
+  setClosestBeacon(data)
+  {
+    if(this.beacons.length)
+    {
+      this.closestBeacon = this.beacons[0];
+      for(let b of this.beacons)
+      {
+        if(b.distance < this.closestBeacon.distance )
+        {
+          this.closestBeacon = b;
+        }
+      }
+      //this.closestBeacon = this.beacons.filter(beacon => beacon.proximity == 'ProximityImmediate')[0]
+    }
+
   }
 
   presentItem() {
-    if(this.exhibition.unlocked){
+    console.log("presentItem: "+this.triggeredBeaconNumber.indexOf(this.closestBeacon.minor));
+    if(this.exhibition.unlocked && this.isAvailablepresentItem(this.closestBeacon.minor) && !this.stopReadBeacon){
       this.setLastTriggeredBeacon()
       this.showOpenItemAlert(this.closestBeacon.minor, this.exhibition.id)
       this.stopItemBeaconActions()
     }
   }
-
+  getPresentItem(minorId){
+    let idx = this.itemsExhibition.findIndex(d =>{
+      return d.beacon == minorId;
+    })
+    return idx !== -1 ? this.itemsExhibition[idx] : idx;
+  }
+  isAvailablepresentItem(minorId){
+    return this.getPresentItem(minorId) !== -1 && this.triggeredBeaconNumber.indexOf(minorId) == -1;
+  }
   stopItemBeaconActions() {
     this.events.publish('stopVideo')
     this.events.publish('stopRanging')
@@ -156,9 +187,12 @@ export class BeaconProvider {
 
   unlockExhibition(exhibitionId) {
     this.storage.getItem(exhibitionId).then(exhibition => {
-      exhibition.unlocked = true
+      //let isunlock = exhibition.unlocked;
+      this.exhibition.unlocked = exhibition.unlocked = true;
       this.storage.setItem(exhibitionId, exhibition).then(() => {
-        this.showExhibitionUnlockedAlert()
+        /*if (!isunlock){
+          this.showExhibitionUnlockedAlert()
+        }*/
         this.events.publish('exhibitionUnlocked')
       })
     })
@@ -166,6 +200,9 @@ export class BeaconProvider {
 
   setLastTriggeredBeacon() {
     this.lastTriggeredBeaconNumber = this.closestBeacon.minor
+    if (this.triggeredBeaconNumber.indexOf(this.closestBeacon.minor) == -1){
+      this.triggeredBeaconNumber.push(this.lastTriggeredBeaconNumber);
+    }
   }
 
   retrieveItemByBeacon(beaconNumber, exhibitionId) {
@@ -184,7 +221,8 @@ export class BeaconProvider {
   }
 
   cleanLastTriggeredBeacon() {
-    this.lastTriggeredBeaconNumber = null
+    this.lastTriggeredBeaconNumber = null;
+    this.triggeredBeaconNumber = [];
   }
 
   showExhibitionUnlockedAlert() {
@@ -214,9 +252,9 @@ export class BeaconProvider {
     this.translate.get('BEACONS.ALERT').subscribe(data => {
       messages = data
     })
-
+    let item = this.getPresentItem(beaconNumber);
     let alert = this.alertCtrl.create({
-      title: messages['TITLE'] + ' ' + beaconNumber,
+      title: item !== -1 ? item.name : messages['TITLE'] + ' ' + beaconNumber,
       message: messages['BODY'],
       buttons: [
         {
@@ -230,6 +268,7 @@ export class BeaconProvider {
         {
           text: messages['BUTTONS']['YES'],
           handler: () => {
+            this.stopReadBeacon = true;
             this.retrieveItemByBeacon(beaconNumber, exhibitionId)
             this.events.publish('startRanging')
           }

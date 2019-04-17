@@ -36,6 +36,7 @@ export class DownloadProvider {
       const fileTransfer: FileTransferObject = this.transfer.create();
 
       return fileTransfer.download(source, this.storageDirectory + id + '-video.mp4').then((entry) => {
+        console.log(entry.toURL());
         this.downloadedVideos.push({id: id, source: entry.toURL()})
         return entry.toURL()
       }).catch((error) => {

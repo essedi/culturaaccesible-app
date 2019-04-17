@@ -63,17 +63,17 @@ export class ItemDetail {
     this.storage.getItem(this.exhibitionId + '-items').then(items => {
       if(items.length > 0){
         this.item = items[this.position]
-        if(this.downloader.checkFile(this.item.id)){
+        /*if(this.downloader.checkFile(this.item.id)){
           this.item.video = this.downloader.storageDirectory + this.item.id + '-video.mp4'
-        }
+        }*/
         this.disableIfFirstItem()
         this.disableIfLastItem()
       }
     })
 
-    this.video = document.getElementsByTagName("video")[0];
-    this.previousButton = document.getElementsByClassName('previous')[0]
-    this.nextButton = document.getElementsByClassName('next')[0]
+    this.video = document.getElementById("myVideo");
+    this.previousButton = <HTMLInputElement> document.getElementsByClassName('previous')[0]
+    this.nextButton = <HTMLInputElement> document.getElementsByClassName('next')[0]
     setTimeout(()=> {
       this.video.load()
     }, 500)

@@ -27,8 +27,8 @@ export class ExhibitionDetail {
                 private storage: NativeStorage,
                 private itemService: ItemsProvider ) {
 
-        let exhibition = navParams.get('exhibition')
-
+        let exhibition:any = navParams.get('exhibition')
+        console.log(exhibition)
         platform.ready().then(() => {
           if(!beaconProvider.isInitialized){
             beaconProvider.initialise().then((isInitialised) => {
@@ -42,7 +42,9 @@ export class ExhibitionDetail {
     }
 
     ionViewWillEnter() {
-      let exhibition = this.navParams.get('exhibition')
+      this.beaconProvider.stopReadBeacon = false;
+      let exhibition:any = this.navParams.get('exhibition')
+      console.log(exhibition);
       this.beaconProvider.startRanging()
 
       this.events.subscribe('goToItemDetail', (data) => {
@@ -63,30 +65,39 @@ export class ExhibitionDetail {
 
     getExhibition(exhibition) {
       this.storage.getItem(exhibition.id).then(exhibition => {
+        console.log(exhibition);
+        this.exhibition = exhibition;
+        this.beaconProvider.itemsExhibition = [];
+        if(this.exhibition.unlocked){
+          //this.beaconProvider.lastTriggeredBeaconNumber =  parseInt(exhibition.beacon);
+          this.beaconProvider.unlockExhibition(exhibition.id);
+        }
         this.beaconProvider.listenToBeaconEvents(exhibition)
-        this.exhibition = exhibition
       })
 
-      this.storage.getItem(this.exhibition.id + '-items').then(items => {
+      /*this.storage.getItem(this.exhibition.id + '-items').then(items => {
         if(items.length > 0){
           this.items = items
           this.hasItems = true
         }
-      })
+      })*/
     }
 
-    unlockExhibition(exhibition) {
-      this.storage.getItem(exhibition.id).then(exhibition => {
+    unlockExhibition(exhibition2) {
+      this.storage.getItem(exhibition2.id).then(exhibition => {
         this.exhibition = null
         this.exhibition = exhibition
         this.beaconProvider.exhibition = exhibition
       })
 
       this.storage.getItem(this.exhibition.id + '-items').then(items => {
+        console.log(items);
         if(items.length > 0){
           this.items = items
           this.hasItems = true
         }
+        this.beaconProvider.itemsExhibition = items;
+        this.changeDetector.detectChanges();
       })
     }
 
@@ -95,6 +106,7 @@ export class ExhibitionDetail {
     }
 
     goToItemView(index) {
+        this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
         let activePage = this.navCtrl.getActive().component.name
         if('ItemDetail' == activePage){
           this.events.publish('refreshItemPage', {index: index})

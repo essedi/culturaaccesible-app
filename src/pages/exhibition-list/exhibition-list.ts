@@ -86,9 +86,12 @@ export class ExhibitionList {
   download(exhibition, isoCode) {
     let lthis = this;
     this.presentLoading()
-    this.service.download(exhibition.id, isoCode).subscribe(exhibition => {
-      this.extractItems(exhibition)
+    this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
+      let object = JSON.parse(exhibition.data);
+      console.log(object);
+      this.extractItems(object);
     }, error => {
+      console.log(error);
       console.log(JSON.stringify(error))
       lthis.loading.dismiss();
     })
@@ -118,13 +121,18 @@ export class ExhibitionList {
       })
     })
     setTimeout(()=>{
+      console.log("items");
+      console.log(items);
       this.nativeStorage.setItem(exhibition.id + '-items', items)
       this.downloadMedia(exhibition, items)
     }, 1500)
   }
 
   downloadMedia(exhibition, items) {
-    Promise.all(
+    this.saveInLocal(exhibition)
+    this.getStoredData()
+    this.loading.dismiss()
+    /*Promise.all(
       items.map((object) => {
         return this.downloader.download(object.video, object.id)
       })
@@ -135,7 +143,7 @@ export class ExhibitionList {
     }).catch((error) => {
       this.loading.dismiss()
       this.presentError()
-    })
+    })*/
   }
 
   delete(exhibition) {
@@ -212,6 +220,7 @@ export class ExhibitionList {
     this.nativeStorage.getItem(exhibition.id)
       .then(
         exhibition => {
+          console.log(exhibition.id);
           this.navCtrl.push('ExhibitionDetail', {exhibition: exhibition})
         })
       .catch(
