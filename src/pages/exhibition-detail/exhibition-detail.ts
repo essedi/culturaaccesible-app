@@ -106,7 +106,7 @@ export class ExhibitionDetail {
     }
 
     goToItemView(index) {
-        this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
+        //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
         let activePage = this.navCtrl.getActive().component.name
         if('ItemDetail' == activePage){
           this.events.publish('refreshItemPage', {index: index})

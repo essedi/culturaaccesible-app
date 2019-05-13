@@ -268,7 +268,7 @@ export class BeaconProvider {
         {
           text: messages['BUTTONS']['YES'],
           handler: () => {
-            this.stopReadBeacon = true;
+            //this.stopReadBeacon = true;
             this.retrieveItemByBeacon(beaconNumber, exhibitionId)
             this.events.publish('startRanging')
           }
