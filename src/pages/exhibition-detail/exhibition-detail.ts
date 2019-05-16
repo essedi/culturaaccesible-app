@@ -26,9 +26,15 @@ export class ExhibitionDetail {
                 private service: ExhibitionsProvider,
                 private storage: NativeStorage,
                 private itemService: ItemsProvider ) {
-
+        let lthis = this;
         let exhibition:any = navParams.get('exhibition')
-        console.log(exhibition)
+        events.subscribe('goToItemDetail', (data) => {
+          lthis.goToItemView(data.index)
+        })
+
+        events.subscribe('exhibitionUnlocked', (data) => {
+          lthis.unlockExhibition(exhibition)
+        })
         platform.ready().then(() => {
           if(!beaconProvider.isInitialized){
             beaconProvider.initialise().then((isInitialised) => {
@@ -47,18 +53,11 @@ export class ExhibitionDetail {
       console.log(exhibition);
       this.beaconProvider.startRanging()
 
-      this.events.subscribe('goToItemDetail', (data) => {
-        this.goToItemView(data.index)
-      })
-
-      this.events.subscribe('exhibitionUnlocked', (data) => {
-        this.unlockExhibition(exhibition)
-      })
-
       this.getExhibition(exhibition)
     }
 
-    ionViewWillLeave() {
+    ionViewWillUnload() {
+      this.beaconProvider.stopRanging();
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
     }

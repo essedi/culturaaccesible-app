@@ -120,6 +120,9 @@ export class ExhibitionList {
         })
       })
     })
+    items.sort((a: any, b: any)=>{
+        return parseInt(a.beacon) > parseInt(b.beacon) ? 1 : -1;
+    });
     setTimeout(()=>{
       console.log("items");
       console.log(items);
