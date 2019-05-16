@@ -159,6 +159,8 @@ export class ExhibitionList {
     })
     this.nativeStorage.remove(exhibition.id + '-items').then(done => {
       this.loading.dismiss();
+    },error =>{
+      this.loading.dismiss();
     })
   }
 

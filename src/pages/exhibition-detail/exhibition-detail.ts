@@ -108,9 +108,10 @@ export class ExhibitionDetail {
         //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
         let activePage = this.navCtrl.getActive().component.name
         if('ItemDetail' == activePage){
-          this.events.publish('refreshItemPage', {index: index})
-        }else{
-          this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})
+          //this.events.publish('refreshItemPage', {index: index})
+          this.navCtrl.pop();
         }
+        this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})
+
     }
 }

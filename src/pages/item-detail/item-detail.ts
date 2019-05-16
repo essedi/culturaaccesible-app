@@ -48,7 +48,9 @@ export class ItemDetail {
     })
 
     events.subscribe('stopVideo', (data) => {
-      this.viewCtrl.dismiss()
+      //this.viewCtrl.dismiss()
+      this.pause();
+      this.video.webkitExitFullScreen();
     })
   }
 
