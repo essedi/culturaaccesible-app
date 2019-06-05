@@ -31,22 +31,42 @@
                   </button>
                 </ion-col >
                 <ion-col col-6 class="right">
-                  <button ion-button clear color="background" *ngIf="!isDownloaded(exhibition)" (click)="goToDetail(exhibition)">
-                      <ion-icon name="ios-cloud-download"></ion-icon>
+                  <button ion-button  color="primary" *ngIf="!isDownloaded(exhibition)" (click)="goToDetail(exhibition)">
+                      Descarga <ion-icon name="arrow-down"></ion-icon> 
                   </button>
-                  <button ion-button clear color="background" class="enter-button" *ngIf="isDownloaded(exhibition)" (click)="goToDetail(exhibition)">
-                      <ion-icon name="arrow-forward"></ion-icon>
+                  <button ion-button  color="primary" class="enter-button" *ngIf="isDownloaded(exhibition)" (click)="goToDetail(exhibition)">
+                      Entrar 
+                      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAcCAYAAAB/E6/TAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4wUfCykqDzay6QAAATxJREFUSMft1klKpEEQBeAvxBEaFFtd9QmsVUOvvIfewBt4BlcN7kX3XsFDuFFQnKBREEGQAgXFocJNCsXPb1U5VINQD3IRARkvIjIj84UekJmzWMMUTnCAU5zhCrcR8dgpxnBN0AamK+6f+I35Yj/hDte4wGlmHuEIexGx3y3zkczczMxmzWplZ7Qy8z4zNzJztGtF+IEhbKFZfBNYwlyHPANjmOypdQVN/MVxseew0IXIu86ovZMRkaWlLZ/EkP+Eb02Ug9bVYQfn/Sa6xzq23zqHj85RFeNYLkMb/SSCP4OBHQzsp9Hp1kVmxlcl9BbRFFYqP+yvrya6wTMWK/7JHi7BY9lf+89XBcp8qagdM1hFo9jP5Um6xmWRXq8qaDci9rpWVCeViq7bLTruBIcl+L+i624i4sEA/cAL/MGV9s+TjicAAAAASUVORK5CYII=" />
                   </button>
                 </ion-col>
               </ion-row>
+
+
+
+           <!-- <div  style="width: 100%; background-color: grey;">
+              <div id="myProgressBar{{exhibition.id}}" style="width: 1%; height: 26px; background-color: green; display:none; text-align:center; font-size: 16px; color: white ">
+                  {{ loadProgress }} % 
+              </div>
+            </div>-->
+                
+             <!--<progress-bar *ngIf="!isDownloaded(exhibition)"  [progress]="loadProgress" ></progress-bar> -->
+                
               <ion-row>
                   <button ion-button block color="active" (click)="goToMuseum(exhibition.museum.id)">
                     {{exhibition.museum.name}}
                   </button>
               </ion-row>
             </ion-grid>
+                          
+
         </ion-card>
+        
+
     </ion-list>
+    
+
+
+    
     <div *ngIf="!hasExhibitions" class="message-container">
         <img class="image" src="https://trello-attachments.s3.amazonaws.com/58e4c7c3c40db2d4f44c74aa/592d2b06ccd804051d2bd314/9126f357c17774b961ed645becdc6a0c/favicon.png">
         <div class="wrapper">

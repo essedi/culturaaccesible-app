@@ -1,6 +1,6 @@
 {
     "name": "ionic-hello-world",
-    "version": "0.0.0",
+    "version": "1.0.1",
     "author": "Ionic Framework",
     "homepage": "http://ionicframework.com/",
     "private": true,
@@ -41,6 +41,7 @@
         "cordova-plugin-file": "^6.0.1",
         "cordova-plugin-file-transfer": "^1.7.1",
         "cordova-plugin-ionic": "^4.2.0",
+        "cordova-plugin-ionic-webview": "^4.0.1",
         "cordova-plugin-nativestorage": "^2.3.2",
         "cordova-plugin-splashscreen": "^5.0.2",
         "cordova-plugin-statusbar": "^2.4.2",

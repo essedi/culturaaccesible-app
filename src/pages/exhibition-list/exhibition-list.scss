@@ -17,8 +17,14 @@ page-exhibition-list {
   .actions{
     button{
       ion-icon{
-        font-size: 30px
+        margin-left: 8px;
       }
+      img{
+         margin-left: 8px;
+         max-height: 25px;
+         max-width: 16px;
+      }
+      
     }
   }
 }
