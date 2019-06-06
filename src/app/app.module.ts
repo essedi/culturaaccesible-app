@@ -4,6 +4,8 @@ import { HttpModule, Http } from '@angular/http';
 import { EnvironmentsModule } from './environment-variables/environment-variables.module.ts';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { Network } from '@ionic-native/network';
+import {Globalization} from '@ionic-native/globalization';
 
 import { IBeacon } from '@ionic-native/ibeacon';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -22,6 +24,14 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { HTTP } from '@ionic-native/http';
+import { SQLite } from '@ionic-native/sqlite';
+import { TasksServiceProvider } from '../providers/tasks-service/tasks-service';
+import { NetworkProvider } from '../providers/network/network';
+import { GlobalProvider } from '../providers/global/global';
+import { ApiProvider } from '../providers/api/api';
+
+
+
 
 export function createTranslateLoader(http: Http) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -53,6 +63,8 @@ export function createTranslateLoader(http: Http) {
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         ExhibitionsProvider,
+        Network,
+        Globalization,
         MuseumProvider,
         ItemsProvider,
         BeaconProvider,
@@ -61,7 +73,13 @@ export function createTranslateLoader(http: Http) {
         NativeStorage,
         FileTransfer,
         HTTP,
-        File
+        File,
+        SQLite,
+        TasksServiceProvider,
+        NetworkProvider,
+        GlobalProvider,
+        ApiProvider
+    
     ]
 })
 export class AppModule {}

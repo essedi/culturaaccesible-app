@@ -3,16 +3,34 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 
+import { TasksServiceProvider } from '../tasks-service/tasks-service';
+import { GlobalProvider} from '../global/global';
+import {ApiProvider} from '../api/api';
+
+
+
 @Injectable()
 export class MuseumProvider {
   museums: Array<Object>;
 
   constructor(public http: Http,
+                private global: GlobalProvider,
+                private database: TasksServiceProvider,
+                public api : ApiProvider,
               @Inject(EnvVariables) private envVariables) {}
 
-  retrieveList() {
+ /* retrieveList() {
       let url = `${this.envVariables.baseUrl}/api/museum/list`;
+      
       return this.http.post(url, '').map(museums => museums.json())
+
+  }*/
+  
+  
+  
+    retrieveList() {
+      
+      return this.api.post('api/museum/list', 'museums', '');
   }
 
   retrieve(id) {

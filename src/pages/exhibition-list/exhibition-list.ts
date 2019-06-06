@@ -17,6 +17,8 @@ export class ExhibitionList {
   hasExhibitions: boolean
   storedData;
   loading;
+  public loadProgress : number = 0;  
+
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -35,7 +37,7 @@ export class ExhibitionList {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
-  }
+      }
 
   getStoredData() {
     if (this.platform.is('cordova')) {
@@ -162,6 +164,12 @@ export class ExhibitionList {
     },error =>{
       this.loading.dismiss();
     })
+    
+     //this.loadProgress = 0;
+     var x = document.getElementById('myProgressBar'+exhibition.id);
+     x.style.display = "none";
+
+
   }
 
   askLanguage(exhibition) {
@@ -221,6 +229,44 @@ export class ExhibitionList {
     toast.present();
   }
 
+
+
+
+    loaderBarFunction(exhibition)
+    {
+
+       const tag = document.createElement('script');
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost/api/exhibition/download' );
+        
+        xhr.onloadend = (e) => document.head.appendChild(tag);
+        
+        //xhr.setRequestHeader("Content-type", "application/json");
+   
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+        xhr.send({"iso_code": "es" , "id" : exhibition.id }); 
+  
+        
+       const barElement = document.getElementById('myProgressBar'+exhibition.id);
+
+        barElement.style.display = "block";
+ 
+        xhr.onprogress = (e) => {
+            
+
+          if (e.lengthComputable) {
+              
+            const width = 100 * e.loaded / + e.total;
+
+            this.loadProgress = width;
+            
+            barElement.style.width = width + '%';
+
+          }
+        }
+  }
+  
+  
   goToDetail(exhibition) {
     this.nativeStorage.getItem(exhibition.id)
       .then(
@@ -231,6 +277,8 @@ export class ExhibitionList {
       .catch(
         error => {
           this.askLanguage(exhibition)
+          this.loaderBarFunction(exhibition);
+
         });
   }
 
