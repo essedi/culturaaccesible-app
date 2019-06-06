@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TasksServiceProvider } from '../providers/tasks-service/tasks-service';
 import {NetworkProvider} from '../providers/network/network';
 import {GlobalProvider} from '../providers/global/global';
+
 import {SQLite} from '@ionic-native/sqlite';
 
 @Component({
@@ -27,6 +28,7 @@ export class MyApp {
         public networkProvider: NetworkProvider,
         private global: GlobalProvider,
         public sqlite: SQLite,
+        private database: TasksServiceProvider,
 
 
 
@@ -38,7 +40,6 @@ export class MyApp {
         translate.use(language);
 
         this.initializeApp();
-
         translate.get('MENU').subscribe(data => {
 
           this.pages = [
@@ -54,6 +55,8 @@ export class MyApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             
+           
+
             this.networkProvider.initializeNetworkEvents();
 
             this.statusBar.styleDefault();
@@ -71,7 +74,8 @@ export class MyApp {
     
     
 
-   
+    
+    
   
   
 }

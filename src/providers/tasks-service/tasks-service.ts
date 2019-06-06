@@ -39,14 +39,15 @@ export class TasksServiceProvider {
     
     
     
-    createTable(){
+   /* createTable(){
         
         
      //   let sql = 'DROP TABLE api_call';
 
+        let sql =  'CREATE TABLE IF NOT EXISTS api_call(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255),data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
+        let sql2 = 'CREATE TABLE IF NOT EXISTS exibitions(id VARCHAR(255) PRIMARY KEY, beacon INTEGER, creation_date  TIMESTAMP,date_finish TIMESTAMP,date_start TIMESTAMP, description TEXT, general_description TEXT, name VARCHAR(255)   )';
 
-      let sql = 'CREATE TABLE IF NOT EXISTS api_call(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255),data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
-        let sql2 = 'CREATE TABLE IF NOT EXISTS museums(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) )';
+
         this.db.executeSql(sql2, []).then((res)=>{
             console.log(res,"create table record");
         }).catch((error)=>{
@@ -54,16 +55,45 @@ export class TasksServiceProvider {
             console.log(error);
         });
         return this.db.executeSql(sql, []);
-    } 
+    } */
     
-    
-   /* createTable2()
+     createTables()
+    {
+        let lthis = this;
+        return new Promise(function (resolve, reject)
+        {
+            let tables = [DATABASE_TABLE_RESPONSE, DATABASE_TABLE_CALL];
+            let results: any[] = [];
+            for (let table of tables)
+            {
+                lthis.createTable(table).then(
+                    (res) =>
+                    {
+                        results.push(res);
+                        if (results.length == tables.length)
+                        {
+                            resolve(results);
+                        }
+                    },
+                    (err) =>
+                    {
+                        results.push(err);
+                        if (results.length == tables.length)
+                        {
+                            resolve(results);
+                        }
+                    }
+                );
+            }
+        });
+    }
+    createTable(table : string)
     { 
         let lthis = this;
         return new Promise(function (resolve, reject)
         {
-            let sql = 'CREATE TABLE IF NOT EXISTS api_call(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
-              //let sql = 'CREATE TABLE IF NOT EXISTS ' + table + ';';
+            let sql = 'CREATE TABLE IF NOT EXISTS  ' + table + '((id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
+             //let sql = 'CREATE TABLE IF NOT EXISTS ' + table + ';';
 
             lthis.db.executeSql(sql).then(
                 (res) =>
@@ -84,7 +114,7 @@ export class TasksServiceProvider {
                 }
             );
         });
-    }*/
+    }
     
     
     emptyTables()
@@ -375,6 +405,7 @@ export class TasksServiceProvider {
                 {
                     result = res.rows.item(0).data;
                 }
+
                 return Promise.resolve(result);
             },
             (err) =>
@@ -404,7 +435,8 @@ export class TasksServiceProvider {
     }
 
 
-   createDatabase()
+  
+   /* createDatabase()
     {
         this.sqlite.create({
             name: 'data.cultura.db',
@@ -414,16 +446,13 @@ export class TasksServiceProvider {
             console.log(db);
             
             this.setDatabase(db);
-            console.log("create table");
             return this.createTable();
         })
         .catch(error =>{
             console.error(error);
         });
-    }
-    
-    
-   /* createDatabase()
+    }*/
+    createDatabase()
     {
         let lthis = this;
         return new Promise(function (resolve, reject)
@@ -439,7 +468,7 @@ export class TasksServiceProvider {
                     lthis.setDatabase(res);
                     console.log("Database: create local database", res);
                     
-                    return lthis.createTable().then(
+                    return lthis.createTables().then(
                         (res) =>
                         {
                             console.log(res, "lthis.createTable()");
@@ -465,7 +494,7 @@ export class TasksServiceProvider {
                 }
             );
         });
-    } */
+    } 
     
     
     

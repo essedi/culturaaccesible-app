@@ -31,30 +31,7 @@ export class NetworkProvider
     public initializeNetworkEvents(): void
     {
         
-        this.database.createDatabase();
-        
-         console.log("NetworkProvider", this.network );
-                console.log("NetworkProvider: type", this.network.type);
-                if (this.network.type == this.network.Connection.NONE)
-                {
-                    this.global.setOnlie(false);
-                } else
-                {
-                    //this.checkRecords().then(() => {}, () => {});
-                    this.checkCalls();
-                }
-                this.network.onDisconnect().subscribe(() =>
-                {
-                    this.global.setOnlie(false);
-                    console.log("NetworkProvider: network disconnect");
-                });
-                this.network.onConnect().subscribe(() =>
-                {
-                    this.global.setOnlie(true);
-                    this.checkCalls();
-                    console.log("NetworkProvider: network connect");
-                });
-         /*this.database.createDatabase().then(
+        this.database.createDatabase().then(
             () =>
             {
                 console.log("NetworkProvider", this.network );
@@ -80,7 +57,7 @@ export class NetworkProvider
                 });
             },
             () => {}
-        );*/
+        );
     }
     private checkCalls()
     {

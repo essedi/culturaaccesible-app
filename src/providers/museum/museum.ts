@@ -28,16 +28,20 @@ export class MuseumProvider {
   
   
   
-    retrieveList() {
+  retrieveList() {
       
       return this.api.post('api/museum/list', 'museums', '');
   }
 
   retrieve(id) {
-      let url = `${this.envVariables.baseUrl}/api/museum/retrieve`;
+      
       let headers    = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
       let options    = new RequestOptions({ headers: headers });
-      return this.http.post(url, {"id": id}, options).map(museums => museums.json())
+      
+      return this.api.post('api/museum/retrieve', 'museums', {"id": id} ,options );
+
   }
+  
+  
 
 }

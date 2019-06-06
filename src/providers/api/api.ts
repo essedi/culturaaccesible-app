@@ -24,87 +24,32 @@ constructor(
         private database: TasksServiceProvider,
         private global: GlobalProvider,
         private events: Events,
+
          @Inject(EnvVariables) private envVariables
     )
     {
 
     }
 
-    get(endpoint: string, params?: any, options: any = {}, cache: boolean = true)
-    {
-//        console.log("get ", cache, this.database.getDatabase() != null, !this.global.isOnline());
-        if (cache && this.database.getDatabase() != null && !this.global.isOnline())
-        {
-            //offline
-            return new Observable<any>((obs) =>
-            {
-                this.database.getResponse(this.getEndpoint(endpoint, params)).then(
-                    (res) =>
-                    {
-                        if (res != null)
-                        {
-                            console.log("Gets call from local", this.getEndpoint(endpoint, params), "data", JSON.parse(res));
-                            obs.next(JSON.parse(res));
-                        } else
-                        {
-                            let resp = {name: "no network", message: "error.network", error: {error: "network"}};
-                            obs.error(resp);
-                        }
-                        obs.complete();
-                    }).catch(error =>
-                    {
-                        obs.error(error);
-                        obs.complete();
-                    });
-            });
-        } else
-        {
-            if (!options)
-            {
-                options = {};
-            }
-            if (params)
-            {
-                options.params = params;
-            }
-            
-            
-            let result = this.http.get(this.url + '/' + endpoint, options);
 
-            //get result and save local
-            result.subscribe(
-                (resp) =>
-                {
-                    if (this.database.getDatabase() != null)
-                    {
-                        this.database.registerResponse(this.getEndpoint(endpoint, params), resp);
-                    }
-                },
-                (err) =>
-                {
-
-                }
-            );
-
-            return result;
-        }
-    }
-    
-    
     post(endpoint: string, typeClass: any ,body?: any, options?: any, cache: boolean = true)
     {
-        if (cache && this.database.getDatabase() != null && !this.global.isOnline())
+        if (cache && this.database.getDatabase() != null  && !this.global.isOnline() )
         {
-             console.log("return observable");
+
              return new Observable<any>((obs) =>
             {
                 this.database.getResponse(this.getEndpoint(endpoint, body)).then(
                     (res) =>
                     {
+
                         if (res != null)
                         {
                             console.log("Gets call from local", this.getEndpoint(endpoint, body), "data", JSON.parse(res));
-                            obs.next(JSON.parse(res));
+
+                            obs.next(JSON.parse(res))
+                            
+                            
                         } else
                         {
                             let resp = {name: "no network", message: "error.network", error: {error: "network"}};
@@ -137,32 +82,12 @@ constructor(
                 {
                 }
             );
-            
 
             return result.map(typeClass => typeClass.json());
                     
         }
     }
     
-    
-
-  /*  post2(endpoint: string, typeClass: any ,body?: any, options?: any, cache: boolean = true)
-    {
-        if (cache && this.database.getDatabase() != null && !this.global.isOnline())
-        {
-            console.log("return sqlite");
-            return this.database.registerCall(this.getEndpoint(endpoint), body);
-            
-        } else
-        {
-            console.log("no sqlite");
-           
-            return this.http.post(this.url + '/' + endpoint, body, options).map(typeClass =>
-            typeClass.json()
-        )
-        
-        }
-    }*/
 
     put(endpoint: string, body: any, options?: any)
     {

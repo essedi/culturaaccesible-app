@@ -63,10 +63,9 @@ export class ExhibitionsProvider {
     download2(id, isoCode) {
         let headers    = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
         let options    = new RequestOptions({ headers: headers });
-        let url = `${this.envVariables.baseUrl}/api/exhibition/download`;
         let payload = {"id": id, "iso_code": isoCode}
-        return this.http.post(url, payload, options).map(exhibitions =>
-            exhibitions.json()
-        )
+        
+        return this.api.post('api/exhibition/download', 'exhibitions' ,payload, options);
+
     }
 }
