@@ -34,6 +34,7 @@ constructor(
 
     post(endpoint: string, typeClass: any ,body?: any, options?: any, cache: boolean = true)
     {
+        console.log('111', cache, this.database.getDatabase(), this.global.isOnline() );
         if (cache && this.database.getDatabase() != null  && !this.global.isOnline() )
         {
 
@@ -48,6 +49,9 @@ constructor(
                             console.log("Gets call from local", this.getEndpoint(endpoint, body), "data", JSON.parse(res));
 
                             obs.next(JSON.parse(res))
+                            
+                            //obs.next(JSON.parse(res.map(typeClass => typeClass.json()) ))
+
                             
                             
                         } else

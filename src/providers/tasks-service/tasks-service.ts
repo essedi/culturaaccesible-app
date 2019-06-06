@@ -9,8 +9,7 @@ export const DATABASE_TABLE_CALL = "api_call";
 export const DATABASE_TYPE_CALL_IMAGE = "image";
 export const DATABASE_TYPE_CALL_POST = "post";
 export const DATABASE_TYPE_CALL_PUT = "put";
-//export const DATABASE_TABLE_RESPONSE = "api_response";
-export const DATABASE_TABLE_RESPONSE = "api_call";
+export const DATABASE_TABLE_RESPONSE = "api_response";
 
 @Injectable()
 export class TasksServiceProvider {
@@ -38,31 +37,12 @@ export class TasksServiceProvider {
 
     
     
-    
-   /* createTable(){
-        
-        
-     //   let sql = 'DROP TABLE api_call';
-
-        let sql =  'CREATE TABLE IF NOT EXISTS api_call(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255),data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
-        let sql2 = 'CREATE TABLE IF NOT EXISTS exibitions(id VARCHAR(255) PRIMARY KEY, beacon INTEGER, creation_date  TIMESTAMP,date_finish TIMESTAMP,date_start TIMESTAMP, description TEXT, general_description TEXT, name VARCHAR(255)   )';
-
-
-        this.db.executeSql(sql2, []).then((res)=>{
-            console.log(res,"create table record");
-        }).catch((error)=>{
-            console.log("not create table record");
-            console.log(error);
-        });
-        return this.db.executeSql(sql, []);
-    } */
-    
      createTables()
     {
         let lthis = this;
         return new Promise(function (resolve, reject)
         {
-            let tables = [DATABASE_TABLE_RESPONSE, DATABASE_TABLE_CALL];
+            let tables = [DATABASE_TABLE_CALL];
             let results: any[] = [];
             for (let table of tables)
             {

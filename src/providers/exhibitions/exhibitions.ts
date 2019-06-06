@@ -58,6 +58,7 @@ export class ExhibitionsProvider {
       let url = `${this.envVariables.baseUrl}/api/exhibition/download`;
       let payload = {"id": id, "iso_code": isoCode};
       this.http2.setDataSerializer("json");
+      console.log(url, " url http");
       return this.http2.post(url, payload, headers);
     }
     download2(id, isoCode) {

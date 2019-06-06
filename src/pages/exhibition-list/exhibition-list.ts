@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component ,Inject} from '@angular/core';
 import { IonicPage, NavController, AlertController, NavParams, LoadingController, ToastController, Events, Platform } from 'ionic-angular';
 import { ExhibitionsProvider } from '../../providers/exhibitions/exhibitions';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { TranslateService } from '@ngx-translate/core';
 import { DownloadProvider } from '../../providers/downloader/downloader';
+import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 
 
 @IonicPage()
@@ -18,6 +19,7 @@ export class ExhibitionList {
   storedData;
   loading;
   public loadProgress : number = 0;  
+  private url: string = this.envVariables.baseUrl;
 
 
   constructor(public navCtrl: NavController,
@@ -30,7 +32,8 @@ export class ExhibitionList {
               private nativeStorage: NativeStorage,
               public translate: TranslateService,
               private service: ExhibitionsProvider,
-              private downloader: DownloadProvider) {
+              private downloader: DownloadProvider,
+              @Inject(EnvVariables) private envVariables) {
   }
 
   ionViewWillEnter() {
@@ -87,10 +90,13 @@ export class ExhibitionList {
 
   download(exhibition, isoCode) {
     let lthis = this;
-    this.presentLoading()
+    //this.presentLoading()
+    this.loaderBarFunction(exhibition);
+
     this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
       let object = JSON.parse(exhibition.data);
-      console.log(object);
+      console.log(object, "object for download");
+      
       this.extractItems(object);
     }, error => {
       console.log(error);
@@ -235,31 +241,25 @@ export class ExhibitionList {
     loaderBarFunction(exhibition)
     {
 
-       const tag = document.createElement('script');
+        const tag = document.createElement('script');
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost/api/exhibition/download' );
+        var url = `${this.envVariables.baseUrl}/api/exhibition/download`;
         
+        xhr.open('POST', url , true);
+        xhr.responseType = 'arraybuffer';
         xhr.onloadend = (e) => document.head.appendChild(tag);
-        
-        //xhr.setRequestHeader("Content-type", "application/json");
-   
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.send({"iso_code": "es" , "id" : exhibition.id }); 
-  
-        
-       const barElement = document.getElementById('myProgressBar'+exhibition.id);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(JSON.stringify({"iso_code": "es" , "id" : exhibition.id }));
 
+        const barElement = document.getElementById('myProgressBar'+exhibition.id);
         barElement.style.display = "block";
  
         xhr.onprogress = (e) => {
-            
 
           if (e.lengthComputable) {
               
             const width = 100 * e.loaded / + e.total;
-
             this.loadProgress = width;
-            
             barElement.style.width = width + '%';
 
           }
@@ -277,7 +277,6 @@ export class ExhibitionList {
       .catch(
         error => {
           this.askLanguage(exhibition)
-          this.loaderBarFunction(exhibition);
 
         });
   }
