@@ -16,9 +16,11 @@ export class HomePage {
               public alertCtrl: AlertController,
               public platform: Platform,
               public events: Events) {
+              
+                console.log("in home tasks", this.tasks);
   }
   
-  
+
 
   
 }

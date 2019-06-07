@@ -1,6 +1,7 @@
 import { Injectable ,Inject} from '@angular/core';
 
 import { HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
@@ -34,9 +35,12 @@ constructor(
 
     post(endpoint: string, typeClass: any ,body?: any, options?: any, cache: boolean = true)
     {
+        
         console.log('111', cache, this.database.getDatabase(), this.global.isOnline() );
-        if (cache && this.database.getDatabase() != null  && !this.global.isOnline() )
+        
+        if (cache && this.database.getDatabase() != null  &&  !this.global.isOnline() )
         {
+            //offlinethis.global.isOnline() 
 
              return new Observable<any>((obs) =>
             {
@@ -48,11 +52,9 @@ constructor(
                         {
                             console.log("Gets call from local", this.getEndpoint(endpoint, body), "data", JSON.parse(res));
 
-                            obs.next(JSON.parse(res))
+                            obs.next(JSON.parse(res));
                             
-                            //obs.next(JSON.parse(res.map(typeClass => typeClass.json()) ))
-
-                            
+                         
                             
                         } else
                         {
@@ -69,9 +71,12 @@ constructor(
             
         } else
         {
+            
+          
+            
             console.log("no sqlite");
   
-            let result = this.http.post(this.url + '/' + endpoint, body, options);
+            let result = this.http.post(this.url + '/' + endpoint, body ,options).map(typeClass => typeClass.json());
 
             //get result and save local
             result.subscribe(
@@ -87,7 +92,7 @@ constructor(
                 }
             );
 
-            return result.map(typeClass => typeClass.json());
+            return result;
                     
         }
     }

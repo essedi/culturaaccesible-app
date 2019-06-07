@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {SQLiteObject} from '@ionic-native/sqlite';
 import {Events} from 'ionic-angular';
 import {Observable} from "rxjs/Observable"
-import {SQLite} from '@ionic-native/sqlite';
+import {SQLite,SQLiteObject} from '@ionic-native/sqlite';
 
 
 export const DATABASE_TABLE_CALL = "api_call";
@@ -14,7 +13,7 @@ export const DATABASE_TABLE_RESPONSE = "api_response";
 @Injectable()
 export class TasksServiceProvider {
     
-  db: SQLiteObject = null;
+    db: SQLiteObject = null;
 
     constructor(
         public events: Events,
@@ -39,18 +38,21 @@ export class TasksServiceProvider {
     
      createTables()
     {
+        
+        console.log("DATABASE: Create defaults database tables");
         let lthis = this;
         return new Promise(function (resolve, reject)
         {
-            let tables = [DATABASE_TABLE_CALL];
+            let tables = [DATABASE_TABLE_RESPONSE , DATABASE_TABLE_CALL];
             let results: any[] = [];
             for (let table of tables)
             {
                 lthis.createTable(table).then(
                     (res) =>
                     {
+                        console.log("HERE");
                         results.push(res);
-                        if (results.length == tables.length)
+                        if (results.length >= tables.length)
                         {
                             resolve(results);
                         }
@@ -58,7 +60,7 @@ export class TasksServiceProvider {
                     (err) =>
                     {
                         results.push(err);
-                        if (results.length == tables.length)
+                        if (results.length >= tables.length)
                         {
                             resolve(results);
                         }
@@ -67,32 +69,42 @@ export class TasksServiceProvider {
             }
         });
     }
+    
+    
+    
+
+        
+        
     createTable(table : string)
     { 
+        console.log("Database: attempt to create table", table, this.db);
         let lthis = this;
         return new Promise(function (resolve, reject)
         {
-            let sql = 'CREATE TABLE IF NOT EXISTS  ' + table + '((id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
-             //let sql = 'CREATE TABLE IF NOT EXISTS ' + table + ';';
+            let sql = 'CREATE TABLE IF NOT EXISTS  ' + table + '(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
+            // let sql = 'CREATE TABLE IF NOT EXISTS ' + table + ';';
+             console.info("Create sql ", sql);
 
-            lthis.db.executeSql(sql).then(
+
+            lthis.db.executeSql(sql, []).then(
                 (res) =>
                 {
-                    console.log("Datebase:  create table api_call", res);
+                    console.log("Database: create table",table , res);
                     resolve(res);
                 },
                 (err) =>
                 {
-                    console.log("Datebase:  create table error api_call" , err);
+                    console.log("Database: create table error",table , err);
                     reject(err);
                 }
             ).catch(
                 (err) =>
                 {
-                    console.log("Datebase:  create table uncaught error api_call" , err);
+                    console.error("Database: create table uncaught error", table, err);
                     reject(err);
                 }
             );
+           
         });
     }
     
@@ -416,7 +428,7 @@ export class TasksServiceProvider {
 
 
   
-   /* createDatabase()
+   /*createDatabase()
     {
         this.sqlite.create({
             name: 'data.cultura.db',
@@ -426,13 +438,13 @@ export class TasksServiceProvider {
             console.log(db);
             
             this.setDatabase(db);
-            return this.createTable();
+            return this.createTables();
         })
         .catch(error =>{
             console.error(error);
         });
-    }*/
-    createDatabase()
+    } */
+     createDatabase()
     {
         let lthis = this;
         return new Promise(function (resolve, reject)
@@ -448,7 +460,7 @@ export class TasksServiceProvider {
                     lthis.setDatabase(res);
                     console.log("Database: create local database", res);
                     
-                    return lthis.createTables().then(
+                    lthis.createTables().then(
                         (res) =>
                         {
                             console.log(res, "lthis.createTable()");

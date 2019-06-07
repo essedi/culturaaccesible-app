@@ -54,13 +54,10 @@ export class MyApp {
             
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
-            
            
-
-            this.networkProvider.initializeNetworkEvents();
-
             this.statusBar.styleDefault();
             this.splashScreen.hide();
+            this.networkProvider.initializeNetworkEvents();
 
         });
     }

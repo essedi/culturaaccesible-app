@@ -1,5 +1,6 @@
 //import {HttpClient} from '@angular/common/http';
 import { Http } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 import {Injectable} from '@angular/core';
 import {AlertController, Events} from 'ionic-angular';
@@ -30,12 +31,14 @@ export class NetworkProvider
 
     public initializeNetworkEvents(): void
     {
-        
+        console.log("NetworkProvider: init",this.network.type);
+
         this.database.createDatabase().then(
             () =>
             {
                 console.log("NetworkProvider", this.network );
                 console.log("NetworkProvider: type", this.network.type);
+                
                 if (this.network.type == this.network.Connection.NONE)
                 {
                     this.global.setOnlie(false);
@@ -56,7 +59,9 @@ export class NetworkProvider
                     console.log("NetworkProvider: network connect");
                 });
             },
-            () => {}
+            (err) => {
+                console.error("Fails to create db to network provider",err);
+            }
         );
     }
     private checkCalls()

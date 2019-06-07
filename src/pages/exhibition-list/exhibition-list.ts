@@ -95,7 +95,6 @@ export class ExhibitionList {
 
     this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
       let object = JSON.parse(exhibition.data);
-      console.log(object, "object for download");
       
       this.extractItems(object);
     }, error => {
