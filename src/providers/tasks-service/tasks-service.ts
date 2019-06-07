@@ -71,20 +71,15 @@ export class TasksServiceProvider {
     }
     
     
-    
 
-        
         
     createTable(table : string)
     { 
-        console.log("Database: attempt to create table", table, this.db);
         let lthis = this;
         return new Promise(function (resolve, reject)
         {
             let sql = 'CREATE TABLE IF NOT EXISTS  ' + table + '(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), data TEXT,date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, parent_id INTEGER, type VARCHAR(255));';
             // let sql = 'CREATE TABLE IF NOT EXISTS ' + table + ';';
-             console.info("Create sql ", sql);
-
 
             lthis.db.executeSql(sql, []).then(
                 (res) =>

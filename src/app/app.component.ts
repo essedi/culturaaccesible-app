@@ -3,9 +3,7 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateService } from '@ngx-translate/core';
-import { TasksServiceProvider } from '../providers/tasks-service/tasks-service';
 import {NetworkProvider} from '../providers/network/network';
-import {GlobalProvider} from '../providers/global/global';
 
 import {SQLite} from '@ionic-native/sqlite';
 
@@ -14,10 +12,7 @@ import {SQLite} from '@ionic-native/sqlite';
 })
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
-
     rootPage: any = 'ExhibitionList';
-    
-
 
     pages: Array<{title: string, component: any, id: string}>;
 
@@ -26,11 +21,7 @@ export class MyApp {
         public splashScreen: SplashScreen,
         public translate: TranslateService,
         public networkProvider: NetworkProvider,
-        private global: GlobalProvider,
         public sqlite: SQLite,
-        private database: TasksServiceProvider,
-
-
 
         ) {
 
@@ -41,24 +32,23 @@ export class MyApp {
 
         this.initializeApp();
         translate.get('MENU').subscribe(data => {
-
+          
           this.pages = [
               { title: data['EXHIBITIONS'], component: 'ExhibitionList', id: 'exhibitions' }
           ];
-
-        })
+          
+        });
     }
 
     initializeApp() {
         this.platform.ready().then(() => {
             
+            this.splashScreen.hide();
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
-           
             this.statusBar.styleDefault();
-            this.splashScreen.hide();
             this.networkProvider.initializeNetworkEvents();
-
+            
         });
     }
 
@@ -69,10 +59,5 @@ export class MyApp {
     }
     
     
-    
 
-    
-    
-  
-  
 }
