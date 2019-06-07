@@ -4,7 +4,6 @@ import 'rxjs/add/operator/map';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 import { Events } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
-import {ApiProvider} from '../api/api';
 
 @Injectable()
 export class ItemsProvider {
@@ -12,7 +11,6 @@ export class ItemsProvider {
   constructor(public http: Http,
               public events: Events,
               private storage: NativeStorage,
-              public api : ApiProvider,
               @Inject(EnvVariables) private envVariables) {
     events.subscribe('retrieveItemByBeacon', (data) => {
       this.retrieveByBeacon(data.beaconNumber, data.exhibitionId)
@@ -22,9 +20,9 @@ export class ItemsProvider {
   retrieveList(exhibition_id) {
       let headers    = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
       let options    = new RequestOptions({ headers: headers });
+      let url = `${this.envVariables.baseUrl}/api/exhibition/items`;
       let payload = {"exhibition_id": exhibition_id};
-      
-      return this.api.post('api/exhibition/items', 'items' ,payload, options);
+      return this.http.post(url, payload, options).map(items => items.json())
   }
 
   retrieveByBeacon(beaconNumber, exhibitionId) {
