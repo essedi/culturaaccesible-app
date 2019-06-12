@@ -122,7 +122,8 @@ export class BeaconProvider {
     }
   }
 
-  noBeaconAvailable() {
+  noBeaconAvailable() 
+  {
     return !this.closestBeacon || this.closestBeacon.minor == this.lastTriggeredBeaconNumber
   }
 

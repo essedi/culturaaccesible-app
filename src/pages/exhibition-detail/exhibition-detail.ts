@@ -64,7 +64,7 @@ export class ExhibitionDetail {
 
     getExhibition(exhibition) {
       this.storage.getItem(exhibition.id).then(exhibition => {
-        console.log(exhibition);
+        console.log(exhibition, "exhibition info");
         this.exhibition = exhibition;
         this.beaconProvider.itemsExhibition = [];
         if(this.exhibition.unlocked){

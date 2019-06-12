@@ -17,12 +17,17 @@ import { MuseumProvider } from '../providers/museum/museum';
 import { ItemsProvider } from '../providers/items/items';
 import { BeaconProvider } from '../providers/beacons/beacons';
 import { DownloadProvider } from '../providers/downloader/downloader';
+import { GpsProvider } from '../providers/gps/gps';
 
 import { NativeStorage } from '@ionic-native/native-storage';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { HTTP } from '@ionic-native/http';
 
+// gps providers
+import {Geolocation} from '@ionic-native/geolocation';
+import {Diagnostic} from '@ionic-native/diagnostic';
+import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 
 
 
@@ -66,6 +71,10 @@ export function createTranslateLoader(http: Http) {
         FileTransfer,
         HTTP,
         File,
+        GpsProvider,
+        Diagnostic,
+        OpenNativeSettings,
+        Geolocation
     
     ]
 })

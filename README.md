@@ -1,5 +1,9 @@
 # culturaaccesible-app
 
+
+add  android:usesCleartextTraffic="true" in application tag of AndroidManifest.xml
+
+
 <strong>Build with</strong>
 
 <p>

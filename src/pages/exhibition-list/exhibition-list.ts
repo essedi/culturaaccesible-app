@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DownloadProvider } from '../../providers/downloader/downloader';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 
+import {GpsProvider} from '../../providers/gps/gps';
 
 @IonicPage()
 @Component({
@@ -33,7 +34,20 @@ export class ExhibitionList {
               public translate: TranslateService,
               private service: ExhibitionsProvider,
               private downloader: DownloadProvider,
+              private gps: GpsProvider,
+
               @Inject(EnvVariables) private envVariables) {
+              
+              this.gps.getLocation().then(
+                (res: any) =>
+                {
+                    console.log(res, "<<<< gps location");
+                },
+                (err: any) =>
+                {
+                    console.log(err, "<<<< err location");
+
+                });
   }
 
   ionViewWillEnter() {
