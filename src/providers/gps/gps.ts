@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import {Geolocation, GeolocationOptions} from '@ionic-native/geolocation';
 import {Diagnostic} from '@ionic-native/diagnostic';
 import {OpenNativeSettings} from '@ionic-native/open-native-settings';
+import { Platform, Events, AlertController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 
 /*
@@ -13,14 +16,68 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 @Injectable()
 export class GpsProvider {
 
+  itemsExhibition: any[] = [];
+  exhibition: any;
+  stopGps: boolean ;
+
+
   constructor(
+        public platform: Platform,
+        public events: Events,
+        public translate: TranslateService,
+        public alertCtrl: AlertController,
+        private storage: NativeStorage,
+              
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
         private openSettings: OpenNativeSettings
-        ) {
-    console.log('Hello GpsProvider Provider');
-    
+        ) {}
+  
+   getItemLocation(){
+       
+    this.getLocation().then(
+        (res: any) =>
+        {
+            console.log(res,"<<<< exibition getlocationn gps");
+
+           for(let item of this.itemsExhibition)
+            {
+                
+                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
+                console.log(distance, "<<<< distancia en metros, need 50");
+                
+                if(distance < 50)
+                {
+                    console.log("<<<< PLAY VIDEO AT 50 MTRS");
+                    
+                    this.showOpenItemAlert(item, this.exhibition.id );
+                    
+                }
+            }
+        },
+        (err: any) =>
+        {
+            console.log(err, "<<<< err location");
+
+        });
   }
+  
+
+
+   refreshTime(lthis = this)
+    {
+      if(this.stopGps == false)
+      {    
+        lthis.getItemLocation();  
+
+        setTimeout(function ()
+        {
+            lthis.refreshTime(lthis);
+
+        }, 10000);
+          
+      } 
+    }
   
   
    getLocation(opt: GeolocationOptions = null)
@@ -54,6 +111,7 @@ export class GpsProvider {
 
                         }
                     );
+                    
                 },
                 () =>
                 {
@@ -87,7 +145,6 @@ export class GpsProvider {
                                         (res) =>
                                         {
                                             console.log('Location: isLocationAvailable openSettings', res);
-                                            //                                            lthis.checkLocation();
                                         },
                                         (err) =>
                                         {
@@ -156,7 +213,6 @@ export class GpsProvider {
                                         (res) =>
                                         {
                                             console.log('Location: openSettings', res);
-                                            //                                            lthis.checkLocation();
                                         },
                                         (err) =>
                                         {
@@ -195,5 +251,85 @@ export class GpsProvider {
         let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
         return Math.floor(dis * 1000);
     }
+    
+    
+    
+
+    presentUnlockExhibition() 
+    {
+      this.setDefaultLockedValue()
+      if(this.isLocked())
+      {
+        //this.setLastTriggeredBeacon()
+        this.unlockExhibition(this.exhibition.id)
+      }
+    }
+
+    setDefaultLockedValue() 
+    {
+      if(this.exhibition.unlocked === undefined){
+        this.exhibition.unlocked = false
+      }
+    }
+
+    isLocked() 
+   {
+      return !this.exhibition.unlocked 
+    }
+
+    unlockExhibition(exhibitionId) {
+      this.storage.getItem(exhibitionId).then(exhibition => {
+        //let isunlock = exhibition.unlocked;
+        this.exhibition.unlocked = exhibition.unlocked = true;
+        this.storage.setItem(exhibitionId, exhibition).then(() => {
+         
+          this.events.publish('exhibitionUnlocked')
+        })
+      })
+    }
+
+
+  retrieveItemByCoords(lat, lng, exhibitionId) 
+  {
+    this.events.publish('retrieveItemByCoords', {lat:lat , lng: lng, exhibitionId: exhibitionId})
+  }
+
+
+
+  showOpenItemAlert(item, exhibitionId) 
+   {
+    let messages;
+
+    this.translate.get('BEACONS.ALERT').subscribe(data => {
+      messages = data
+    })
+    let alert = this.alertCtrl.create({
+      title: item !== -1 ? item.name : messages['TITLE'] ,
+      message: messages['BODY'],
+      buttons: [
+        {
+          text: messages['BUTTONS']['NO'],
+          role: 'cancel',
+          handler: () => {
+           // this.events.publish('startRanging')
+            this.stopGps = true;
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: messages['BUTTONS']['YES'],
+          handler: () => {
+           
+            this.retrieveItemByCoords(item.lat, item.lng, exhibitionId)
+            this.stopGps = true;
+           // this.events.publish('startRanging')
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+
 
 }

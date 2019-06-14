@@ -8,6 +8,10 @@
     <access launch-external="yes" origin="comgooglemaps://*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://192.168.1.202:8100" />
+    <allow-navigation href="http://192.168.1.19" />
+    <allow-navigation href="http://192.168.1.45" />
+    <allow-navigation href="http://localhost" />
+    <allow-navigation href="http://localhost/* " />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -98,5 +102,6 @@
     <allow-navigation href="http://192.168.1.19:8101" />
     <allow-navigation href="http://192.168.1.19:4568" />
     <allow-navigation href="http://172.18.0.1:8101" />
+    <allow-navigation href="http://172.18.0.1:4567" />
     <allow-navigation href="http://54.198.129.130:4567" />
 </widget>

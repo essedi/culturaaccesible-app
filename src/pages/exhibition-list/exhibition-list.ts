@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { DownloadProvider } from '../../providers/downloader/downloader';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 
-import {GpsProvider} from '../../providers/gps/gps';
 
 @IonicPage()
 @Component({
@@ -19,8 +18,8 @@ export class ExhibitionList {
   hasExhibitions: boolean
   storedData;
   loading;
+
   public loadProgress : number = 0;  
-  private url: string = this.envVariables.baseUrl;
 
 
   constructor(public navCtrl: NavController,
@@ -34,27 +33,14 @@ export class ExhibitionList {
               public translate: TranslateService,
               private service: ExhibitionsProvider,
               private downloader: DownloadProvider,
-              private gps: GpsProvider,
+              @Inject(EnvVariables) private envVariables) { }
 
-              @Inject(EnvVariables) private envVariables) {
-              
-              this.gps.getLocation().then(
-                (res: any) =>
-                {
-                    console.log(res, "<<<< gps location");
-                },
-                (err: any) =>
-                {
-                    console.log(err, "<<<< err location");
-
-                });
-  }
 
   ionViewWillEnter() {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
-      }
+   }
 
   getStoredData() {
     if (this.platform.is('cordova')) {
@@ -70,11 +56,11 @@ export class ExhibitionList {
 
   setExhibtitions() {
     this.service.retrieveList().subscribe(exhibitions => {
-      console.log(exhibitions);
+      console.log(exhibitions, "ALL EXHIBITIONS");
       if(exhibitions.length > 0){
         this.hasExhibitions = true
         this.allExhibitions = exhibitions
-        console.log("show exibition ")
+        console.log("show exibition ") 
         this.filterExhibitions()
       }else {
         this.showNoExhibitionMessage()
@@ -93,6 +79,7 @@ export class ExhibitionList {
   filterExhibitions() {
     let activeExhibitions: Array<Object> = []
 
+    
     for (let exhibition of this.allExhibitions) {
       if (exhibition['show']) {
         activeExhibitions.push(exhibition)
@@ -277,7 +264,7 @@ export class ExhibitionList {
 
           }
         }
-  }
+    }
   
   
   goToDetail(exhibition) {

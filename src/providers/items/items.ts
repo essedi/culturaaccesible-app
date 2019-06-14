@@ -12,9 +12,16 @@ export class ItemsProvider {
               public events: Events,
               private storage: NativeStorage,
               @Inject(EnvVariables) private envVariables) {
+              
     events.subscribe('retrieveItemByBeacon', (data) => {
       this.retrieveByBeacon(data.beaconNumber, data.exhibitionId)
     })
+    
+    events.subscribe('retrieveItemByCoords', (data) => {
+      this.retrieveByCoords(data.lat, data.lng, data.exhibitionId)
+    })
+    
+    
   }
 
   retrieveList(exhibition_id) {
@@ -32,4 +39,15 @@ export class ItemsProvider {
           this.events.publish('goToItemDetail', {item: item, index: index})
       })
   }
+  
+  
+   retrieveByCoords(lat, lng, exhibitionId) {
+      this.storage.getItem(exhibitionId + '-items').then(items => {
+          let item = items.find(item => item.lat == lat , item => item.lng == lng )
+          let index = items.indexOf(item)
+          this.events.publish('goToItemDetail', {item: item, index: index})
+      })
+  }
+  
+  
 }
