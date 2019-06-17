@@ -39,87 +39,86 @@ export class ExhibitionDetail {
           lthis.unlockExhibition(exhibition)
         })
         
+       
         platform.ready().then(() => {
-            
-        if(this.exhibition.locationType != "gps"){
-            if(!beaconProvider.isInitialized){
-            beaconProvider.initialise().then((isInitialised) => {
-              if (isInitialised) {
-                beaconProvider.listenToBeaconEvents(exhibition);
-                beaconProvider.isInitialized = true
+            if(exhibition){
+                if(!beaconProvider.isInitialized && exhibition.locationType != "gps"){
+                beaconProvider.initialise().then((isInitialised) => {
+                  if (isInitialised) {
+                    beaconProvider.listenToBeaconEvents(exhibition);
+                    beaconProvider.isInitialized = true
+                    }
+                  });
                 }
-              });
-            }
-          }
-          
-          
+             }
         });
+       
     }
 
    ionViewWillEnter() {
-      this.beaconProvider.stopReadBeacon = false;
-      this.gpsProvider.stopGps = false;
-      let exhibition:any = this.navParams.get('exhibition')
-      console.log(exhibition);
-      
 
-      if(this.exhibition.locationType == "gps")
+      let exhibition: any = this.navParams.get('exhibition')
+      console.log(exhibition, "this exihibition 2");
+      
+     
+      if(exhibition.locationType == "gps")
        {
+          this.gpsProvider.stopGps = false;
           console.log( "gps location");
-          this.gpsProvider.refreshTime();
-          
-      }else
-      {
+        this.gpsProvider.refreshTime();
+
+      }else{ 
+      
+         this.beaconProvider.stopReadBeacon = false;
          console.log( "beacon location");
          this.beaconProvider.startRanging() 
+        
          
       }
-      
+       this.getExhibition(exhibition)
 
-      this.getExhibition(exhibition)
     }
     
 
     ionViewWillUnload() {
         
-      this.beaconProvider.stopRanging();
       this.gpsProvider.stopGps = true;
-
+      this.beaconProvider.stopRanging();
+      
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
       
     }
-
-    getExhibition(exhibition) {
+    
+     getExhibition(exhibition) {
       this.storage.getItem(exhibition.id).then(exhibition => {
         console.log(exhibition, "exhibition info");
         this.exhibition = exhibition;
         this.beaconProvider.itemsExhibition = [];
         this.gpsProvider.itemsExhibition = [];
-        
-        if(this.exhibition.unlocked){
-          //this.beaconProvider.lastTriggeredBeaconNumber =  parseInt(exhibition.beacon);
-          this.beaconProvider.unlockExhibition(exhibition.id);
+
+        if(this.exhibition.unlocked)
+        {
+           // move this Up if want to show items always
           this.gpsProvider.unlockExhibition(exhibition.id);
+          this.beaconProvider.unlockExhibition(exhibition.id);
 
         }
+ 
         this.beaconProvider.listenToBeaconEvents(exhibition)
+
       })
 
-      /*this.storage.getItem(this.exhibition.id + '-items').then(items => {
-        if(items.length > 0){
-          this.items = items
-          this.hasItems = true
-        }
-      })*/
     }
+
 
     unlockExhibition(exhibition2) {
       this.storage.getItem(exhibition2.id).then(exhibition => {
         this.exhibition = null
         this.exhibition = exhibition
         this.beaconProvider.exhibition = exhibition
-        this.gpsProvider.exhibition = exhibition;
+        this.gpsProvider.exhibition = exhibition
+
 
       })
 
@@ -136,7 +135,9 @@ export class ExhibitionDetail {
       })
     }
 
-    goToMuseum(){
+
+    goToMuseum()
+    {
         this.navCtrl.push('MuseumDetail', {id: this.exhibition.museum_id})
     }
 

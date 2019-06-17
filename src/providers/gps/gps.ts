@@ -27,11 +27,10 @@ export class GpsProvider {
         public translate: TranslateService,
         public alertCtrl: AlertController,
         private storage: NativeStorage,
-              
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
         private openSettings: OpenNativeSettings
-        ) {}
+   ) {}
   
    getItemLocation(){
        
@@ -44,14 +43,15 @@ export class GpsProvider {
             {
                 
                 var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
-                console.log(distance, "<<<< distancia en metros, need 50");
+                console.log(distance, "<<<< distancia en metros, needed 90");
                 
-                if(distance < 50)
+                if(distance < 90)
                 {
-                    console.log("<<<< PLAY VIDEO AT 50 MTRS");
+                    console.log("<<<< PLAY VIDEO AT 90 MTRS");
                     
                     this.showOpenItemAlert(item, this.exhibition.id );
-                    
+                    this.stopGps = true;
+
                 }
             }
         },
@@ -253,36 +253,13 @@ export class GpsProvider {
     }
     
     
-    
-
-    presentUnlockExhibition() 
-    {
-      this.setDefaultLockedValue()
-      if(this.isLocked())
-      {
-        //this.setLastTriggeredBeacon()
-        this.unlockExhibition(this.exhibition.id)
-      }
-    }
-
-    setDefaultLockedValue() 
-    {
-      if(this.exhibition.unlocked === undefined){
-        this.exhibition.unlocked = false
-      }
-    }
-
-    isLocked() 
-   {
-      return !this.exhibition.unlocked 
-    }
-
+ 
     unlockExhibition(exhibitionId) {
       this.storage.getItem(exhibitionId).then(exhibition => {
         //let isunlock = exhibition.unlocked;
-        this.exhibition.unlocked = exhibition.unlocked = true;
+        this.exhibition.unlocked = true;
+        exhibition.unlocked = true;
         this.storage.setItem(exhibitionId, exhibition).then(() => {
-         
           this.events.publish('exhibitionUnlocked')
         })
       })
@@ -312,7 +289,7 @@ export class GpsProvider {
           role: 'cancel',
           handler: () => {
            // this.events.publish('startRanging')
-            this.stopGps = true;
+            //this.stopGps = true;
             console.log('Cancel clicked');
           }
         },
@@ -321,7 +298,7 @@ export class GpsProvider {
           handler: () => {
            
             this.retrieveItemByCoords(item.lat, item.lng, exhibitionId)
-            this.stopGps = true;
+            //this.stopGps = true;
            // this.events.publish('startRanging')
           }
         }
