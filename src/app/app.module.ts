@@ -28,6 +28,10 @@ import { HTTP } from '@ionic-native/http';
 import {Geolocation} from '@ionic-native/geolocation';
 import {Diagnostic} from '@ionic-native/diagnostic';
 import {OpenNativeSettings} from '@ionic-native/open-native-settings';
+import { PurchaseProvider } from '../providers/purchase/purchase';
+
+//purchase provider
+import { InAppPurchase } from '@ionic-native/in-app-purchase';
 
 
 
@@ -74,7 +78,9 @@ export function createTranslateLoader(http: Http) {
         GpsProvider,
         Diagnostic,
         OpenNativeSettings,
-        Geolocation
+        Geolocation,
+        PurchaseProvider,
+        InAppPurchase
     
     ]
 })

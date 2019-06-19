@@ -130,6 +130,7 @@ export class BeaconProvider {
 
   setClosestBeacon(data)
   {
+     console.log(data, "setClosestBeacon");
     if(this.beacons.length)
     {
       this.closestBeacon = this.beacons[0];
@@ -140,7 +141,7 @@ export class BeaconProvider {
           this.closestBeacon = b;
         }
       }
-      //this.closestBeacon = this.beacons.filter(beacon => beacon.proximity == 'ProximityImmediate')[0]
+    //  this.closestBeacon = this.beacons.filter(beacon => beacon.proximity == 'ProximityImmediate')[0]
     }
 
   }

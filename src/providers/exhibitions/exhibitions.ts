@@ -3,6 +3,7 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 import { HTTP } from '@ionic-native/http';
+import { Events } from 'ionic-angular';
 
 @Injectable()
 export class ExhibitionsProvider {
@@ -10,7 +11,13 @@ export class ExhibitionsProvider {
 
     constructor(private http: Http,
                 private http2: HTTP,
-                @Inject(EnvVariables) private envVariables) {}
+                public events: Events,
+                @Inject(EnvVariables) private envVariables) {
+                    
+             
+
+    
+    }
 
     retrieveList() {
         let headers    = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});

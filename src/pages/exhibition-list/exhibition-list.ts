@@ -5,6 +5,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { TranslateService } from '@ngx-translate/core';
 import { DownloadProvider } from '../../providers/downloader/downloader';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
+import { PurchaseProvider } from '../../providers/purchase/purchase'
 
 
 @IonicPage()
@@ -18,6 +19,7 @@ export class ExhibitionList {
   hasExhibitions: boolean
   storedData;
   loading;
+  payed: boolean = false;
 
   public loadProgress : number = 0;  
 
@@ -33,14 +35,26 @@ export class ExhibitionList {
               public translate: TranslateService,
               private service: ExhibitionsProvider,
               private downloader: DownloadProvider,
-              @Inject(EnvVariables) private envVariables) { }
+              private purchaseProvider: PurchaseProvider,
+              @Inject(EnvVariables) private envVariables) { 
+              
+              events.subscribe('retrievePremiumExhibition', (data) => {
+                  //this.download(data.id, data.isoCode)
+                  console.log(data , "the exhibition is payed");
+                  this.payed = true;
+              })
+   }
 
+    
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
+    console.log("entered");
    }
+   
+  
 
   getStoredData() {
     if (this.platform.is('cordova')) {
@@ -70,6 +84,12 @@ export class ExhibitionList {
 
   showNoExhibitionMessage() {
     this.hasExhibitions = false
+  }
+  
+  purchaseExhibition(exhibition){
+      
+    this.purchaseProvider.getProducts(exhibition);
+      
   }
 
   isDownloaded(exhibition) {

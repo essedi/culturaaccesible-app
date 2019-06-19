@@ -15,6 +15,9 @@
           <p id="extended-description">{{exhibition?.extended_description || exhibition?.general_description}}</p>
           <button id="enter-museum" ion-button block round outline color="light" (click)="goToMuseum()">{{'EXHIBITIONS.DETAIL.BUTTONS.MUSEUM' | translate}}</button>
       </div>
+        
+        
+                
       <div *ngIf="!exhibition?.unlocked && exhibition?.locationType != 'gps'" class="message-container">
           <img class="image" src="https://trello-attachments.s3.amazonaws.com/58e4c7c3c40db2d4f44c74aa/592d2b06ccd804051d2bd314/9126f357c17774b961ed645becdc6a0c/favicon.png">
           <div class="wrapper">
@@ -50,5 +53,12 @@
           <ion-icon class="icon" name="bluetooth"></ion-icon>
         </div>
       </div>
-    </div>
+        
+        <div *ngIf="exhibition?.locationType == 'gps'">
+            <div id="map" style="width: 100%; height: 400px; display: block;"></div>
+        </div>
+        
+     </div>
+        
+ 
 </ion-content>
