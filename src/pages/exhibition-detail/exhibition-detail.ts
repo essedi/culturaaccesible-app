@@ -113,6 +113,11 @@ export class ExhibitionDetail {
           let marker = new google.maps.Marker({
             position: myLatLng,
             map: this.map,
+            icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 5,
+                  strokeColor: "#4286f4"
+                },            
             title: ''
           });
           mapEle.classList.add('show-map');
@@ -131,7 +136,6 @@ export class ExhibitionDetail {
                 mapEle.classList.add('show-map');
             });
         }
-        
         */
       }
 
