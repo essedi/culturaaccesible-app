@@ -13,7 +13,8 @@
             "FROM": "Desde:",
             "TO": "Hasta:",
             "BUTTONS": {
-                "MUSEUM": "Info museo"
+                "MUSEUM": "Info museo",
+                "MAP": "Ver Mapa"
             }
         },
         "LIST": {

@@ -13,7 +13,9 @@
             "FROM": "Open from:",
             "TO": "To:",
             "BUTTONS": {
-                "MUSEUM": "Museum info"
+                "MUSEUM": "Museum info",
+                "MAP": "View Map"
+
             }
         },
         "LIST": {

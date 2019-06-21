@@ -21,6 +21,7 @@
     <allow-intent href="comgooglemaps:*" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="webviewbounce" value="false" />
+    <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="19" />

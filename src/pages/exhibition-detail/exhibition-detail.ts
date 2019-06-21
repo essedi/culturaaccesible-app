@@ -1,24 +1,23 @@
-import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
-import { Platform, IonicPage, NavController, AlertController, NavParams, Events } from 'ionic-angular';
+import { Component, NgZone, ChangeDetectorRef,ViewChild } from '@angular/core';
+import { Platform, IonicPage, NavController, AlertController, NavParams, Events} from 'ionic-angular';
 import { ExhibitionsProvider } from '../../providers/exhibitions/exhibitions';
 import { ItemsProvider } from '../../providers/items/items'
 import { BeaconProvider } from '../../providers/beacons/beacons'
-import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { NativeStorage } from '@ionic-native/native-storage';
-import {GpsProvider} from '../../providers/gps/gps';
 
-declare var google; 
 @IonicPage()
 @Component({
     selector: 'page-exhibition-detail',
     templateUrl: 'exhibition-detail.html',
 })
+
+
 export class ExhibitionDetail {
     exhibition;
     hasItems: boolean = false;
     items: Array<Object>;
-    map: any;
+  
 
     constructor(public navCtrl: NavController,
                 public alertCtrl: AlertController,
@@ -26,12 +25,10 @@ export class ExhibitionDetail {
                 public beaconProvider: BeaconProvider,
                 public events: Events,
                 public zone: NgZone,
-                private geolocation: Geolocation,
                 public changeDetector: ChangeDetectorRef,
                 public navParams: NavParams,
                 private service: ExhibitionsProvider,
                 private storage: NativeStorage,
-                private gpsProvider: GpsProvider,
                 private itemService: ItemsProvider ) {
         let lthis = this;
         let exhibition:any = navParams.get('exhibition')
@@ -42,6 +39,7 @@ export class ExhibitionDetail {
         events.subscribe('exhibitionUnlocked', (data) => {
           lthis.unlockExhibition(exhibition)
         })
+<<<<<<< HEAD
         
        
         platform.ready().then(() => {
@@ -55,9 +53,22 @@ export class ExhibitionDetail {
                   });
                 }
              }
+=======
+        platform.ready().then(() => {
+          if(!beaconProvider.isInitialized){
+            beaconProvider.initialise().then((isInitialised) => {
+              if (isInitialised) {
+                beaconProvider.listenToBeaconEvents(exhibition);
+                beaconProvider.isInitialized = true
+              }
+            });
+          }
+>>>>>>> parent of 7c48ffd... gps functionality finished
         });
     }
+    
 
+<<<<<<< HEAD
    ionViewWillEnter() {
        
       this.beaconProvider.stopReadBeacon = false;
@@ -70,7 +81,6 @@ export class ExhibitionDetail {
           this.gpsProvider.stopGps = false;
           console.log( "gps location");
           this.gpsProvider.refreshTime();
-          this.getPosition();
 
       }else{ 
       
@@ -82,73 +92,28 @@ export class ExhibitionDetail {
     }
     
     
-    getPosition():any{
-        this.geolocation.getCurrentPosition().then(response => {
-          this.loadMap(response);
-        })
-        .catch(error =>{
-          console.log(error);
-        })
-    }
-    
-    loadMap(position: Geoposition)
-     {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        console.log(latitude, longitude);
 
-        // create a new map by passing HTMLElement
-        let mapEle: HTMLElement = document.getElementById('map');
-
-        // create LatLng object
-        let myLatLng = {lat: latitude, lng: longitude};
-
-        // create map
-        this.map = new google.maps.Map(mapEle, {
-          center: myLatLng,
-          zoom: 12
-        });
-
-        google.maps.event.addListenerOnce(this.map, 'idle', () => {
-          let marker = new google.maps.Marker({
-            position: myLatLng,
-            map: this.map,
-            icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 5,
-                  strokeColor: "#4286f4"
-                },            
-            title: ''
-          });
-          mapEle.classList.add('show-map');
-        });
-        
-        console.log(this.items, "ITEMS");
-        
-       /* for(let item of this.items){
-            
-            google.maps.event.addListenerOnce(this.map, 'idle', () => {
-                let marker = new google.maps.Marker({
-                  position: {lat: item.lat, lng: item.lng},
-                  map: this.map,
-                  title: item.name
-                });
-                mapEle.classList.add('show-map');
-            });
-        }
-        */
-      }
-
-   
 
     ionViewWillUnload() {
         
       this.gpsProvider.stopGps = true;
       this.beaconProvider.stopRanging();
 
+=======
+    ionViewWillEnter() {
+      this.beaconProvider.stopReadBeacon = false;
+      let exhibition:any = this.navParams.get('exhibition')
+      console.log(exhibition);
+      this.beaconProvider.startRanging()
+
+      this.getExhibition(exhibition)
+    }
+
+    ionViewWillUnload() {
+      this.beaconProvider.stopRanging();
+>>>>>>> parent of 7c48ffd... gps functionality finished
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
-      
     }
     
      getExhibition(exhibition) {
@@ -156,19 +121,38 @@ export class ExhibitionDetail {
       this.storage.getItem(exhibition.id).then(exhibition => {
         console.log(exhibition, "exhibition info");
         this.exhibition = exhibition;
-        this.beaconProvider.itemsExhibition = [];
-        this.gpsProvider.itemsExhibition = [];
-
-        if(this.exhibition.unlocked)
+<<<<<<< HEAD
+        
+        if(exhibition.locationType == "gps")
         {
-           // move this Up if want to show items always
-          this.gpsProvider.unlockExhibition(exhibition.id);
+            this.gpsProvider.itemsExhibition = [];
+            if(this.exhibition.unlocked)
+            {
+               // move this Up if want to show items always
+              this.gpsProvider.unlockExhibition(exhibition.id);
+
+            }
+=======
+        this.beaconProvider.itemsExhibition = [];
+        if(this.exhibition.unlocked){
+          //this.beaconProvider.lastTriggeredBeaconNumber =  parseInt(exhibition.beacon);
           this.beaconProvider.unlockExhibition(exhibition.id);
-
+>>>>>>> parent of 7c48ffd... gps functionality finished
         }
- 
-        this.beaconProvider.listenToBeaconEvents(exhibition)
+        else
+        {
+            this.beaconProvider.itemsExhibition = [];
+            
+             if(this.exhibition.unlocked)
+            {
+              //this.gpsProvider.unlockExhibition(exhibition.id);
+              this.beaconProvider.unlockExhibition(exhibition.id);
 
+            }
+
+            this.beaconProvider.listenToBeaconEvents(exhibition)
+        
+        }
       })
     }
 
@@ -179,8 +163,11 @@ export class ExhibitionDetail {
         this.exhibition = null
         this.exhibition = exhibition
         this.beaconProvider.exhibition = exhibition
+<<<<<<< HEAD
         this.gpsProvider.exhibition = exhibition
 
+=======
+>>>>>>> parent of 7c48ffd... gps functionality finished
       })
 
       this.storage.getItem(this.exhibition.id + '-items').then(items => {
@@ -190,12 +177,14 @@ export class ExhibitionDetail {
           this.hasItems = true
         }
         this.beaconProvider.itemsExhibition = items;
-        this.gpsProvider.itemsExhibition = items;
-
         this.changeDetector.detectChanges();
       })
     }
 
+    viewMap()
+    {
+        this.navCtrl.push('MapPage', {items: this.items })
+    }
 
     goToMuseum()
     {

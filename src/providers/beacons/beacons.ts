@@ -113,8 +113,7 @@ export class BeaconProvider {
     console.log(this.closestBeacon)
   }
 
-  chooseListenAction(exhibitionBeaconNumber) 
-   {
+  chooseListenAction(exhibitionBeaconNumber) {
     if( this.noBeaconAvailable() ) { return }
     if(this.closestBeacon.minor != exhibitionBeaconNumber){
       this.presentItem()

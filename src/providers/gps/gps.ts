@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import {Geolocation, GeolocationOptions} from '@ionic-native/geolocation';
 import {Diagnostic} from '@ionic-native/diagnostic';
 import {OpenNativeSettings} from '@ionic-native/open-native-settings';
-import { Platform, Events, AlertController } from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
-import { NativeStorage } from '@ionic-native/native-storage';
 
 
 /*
@@ -16,12 +13,8 @@ import { NativeStorage } from '@ionic-native/native-storage';
 @Injectable()
 export class GpsProvider {
 
-  itemsExhibition: any[] = [];
-  exhibition: any;
-  stopGps: boolean ;
-
-
   constructor(
+<<<<<<< HEAD
         public platform: Platform,
         public events: Events,
         public translate: TranslateService,
@@ -60,24 +53,15 @@ export class GpsProvider {
             console.log(err, "<<<< err location");
 
         });
+=======
+        private geolocation: Geolocation,
+        private diagnostic: Diagnostic,
+        private openSettings: OpenNativeSettings
+        ) {
+    console.log('Hello GpsProvider Provider');
+    
+>>>>>>> parent of 7c48ffd... gps functionality finished
   }
-  
-
-
-   refreshTime(lthis = this)
-    {
-      if(this.stopGps == false)
-      {    
-        lthis.getItemLocation();  
-
-        setTimeout(function ()
-        {
-            lthis.refreshTime(lthis);
-
-        }, 10000);
-          
-      } 
-    }
   
   
    getLocation(opt: GeolocationOptions = null)
@@ -111,7 +95,6 @@ export class GpsProvider {
 
                         }
                     );
-                    
                 },
                 () =>
                 {
@@ -145,6 +128,7 @@ export class GpsProvider {
                                         (res) =>
                                         {
                                             console.log('Location: isLocationAvailable openSettings', res);
+                                            //                                            lthis.checkLocation();
                                         },
                                         (err) =>
                                         {
@@ -213,6 +197,7 @@ export class GpsProvider {
                                         (res) =>
                                         {
                                             console.log('Location: openSettings', res);
+                                            //                                            lthis.checkLocation();
                                         },
                                         (err) =>
                                         {
@@ -251,13 +236,13 @@ export class GpsProvider {
         let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
         return Math.floor(dis * 1000);
     }
+<<<<<<< HEAD
     
     
  
     unlockExhibition(exhibitionId) {
       this.storage.getItem(exhibitionId).then(exhibition => {
-        //let isunlock = exhibition.unlocked;
-        this.exhibition.unlocked = true;
+        //this.exhibition.unlocked = true;
         exhibition.unlocked = true;
         this.storage.setItem(exhibitionId, exhibition).then(() => {
           this.events.publish('exhibitionUnlocked')
@@ -308,5 +293,7 @@ export class GpsProvider {
   }
 
 
+=======
+>>>>>>> parent of 7c48ffd... gps functionality finished
 
 }

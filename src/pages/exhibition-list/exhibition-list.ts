@@ -7,6 +7,7 @@ import { DownloadProvider } from '../../providers/downloader/downloader';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 import { PurchaseProvider } from '../../providers/purchase/purchase'
 
+import {GpsProvider} from '../../providers/gps/gps';
 
 @IonicPage()
 @Component({
@@ -19,9 +20,14 @@ export class ExhibitionList {
   hasExhibitions: boolean
   storedData;
   loading;
+<<<<<<< HEAD
   payed: boolean = false;
 
+=======
+>>>>>>> parent of 7c48ffd... gps functionality finished
   public loadProgress : number = 0;  
+  private url: string = this.envVariables.baseUrl;
+
 
 
   constructor(public navCtrl: NavController,
@@ -35,6 +41,7 @@ export class ExhibitionList {
               public translate: TranslateService,
               private service: ExhibitionsProvider,
               private downloader: DownloadProvider,
+<<<<<<< HEAD
               private purchaseProvider: PurchaseProvider,
               @Inject(EnvVariables) private envVariables) { 
               
@@ -43,18 +50,43 @@ export class ExhibitionList {
                   console.log(data , "the exhibition is payed");
                   this.payed = true;
               })
+              
+              
    }
 
+  
     
+      
+=======
+              private gps: GpsProvider,
+
+              @Inject(EnvVariables) private envVariables) {
+              
+              this.gps.getLocation().then(
+                (res: any) =>
+                {
+                    console.log(res, "<<<< gps location");
+                },
+                (err: any) =>
+                {
+                    console.log(err, "<<<< err location");
+
+                });
+  }
+>>>>>>> parent of 7c48ffd... gps functionality finished
 
   ionViewDidEnter() {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
+<<<<<<< HEAD
     console.log("entered");
    }
    
   
+=======
+      }
+>>>>>>> parent of 7c48ffd... gps functionality finished
 
   getStoredData() {
     if (this.platform.is('cordova')) {
@@ -70,11 +102,11 @@ export class ExhibitionList {
 
   setExhibtitions() {
     this.service.retrieveList().subscribe(exhibitions => {
-      console.log(exhibitions, "ALL EXHIBITIONS");
+      console.log(exhibitions);
       if(exhibitions.length > 0){
         this.hasExhibitions = true
         this.allExhibitions = exhibitions
-        console.log("show exibition ") 
+        console.log("show exibition ")
         this.filterExhibitions()
       }else {
         this.showNoExhibitionMessage()
@@ -99,7 +131,6 @@ export class ExhibitionList {
   filterExhibitions() {
     let activeExhibitions: Array<Object> = []
 
-    
     for (let exhibition of this.allExhibitions) {
       if (exhibition['show']) {
         activeExhibitions.push(exhibition)
@@ -284,7 +315,7 @@ export class ExhibitionList {
 
           }
         }
-    }
+  }
   
   
   goToDetail(exhibition) {
