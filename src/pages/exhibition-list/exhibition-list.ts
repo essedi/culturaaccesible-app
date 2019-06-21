@@ -49,13 +49,9 @@ export class ExhibitionList {
                   this.payed = true;
               })
               
-              
    }
 
-  
-    
-      
-
+ 
              
   ionViewDidEnter() {
     this.getStoredData()

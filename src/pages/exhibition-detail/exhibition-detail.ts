@@ -3,12 +3,10 @@ import { Platform, IonicPage, NavController, AlertController, NavParams, Events 
 import { ExhibitionsProvider } from '../../providers/exhibitions/exhibitions';
 import { ItemsProvider } from '../../providers/items/items'
 import { BeaconProvider } from '../../providers/beacons/beacons'
-import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { NativeStorage } from '@ionic-native/native-storage';
 import {GpsProvider} from '../../providers/gps/gps';
 
-declare var google; 
 @IonicPage()
 @Component({
     selector: 'page-exhibition-detail',
@@ -26,7 +24,6 @@ export class ExhibitionDetail {
                 public beaconProvider: BeaconProvider,
                 public events: Events,
                 public zone: NgZone,
-                private geolocation: Geolocation,
                 public changeDetector: ChangeDetectorRef,
                 public navParams: NavParams,
                 private service: ExhibitionsProvider,
@@ -70,7 +67,6 @@ export class ExhibitionDetail {
           this.gpsProvider.stopGps = false;
           console.log( "gps location");
           this.gpsProvider.refreshTime();
-          this.getPosition();
 
       }else{ 
       
@@ -82,64 +78,6 @@ export class ExhibitionDetail {
     }
     
     
-    getPosition():any{
-        this.geolocation.getCurrentPosition().then(response => {
-          this.loadMap(response);
-        })
-        .catch(error =>{
-          console.log(error);
-        })
-    }
-    
-    loadMap(position: Geoposition)
-     {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        console.log(latitude, longitude);
-
-        // create a new map by passing HTMLElement
-        let mapEle: HTMLElement = document.getElementById('map');
-
-        // create LatLng object
-        let myLatLng = {lat: latitude, lng: longitude};
-
-        // create map
-        this.map = new google.maps.Map(mapEle, {
-          center: myLatLng,
-          zoom: 12
-        });
-
-        google.maps.event.addListenerOnce(this.map, 'idle', () => {
-          let marker = new google.maps.Marker({
-            position: myLatLng,
-            map: this.map,
-            icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 5,
-                  strokeColor: "#4286f4"
-                },            
-            title: ''
-          });
-          mapEle.classList.add('show-map');
-        });
-        
-        console.log(this.items, "ITEMS");
-        
-       /* for(let item of this.items){
-            
-            google.maps.event.addListenerOnce(this.map, 'idle', () => {
-                let marker = new google.maps.Marker({
-                  position: {lat: item.lat, lng: item.lng},
-                  map: this.map,
-                  title: item.name
-                });
-                mapEle.classList.add('show-map');
-            });
-        }
-        */
-      }
-
-   
 
     ionViewWillUnload() {
         
@@ -156,19 +94,32 @@ export class ExhibitionDetail {
       this.storage.getItem(exhibition.id).then(exhibition => {
         console.log(exhibition, "exhibition info");
         this.exhibition = exhibition;
-        this.beaconProvider.itemsExhibition = [];
-        this.gpsProvider.itemsExhibition = [];
-
-        if(this.exhibition.unlocked)
+        
+         if(this.exhibition.locatioType == 'gps')
         {
-           // move this Up if want to show items always
-          this.gpsProvider.unlockExhibition(exhibition.id);
-          this.beaconProvider.unlockExhibition(exhibition.id);
+           this.gpsProvider.itemsExhibition = [];
+            
+           if(this.exhibition.unlocked)
+          {
+             // move this Up if want to show items always
+            this.gpsProvider.unlockExhibition(exhibition.id);
 
+          }
+
+        }else
+        {
+
+          this.beaconProvider.itemsExhibition = [];
+
+          if(this.exhibition.unlocked)
+          {
+            this.beaconProvider.unlockExhibition(exhibition.id);
+
+          }
+
+          this.beaconProvider.listenToBeaconEvents(exhibition)
+         
         }
- 
-        this.beaconProvider.listenToBeaconEvents(exhibition)
-
       })
     }
 
