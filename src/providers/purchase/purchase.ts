@@ -26,7 +26,7 @@ export class PurchaseProvider {
       
     this.exhibition = exhibition;
             
-    this.iap.getProducts(['exhibicion1']).then((products) => {
+    this.iap.getProducts([exhibition.productId]).then((products) => {
           
           console.log(products, "products");
           this.buyProducts(products);

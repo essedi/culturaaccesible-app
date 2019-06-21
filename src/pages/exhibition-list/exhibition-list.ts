@@ -20,11 +20,9 @@ export class ExhibitionList {
   hasExhibitions: boolean
   storedData;
   loading;
-<<<<<<< HEAD
   payed: boolean = false;
 
-=======
->>>>>>> parent of 7c48ffd... gps functionality finished
+
   public loadProgress : number = 0;  
   private url: string = this.envVariables.baseUrl;
 
@@ -40,8 +38,8 @@ export class ExhibitionList {
               private nativeStorage: NativeStorage,
               public translate: TranslateService,
               private service: ExhibitionsProvider,
+              private gps: GpsProvider,
               private downloader: DownloadProvider,
-<<<<<<< HEAD
               private purchaseProvider: PurchaseProvider,
               @Inject(EnvVariables) private envVariables) { 
               
@@ -57,36 +55,16 @@ export class ExhibitionList {
   
     
       
-=======
-              private gps: GpsProvider,
 
-              @Inject(EnvVariables) private envVariables) {
-              
-              this.gps.getLocation().then(
-                (res: any) =>
-                {
-                    console.log(res, "<<<< gps location");
-                },
-                (err: any) =>
-                {
-                    console.log(err, "<<<< err location");
-
-                });
-  }
->>>>>>> parent of 7c48ffd... gps functionality finished
-
+             
   ionViewDidEnter() {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
-<<<<<<< HEAD
     console.log("entered");
    }
    
   
-=======
-      }
->>>>>>> parent of 7c48ffd... gps functionality finished
 
   getStoredData() {
     if (this.platform.is('cordova')) {
