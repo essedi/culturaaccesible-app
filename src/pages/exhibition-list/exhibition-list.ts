@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { DownloadProvider } from '../../providers/downloader/downloader';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 import { PurchaseProvider } from '../../providers/purchase/purchase'
-
 import {GpsProvider} from '../../providers/gps/gps';
 
 @IonicPage()
@@ -42,7 +41,7 @@ export class ExhibitionList {
               private downloader: DownloadProvider,
               private purchaseProvider: PurchaseProvider,
               @Inject(EnvVariables) private envVariables) { 
-              
+
               events.subscribe('retrievePremiumExhibition', (data) => {
                   //this.download(data.id, data.isoCode)
                   console.log(data , "the exhibition is payed");
@@ -60,7 +59,6 @@ export class ExhibitionList {
     console.log("entered");
    }
    
-  
 
   getStoredData() {
     if (this.platform.is('cordova')) {

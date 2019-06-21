@@ -34,6 +34,7 @@ export class MuseumDetail {
 
         this.service.retrieve(this.navParams.get('id')).subscribe(museum => {
             this.setInfo(museum)
+            console.log(museum , "MUSEUM");
             this.composeMapLinks()
             loading.dismiss()
         });

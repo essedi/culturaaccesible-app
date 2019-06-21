@@ -5,20 +5,16 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 
 
-/*
-  Generated class for the GpsProvider provider.
-
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class GpsProvider {
 
   itemsExhibition: any[] = [];
   exhibition: any;
   stopGps: boolean ;
+  logs: string[] = [];
 
 
   constructor(
@@ -29,8 +25,21 @@ export class GpsProvider {
         private storage: NativeStorage,
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
-        private openSettings: OpenNativeSettings
-   ) {}
+        private openSettings: OpenNativeSettings,
+        private backgroundGeolocation: BackgroundGeolocation,
+
+   ) {
+ 
+        /*this.platform.resume.subscribe((result)=>{//Foreground
+                console.log("platform resume");
+                 this.startBackgroundGeolocation();
+        });
+        this.platform.pause.subscribe((result)=>{//Background
+                 console.log("platform pause");
+                 this.start();
+        });*/
+
+    }
   
    getItemLocation(){
        
@@ -306,6 +315,60 @@ export class GpsProvider {
     });
     alert.present();
   }
+  
+  
+  
+   startBackgroundGeolocation()
+   {
+    this.backgroundGeolocation.isLocationEnabled()
+    .then((rta) =>{
+      if(rta){
+        this.start();
+      }else {
+        this.backgroundGeolocation.showLocationSettings();
+      }
+    })
+  }
+
+   stopBackgroundGeolocation()
+  {
+    this.backgroundGeolocation.stop();
+  }
+  
+  start()
+  {
+
+    const config: BackgroundGeolocationConfig = {
+      desiredAccuracy: 10,
+      stationaryRadius: 1,
+      distanceFilter: 1,
+      debug: true,
+      stopOnTerminate: false,
+      // Android only section
+      locationProvider: 1,
+      startForeground: true,
+      interval: 6000,
+      fastestInterval: 5000,
+      activitiesInterval: 10000,
+    };
+    
+    this.backgroundGeolocation
+    .configure(config)
+    .subscribe((location: BackgroundGeolocationResponse) => {
+      console.log(location);
+      this.logs.push(`${location.latitude},${location.longitude}`);
+    });
+
+
+    console.log(this.logs, "LOGS");
+    // start recording location
+    this.backgroundGeolocation.start();
+    
+    console.log(this.logs, "LOGS2");
+
+
+  }
+
 
 
 
