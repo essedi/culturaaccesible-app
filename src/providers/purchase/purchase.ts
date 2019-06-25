@@ -10,7 +10,6 @@ export class PurchaseProvider {
   itemsExhibition: any[] = [];
   exhibition: any;
 
-
   constructor(private iap: InAppPurchase,
               public platform: Platform,
               public events: Events,
@@ -18,6 +17,8 @@ export class PurchaseProvider {
               public toastCtrl: ToastController
   ) {
     console.log('Hello PurchaseProvider Provider');
+   
+    this.queryPurchases();
   }
   
   
@@ -49,13 +50,13 @@ export class PurchaseProvider {
           console.log(JSON.stringify(data));
           // The consume() function should only be called after purchasing consumable products
           // otherwise, you should skip this step
-          return this.iap.consume("consumable", data.receipt, data.signature);
+         // return this.iap.consume("consumable", data.receipt, data.signature);
         })
         .then(function () {
             
           console.log('consume done!');           
-          this.events.publish('retrievePremiumExhibition', {id : this.exhibition.id })
-
+         // 
+         
         })
         .catch(function (err) {
           console.log(err);
@@ -63,6 +64,27 @@ export class PurchaseProvider {
         
     }
   }
+  
+  
+  queryPurchases(){
+      
+      var lthis = this;
+      
+      this.iap.restorePurchases().then(function (data) {
+          
+          console.log(lthis.events, "restored purchases lthis.events");
+
+          for(let purchased of data){
+              
+              
+              lthis.events.publish('retrievePremiumExhibition', {id : purchased.productId })
+              
+
+          }
+                 
+        })
+  }
+  
   
   
   

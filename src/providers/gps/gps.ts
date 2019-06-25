@@ -322,9 +322,11 @@ export class GpsProvider {
    {
     this.backgroundGeolocation.isLocationEnabled()
     .then((rta) =>{
-      if(rta){
+      if(rta)
+      {
         this.start();
-      }else {
+      }else 
+      {
         this.backgroundGeolocation.showLocationSettings();
       }
     })
@@ -355,7 +357,7 @@ export class GpsProvider {
     this.backgroundGeolocation
     .configure(config)
     .subscribe((location: BackgroundGeolocationResponse) => {
-      console.log(location);
+      console.log(location, "location11");
       this.logs.push(`${location.latitude},${location.longitude}`);
     });
 
@@ -364,11 +366,10 @@ export class GpsProvider {
     // start recording location
     this.backgroundGeolocation.start();
     
-    console.log(this.logs, "LOGS2");
-
 
   }
 
+  
 
 
 

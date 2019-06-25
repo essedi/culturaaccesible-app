@@ -3,6 +3,7 @@
     "short_name": "Ionic",
     "start_url": "index.html",
     "display": "standalone",
+    "play_store_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAquLvx8Cao4mJBg3nsZzW9iHhTW416jPI+VgQEiwfPohPUwPsqX41lbt45WnBWh/1pYaegnHvp4wOTcw8bQ9lbqxp9V9HKdcwe9jiyeOsCN1nC7ax5CJvrei4OyS3+kSeYTcuFlsJJOp38wbWeZXSfdjrFDr5gJo80IEWHNG9yJbp5kVCcPBgH6lUqyQvJMo/vZW+JHh6jse4W2fiCh2yMUW3P7ftaYvLlmz+MfZgWAX7Xx/no6+MBVvt6EYLO6eFuu7a0CJfs/q8Wts1yqkONkYKDQ153Yy6Y0D8v85hwMAAWbyYWw4irEo0KtNGNsnIjjAGOkWxylr0hZ0DEBdCPwIDAQAB" ,
     "icons": [{
         "src": "assets/imgs/logo.png",
         "sizes": "512x512",

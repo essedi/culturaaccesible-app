@@ -20,6 +20,7 @@ export class ExhibitionList {
   storedData;
   loading;
   payed: boolean = false;
+  purchases: any[] = [];
 
 
   public loadProgress : number = 0;  
@@ -27,27 +28,54 @@ export class ExhibitionList {
 
 
 
-  constructor(public navCtrl: NavController,
-              public alertCtrl: AlertController,
-              public navParams: NavParams,
-              public events: Events,
-              public platform: Platform,
-              public loadingCtrl: LoadingController,
-              public toastCtrl: ToastController,
-              private nativeStorage: NativeStorage,
-              public translate: TranslateService,
-              private service: ExhibitionsProvider,
-              private gps: GpsProvider,
-              private downloader: DownloadProvider,
-              private purchaseProvider: PurchaseProvider,
-              @Inject(EnvVariables) private envVariables) { 
+  constructor(
+            public navCtrl: NavController,
+            public alertCtrl: AlertController,
+            public navParams: NavParams,
+            public events: Events,
+            public platform: Platform,
+            public loadingCtrl: LoadingController,
+            public toastCtrl: ToastController,
+            private nativeStorage: NativeStorage,
+            public translate: TranslateService,
+            private service: ExhibitionsProvider,
+            private gpsProvider: GpsProvider,
+            private downloader: DownloadProvider,
+            private purchaseProvider: PurchaseProvider,
+            @Inject(EnvVariables) private envVariables) { 
+            
 
-              events.subscribe('retrievePremiumExhibition', (data) => {
-                  //this.download(data.id, data.isoCode)
-                  console.log(data , "the exhibition is payed");
-                  this.payed = true;
-              })
+            events.subscribe('retrievePremiumExhibition', (data) => {
+                //this.download(data.id, data.isoCode)
+                this.purchases.push(data);
+            }) 
+
+           /* this.platform.resume.subscribe((result)=>{//Foreground
+                   console.log("platform resume");
+                  this.gpsProvider.startBackgroundGeolocation();
+
+            });
+            this.platform.pause.subscribe((result)=>{//Background
+                     console.log("platform pause");
+                     this.gpsProvider.startBackgroundGeolocation();
+            })*/
               
+   }
+   
+   checkIfPayed(exhibition){
+              
+       if( this.purchases && exhibition.premium == true){
+
+            for(let purchase of this.purchases)
+            {
+                if(purchase.id === exhibition.productId ){
+
+                   return true;
+                }
+            }
+            
+        }
+        return false;
    }
 
  
@@ -73,6 +101,7 @@ export class ExhibitionList {
   }
 
   setExhibtitions() {
+      
     this.service.retrieveList().subscribe(exhibitions => {
       console.log(exhibitions);
       if(exhibitions.length > 0){
