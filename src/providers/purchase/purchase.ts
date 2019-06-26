@@ -18,7 +18,6 @@ export class PurchaseProvider {
   ) {
     console.log('Hello PurchaseProvider Provider');
    
-    this.queryPurchases();
   }
   
   
@@ -72,10 +71,9 @@ export class PurchaseProvider {
       
       this.iap.restorePurchases().then(function (data) {
           
-          console.log(lthis.events, "restored purchases lthis.events");
+          console.log(data, "restored purchases data");
 
           for(let purchased of data){
-              
               
               lthis.events.publish('retrievePremiumExhibition', {id : purchased.productId })
               

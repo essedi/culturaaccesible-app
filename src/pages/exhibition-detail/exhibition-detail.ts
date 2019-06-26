@@ -74,7 +74,7 @@ export class ExhibitionDetail {
          this.beaconProvider.startRanging() 
          
       }
-         this.getExhibition(exhibition)
+       this.getExhibition(exhibition)
     }
     
     

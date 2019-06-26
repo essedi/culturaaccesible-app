@@ -5,12 +5,15 @@ page-exhibition-list {
 
   .image-col{
     border-right: 1px solid map-get($colors, background);
+    max-height: 250px;
+    overflow: hidden;
   }
 
   .info-col{
     color: map-get($colors, background);
     h2{
       font-size: 1.5em;
+      margin-bottom: 10px;
     }
   }
 

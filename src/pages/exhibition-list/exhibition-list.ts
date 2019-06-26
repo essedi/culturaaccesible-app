@@ -22,10 +22,8 @@ export class ExhibitionList {
   payed: boolean = false;
   purchases: any[] = [];
 
-
   public loadProgress : number = 0;  
   private url: string = this.envVariables.baseUrl;
-
 
 
   constructor(
@@ -44,26 +42,33 @@ export class ExhibitionList {
             private purchaseProvider: PurchaseProvider,
             @Inject(EnvVariables) private envVariables) { 
             
-
-            events.subscribe('retrievePremiumExhibition', (data) => {
+            this.purchaseProvider.queryPurchases();
+            
+            this.events.subscribe('retrievePremiumExhibition', (data) => {
                 //this.download(data.id, data.isoCode)
+                console.log(data, "retrievePremiumExhibition")
                 this.purchases.push(data);
             }) 
-
-           /* this.platform.resume.subscribe((result)=>{//Foreground
-                   console.log("platform resume");
-                  this.gpsProvider.startBackgroundGeolocation();
+          
+            this.platform.resume.subscribe((result)=>{//Foreground
+                console.log("platform resume");
+                this.gpsProvider.stopBackgroundGeolocation();
 
             });
             this.platform.pause.subscribe((result)=>{//Background
-                     console.log("platform pause");
-                     this.gpsProvider.startBackgroundGeolocation();
-            })*/
-              
+                console.log("platform pause");
+                this.gpsProvider.startBackgroundGeolocation();
+            })        
+            
+            events.publish('stopRanging');
+            events.publish('cleanLastTriggeredBeacon')
+
    }
    
    checkIfPayed(exhibition){
-              
+       
+       console.log(this.purchases , "this.purchases ")
+  
        if( this.purchases && exhibition.premium == true){
 
             for(let purchase of this.purchases)
@@ -73,17 +78,18 @@ export class ExhibitionList {
                    return true;
                 }
             }
-            
+           return false;
+
         }
-        return false;
    }
 
  
              
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
+   
     console.log("entered");
    }
    
@@ -116,7 +122,9 @@ export class ExhibitionList {
   }
 
   showNoExhibitionMessage() {
+      
     this.hasExhibitions = false
+    
   }
   
   purchaseExhibition(exhibition){
@@ -126,7 +134,9 @@ export class ExhibitionList {
   }
 
   isDownloaded(exhibition) {
+      
     return this.storedData.some(id => id === exhibition.id)
+    
   }
 
   filterExhibitions() {

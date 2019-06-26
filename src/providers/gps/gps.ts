@@ -15,7 +15,8 @@ export class GpsProvider {
   exhibition: any;
   stopGps: boolean ;
   logs: string[] = [];
-
+  data2: any;
+  disabledItems: any[] = [];
 
   constructor(
         public platform: Platform,
@@ -29,39 +30,49 @@ export class GpsProvider {
         private backgroundGeolocation: BackgroundGeolocation,
 
    ) {
- 
-        /*this.platform.resume.subscribe((result)=>{//Foreground
-                console.log("platform resume");
-                 this.startBackgroundGeolocation();
-        });
-        this.platform.pause.subscribe((result)=>{//Background
-                 console.log("platform pause");
-                 this.start();
-        });*/
+        this.events.subscribe('stopGps', (data) => {
 
+               if(data.stop == true)
+               {
+                   const obj = this.itemsExhibition.find( item => item.id === data.id );
+                   const obj2 = this.disabledItems.find( item => item.id === obj.id );
+
+                   if(!obj2){
+                       
+                      this.disabledItems.push(obj);
+                   }
+               }
+        });
     }
+    
   
    getItemLocation(){
-       
+              
     this.getLocation().then(
         (res: any) =>
         {
-            console.log(res,"<<<< exibition getlocationn gps");
 
            for(let item of this.itemsExhibition)
             {
-                
-                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
-                console.log(distance, "<<<< distancia en metros, needed 90");
-                
-                if(distance < 90)
-                {
-                    console.log("<<<< PLAY VIDEO AT 90 MTRS");
-                    
-                    this.showOpenItemAlert(item, this.exhibition.id );
-                    this.stopGps = true;
+               var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
+               console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
+                 
+               var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
+               
+               if(itemDisabled)
+               {
+                   console.log(itemDisabled, "DISABLED");
+                   
+               }else{
 
-                }
+                 if(distance < 90 )
+                 {
+
+                     this.showOpenItemAlert(item, this.exhibition.id );
+                     this.stopGps = true;
+                     this.events.publish('stopGps', {stop:true , id: item.id})
+                 }
+               }
             }
         },
         (err: any) =>
@@ -71,21 +82,24 @@ export class GpsProvider {
         });
   }
   
+  
 
 
    refreshTime(lthis = this)
-    {
-      if(this.stopGps == false)
-      {    
-        lthis.getItemLocation();  
-
-        setTimeout(function ()
+    {   
+        
+        if(this.stopGps == false )
         {
-            lthis.refreshTime(lthis);
 
-        }, 10000);
-          
-      } 
+           lthis.getItemLocation();  
+
+           setTimeout(function ()
+           {
+               lthis.refreshTime(lthis);
+
+           }, 10000);
+
+        }
     }
   
   
@@ -277,7 +291,9 @@ export class GpsProvider {
 
   retrieveItemByCoords(lat, lng, exhibitionId) 
   {
+      
     this.events.publish('retrieveItemByCoords', {lat:lat , lng: lng, exhibitionId: exhibitionId})
+    
   }
 
 
@@ -300,6 +316,7 @@ export class GpsProvider {
            // this.events.publish('startRanging')
             //this.stopGps = true;
             console.log('Cancel clicked');
+            this.events.publish('stopGps', {stop:true , id: item.id})
           }
         },
         {
@@ -309,6 +326,7 @@ export class GpsProvider {
             this.retrieveItemByCoords(item.lat, item.lng, exhibitionId)
             //this.stopGps = true;
            // this.events.publish('startRanging')
+
           }
         }
       ]
@@ -333,38 +351,43 @@ export class GpsProvider {
   }
 
    stopBackgroundGeolocation()
-  {
+  {   
     this.backgroundGeolocation.stop();
   }
   
   start()
   {
-
     const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      stationaryRadius: 1,
-      distanceFilter: 1,
-      debug: true,
-      stopOnTerminate: false,
-      // Android only section
-      locationProvider: 1,
-      startForeground: true,
-      interval: 6000,
-      fastestInterval: 5000,
-      activitiesInterval: 10000,
+            desiredAccuracy: 10,
+            stationaryRadius: 20,
+            distanceFilter: 30,
+            debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: false, // enable this to clear background location settings when the app terminates
     };
-    
-    this.backgroundGeolocation
-    .configure(config)
-    .subscribe((location: BackgroundGeolocationResponse) => {
-      console.log(location, "location11");
-      this.logs.push(`${location.latitude},${location.longitude}`);
-    });
+   
+    this.backgroundGeolocation.configure(config)
+      .subscribe((res) => {
+          
+          console.log(res,"LOCATION RES" );
 
+        this.backgroundGeolocation.onStationary().then((location: BackgroundGeolocationResponse) => {
+          console.log(location,"LOCATION");
 
-    console.log(this.logs, "LOGS");
+          // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
+          // and the background-task may be completed.  You must do this regardless if your operations are successful or not.
+          // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
+         // this.backgroundGeolocation.finish(); // FOR IOS ONLY
+        });
+
+      });
+ 
     // start recording location
     this.backgroundGeolocation.start();
+        
+    this.backgroundGeolocation.getLogEntries(20).then((res)=>{
+        console.log(res, "LOGS");
+        
+    });
     
 
   }

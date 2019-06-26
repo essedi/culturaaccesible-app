@@ -11,16 +11,14 @@
 
 <ion-content class="blue-background">
     
-  
-
     <ion-list *ngIf="hasExhibitions" id="exhibition-list">
         <ion-card class="exhibition-item" *ngFor="let exhibition of exhibitions">
             <ion-grid>
               <ion-row>
-                <ion-col col-5 class="image-col">
+                <ion-col col-12 class="image-col">
                   <img (click)="goToDetail(exhibition)" src={{exhibition.image}}/>
                 </ion-col>
-                <ion-col col-7 class="info-col">
+                <ion-col col-12 class="info-col">
                   <h2 (click)="goToDetail(exhibition)">
                     {{exhibition.name}}
                   </h2>
@@ -47,7 +45,7 @@
                 </ion-col>
                 
                 <ion-col col-6 class="right" *ngIf="exhibition.premium == true">
-                  <button *ngIf=" !checkIfPayed(exhibition)" ion-button  color="primary" (click)="purchaseExhibition(exhibition)">
+                  <button *ngIf="!checkIfPayed(exhibition)" ion-button  color="primary" (click)="purchaseExhibition(exhibition)">
                       Comprar <ion-icon name="card"></ion-icon> 
                   </button>
                   <button ion-button  color="primary" *ngIf="!isDownloaded(exhibition) && checkIfPayed(exhibition)" (click)="goToDetail(exhibition)">
