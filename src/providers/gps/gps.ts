@@ -5,7 +5,7 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+//import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 
 
 @Injectable()
@@ -27,7 +27,7 @@ export class GpsProvider {
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
         private openSettings: OpenNativeSettings,
-        private backgroundGeolocation: BackgroundGeolocation,
+       // private backgroundGeolocation: BackgroundGeolocation,
 
    ) {
         this.events.subscribe('stopGps', (data) => {
@@ -335,7 +335,7 @@ export class GpsProvider {
   }
   
   
-  
+  /*
    startBackgroundGeolocation()
    {
     this.backgroundGeolocation.isLocationEnabled()
@@ -391,7 +391,7 @@ export class GpsProvider {
     
 
   }
-
+*/
   
 
 

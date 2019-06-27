@@ -20,7 +20,6 @@
     "@angular/http": "4.1.0",
     "@angular/platform-browser": "4.1.0",
     "@angular/platform-browser-dynamic": "4.1.0",
-    "@ionic-native/background-geolocation": "^3.14.0",
     "@ionic-native/core": "3.7.0",
     "@ionic-native/diagnostic": "^4.18.0",
     "@ionic-native/file": "^4.3.2",
@@ -53,8 +52,6 @@
     "cordova-plugin-inapppurchase": "1.2.0",
     "cordova-plugin-ionic": "^4.2.0",
     "cordova-plugin-ionic-webview": "^4.0.1",
-    "cordova-plugin-local-notification": "0.9.0-beta.2",
-    "cordova-plugin-mauron85-background-geolocation": "^2.3.6",
     "cordova-plugin-nativestorage": "^2.3.2",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -127,16 +124,6 @@
       "cordova-plugin-googlemaps": {
         "PLAY_SERVICES_VERSION": "15.0.1",
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      },
-      "cordova-plugin-mauron85-background-geolocation": {
-        "GOOGLE_PLAY_SERVICES_VERSION": "11+",
-        "ANDROID_SUPPORT_LIBRARY_VERSION": "23+",
-        "ICON": "@mipmap/ic_launcher",
-        "SMALL_ICON": "@mipmap/ic_launcher",
-        "ACCOUNT_NAME": "@string/app_name",
-        "ACCOUNT_LABEL": "@string/app_name",
-        "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
-        "CONTENT_AUTHORITY": "$PACKAGE_NAME"
       }
     },
     "platforms": [

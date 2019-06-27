@@ -50,7 +50,7 @@ export class ExhibitionList {
                 this.purchases.push(data);
             }) 
           
-            this.platform.resume.subscribe((result)=>{//Foreground
+          /*  this.platform.resume.subscribe((result)=>{//Foreground
                 console.log("platform resume");
                 this.gpsProvider.stopBackgroundGeolocation();
 
@@ -58,7 +58,7 @@ export class ExhibitionList {
             this.platform.pause.subscribe((result)=>{//Background
                 console.log("platform pause");
                 this.gpsProvider.startBackgroundGeolocation();
-            })   
+            })   */
                         
             
    }
