@@ -5,7 +5,7 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
-//import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
 
 
 @Injectable()
@@ -17,6 +17,14 @@ export class GpsProvider {
   logs: string[] = [];
   data2: any;
   disabledItems: any[] = [];
+  
+  config: BackgroundGeolocationConfig = {
+      desiredAccuracy: 10,
+      stationaryRadius: 20,
+      distanceFilter: 30,
+      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+      stopOnTerminate: false // enable this to clear background location settings when the app terminates
+    };
 
   constructor(
         public platform: Platform,
@@ -27,7 +35,7 @@ export class GpsProvider {
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
         private openSettings: OpenNativeSettings,
-       // private backgroundGeolocation: BackgroundGeolocation,
+        private backgroundGeolocation: BackgroundGeolocation
 
    ) {
         this.events.subscribe('stopGps', (data) => {
@@ -335,63 +343,44 @@ export class GpsProvider {
   }
   
   
-  /*
-   startBackgroundGeolocation()
-   {
-    this.backgroundGeolocation.isLocationEnabled()
-    .then((rta) =>{
-      if(rta)
-      {
-        this.start();
-      }else 
-      {
-        this.backgroundGeolocation.showLocationSettings();
-      }
-    })
-  }
-
+  
+ 
    stopBackgroundGeolocation()
   {   
     this.backgroundGeolocation.stop();
   }
   
-  start()
-  {
-    const config: BackgroundGeolocationConfig = {
-            desiredAccuracy: 10,
-            stationaryRadius: 20,
-            distanceFilter: 30,
-            debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-            stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-    };
-   
-    this.backgroundGeolocation.configure(config)
-      .subscribe((res) => {
-          
-          console.log(res,"LOCATION RES" );
-
-        this.backgroundGeolocation.onStationary().then((location: BackgroundGeolocationResponse) => {
-          console.log(location,"LOCATION");
-
-          // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
-          // and the background-task may be completed.  You must do this regardless if your operations are successful or not.
-          // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-         // this.backgroundGeolocation.finish(); // FOR IOS ONLY
-        });
-
-      });
+  
  
-    // start recording location
-    this.backgroundGeolocation.start();
-        
-    this.backgroundGeolocation.getLogEntries(20).then((res)=>{
-        console.log(res, "LOGS");
-        
-    });
-    
+  
+  
+  startBackgroundGeolocation()
+  {
+      var lthis = this;
+      
+      (function runForever(){
+        // Do something here
+          
+        lthis.backgroundGeolocation.configure(lthis.config).then(() => {
+            lthis.backgroundGeolocation
+              .on(BackgroundGeolocationEvents.location)
+              .subscribe((location: BackgroundGeolocationResponse) => {
 
-  }
-*/
+                    console.log(location, "LOCATION WORKS!");
+              });
+         });
+
+         // start recording location
+        lthis.backgroundGeolocation.start(); 
+
+
+      setTimeout(runForever, 5000)
+    })()
+
+
+
+   }
+
   
 
 
