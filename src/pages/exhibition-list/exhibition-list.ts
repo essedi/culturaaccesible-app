@@ -58,11 +58,9 @@ export class ExhibitionList {
             this.platform.pause.subscribe((result)=>{//Background
                 console.log("platform pause");
                 this.gpsProvider.startBackgroundGeolocation();
-            })        
+            })   
+                        
             
-            events.publish('stopRanging');
-            events.publish('cleanLastTriggeredBeacon')
-
    }
    
    checkIfPayed(exhibition){
@@ -79,7 +77,6 @@ export class ExhibitionList {
                 }
             }
            return false;
-
         }
    }
 

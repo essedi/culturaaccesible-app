@@ -264,9 +264,8 @@ export class BeaconProvider {
           text: messages['BUTTONS']['NO'],
           role: 'cancel',
           handler: () => {
-           // this.events.publish('startRanging')
+            this.events.publish('startRanging')
             console.log('Cancel clicked');
-                this.events.publish('stopRanging')
 
           }
         },
@@ -275,8 +274,7 @@ export class BeaconProvider {
           handler: () => {
             //this.stopReadBeacon = true;
             this.retrieveItemByBeacon(beaconNumber, exhibitionId)
-            //this.events.publish('startRanging')
-                this.events.publish('stopRanging')
+            this.events.publish('startRanging')
 
           }
         }

@@ -56,29 +56,34 @@ export class ExhibitionDetail {
     }
 
    ionViewWillEnter() {
-       
+
       this.beaconProvider.stopReadBeacon = false;
       let exhibition: any = this.navParams.get('exhibition')
-      console.log(exhibition, "this exihibition 2");
-
-     
+      console.log(exhibition);
+      
       if(exhibition.locationType == "gps")
        {
           this.gpsProvider.stopGps = false;
-          console.log( "gps location");
           this.gpsProvider.refreshTime();
 
       }else{ 
       
-         console.log("beacon location");
          this.beaconProvider.startRanging() 
          
       }
        this.getExhibition(exhibition)
     }
     
-    
 
+    
+ ionViewWillLeave(){
+        
+        this.beaconProvider.stopRanging();
+        this.beaconProvider.stopReadBeacon = true;
+
+        console.log("ionViewDidLeave");
+    }
+    
     ionViewWillUnload() {
         
       this.gpsProvider.stopGps = true;
