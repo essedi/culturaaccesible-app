@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 
@@ -30,6 +30,7 @@ export class MapPage {
   constructor(
         public navCtrl: NavController, 
         public navParams: NavParams,
+        public platform: Platform,
         private geolocation: Geolocation,
         public googleMaps: GoogleMaps,) {
       
@@ -40,8 +41,10 @@ export class MapPage {
 
   ionViewDidLoad() 
   {
-      
-    this.getPosition();
+     this.platform.ready().then(() => {
+       this.getPosition();
+    });
+   
     
   }
   

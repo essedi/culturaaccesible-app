@@ -45,22 +45,11 @@ export class ExhibitionList {
             this.purchaseProvider.queryPurchases();
             
             this.events.subscribe('retrievePremiumExhibition', (data) => {
-                //this.download(data.id, data.isoCode)
-                console.log(data, "retrievePremiumExhibition")
+                //console.log(data, "retrievePremiumExhibition")
                 this.purchases.push(data);
             }) 
           
-            this.platform.resume.subscribe((result)=>{//Foreground
-                console.log("platform resume");
-                this.gpsProvider.stopBackgroundGeolocation();
-            });
-            
-            this.platform.pause.subscribe((result)=>{//Background
-                console.log("platform pause");
-                this.gpsProvider.startBackgroundGeolocation();
-            })   
-                        
-            
+                 
    }
    
    checkIfPayed(exhibition){
@@ -86,7 +75,6 @@ export class ExhibitionList {
     this.getStoredData()
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
-   
     console.log("entered");
    }
    

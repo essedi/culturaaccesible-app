@@ -35,11 +35,11 @@ export class PurchaseProvider {
         .catch((err) => {
           console.log(err);
         });
-        
   }
   
   
   buyProducts(products){
+   
       
     for(let product of products){
         
@@ -50,10 +50,13 @@ export class PurchaseProvider {
           // The consume() function should only be called after purchasing consumable products
           // otherwise, you should skip this step
          // return this.iap.consume("consumable", data.receipt, data.signature);
+          location.reload();
+
         })
         .then(function () {
             
-          console.log('consume done!');           
+          console.log('consume done!');  
+
          // 
          
         })

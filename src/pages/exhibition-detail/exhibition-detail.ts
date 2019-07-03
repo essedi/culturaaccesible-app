@@ -17,6 +17,7 @@ export class ExhibitionDetail {
     hasItems: boolean = false;
     items: Array<Object>;
     map: any;
+    notification: any;
 
     constructor(public navCtrl: NavController,
                 public alertCtrl: AlertController,
@@ -39,7 +40,6 @@ export class ExhibitionDetail {
         events.subscribe('exhibitionUnlocked', (data) => {
           lthis.unlockExhibition(exhibition)
         })
-        
        
         platform.ready().then(() => {
           if(exhibition){
@@ -50,9 +50,25 @@ export class ExhibitionDetail {
                     beaconProvider.isInitialized = true
                     }
                   });
-                }
-             }
+               }else if(exhibition.locationType == "gps"){
+                   
+                    this.platform.resume.subscribe((result)=>{//Foreground
+                        console.log("platform resume");
+                       this.gpsProvider.stopBackgroundGeolocation();
+
+                    });
+
+                    this.platform.pause.subscribe((result)=>{//Background
+                        console.log("platform pause");
+                        this.gpsProvider.startBackgroundGeolocation();
+                        
+                    })   
+               }
+            }
         });
+        
+        this.notification = this.gpsProvider.notification;
+        console.log(this.notification, "notification");
     }
 
    ionViewWillEnter() {
@@ -65,6 +81,7 @@ export class ExhibitionDetail {
        {
           this.gpsProvider.stopGps = false;
           this.gpsProvider.refreshTime();
+             
 
       }else{ 
       

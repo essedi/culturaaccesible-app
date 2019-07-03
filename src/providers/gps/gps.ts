@@ -6,6 +6,7 @@ import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 @Injectable()
@@ -15,15 +16,23 @@ export class GpsProvider {
   exhibition: any;
   stopGps: boolean ;
   logs: string[] = [];
-  data2: any;
+  notification: any;
   disabledItems: any[] = [];
+  isAndroid: boolean = true;
+  alertItem: any;
   
   config: BackgroundGeolocationConfig = {
       desiredAccuracy: 10,
       stationaryRadius: 20,
       distanceFilter: 30,
       debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: false // enable this to clear background location settings when the app terminates
+      stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+      // Android only section
+      locationProvider: 1,
+      startForeground: true,
+      interval: 3000,
+      fastestInterval: 2000,
+      activitiesInterval: 10000,
     };
 
   constructor(
@@ -34,13 +43,14 @@ export class GpsProvider {
         private storage: NativeStorage,
         private geolocation: Geolocation,
         private diagnostic: Diagnostic,
+        private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings,
         private backgroundGeolocation: BackgroundGeolocation
 
    ) {
         this.events.subscribe('stopGps', (data) => {
 
-               if(data.stop == true)
+             /*  if(data.stop == true)
                {
                    const obj = this.itemsExhibition.find( item => item.id === data.id );
                    const obj2 = this.disabledItems.find( item => item.id === obj.id );
@@ -49,7 +59,21 @@ export class GpsProvider {
                        
                       this.disabledItems.push(obj);
                    }
-               }
+               }*/
+        });
+        
+        
+        this.platform.ready().then(() => {
+            
+           // this.setNotification();
+            console.log( "1notificaionnnnn");
+            this.localNotifications.on('trigger').subscribe((noti)=> { 
+
+                console.log(noti , "notiffff clicked");
+                this.showOpenItemAlert(this.alertItem, this.exhibition.id );
+
+            });
+           
         });
     }
     
@@ -358,31 +382,84 @@ export class GpsProvider {
   {
       var lthis = this;
       
+      
       (function runForever(){
         // Do something here
-          
+
         lthis.backgroundGeolocation.configure(lthis.config).then(() => {
             lthis.backgroundGeolocation
               .on(BackgroundGeolocationEvents.location)
               .subscribe((location: BackgroundGeolocationResponse) => {
 
-                    console.log(location, "LOCATION WORKS!");
-              });
+                    console.log(location, "BACKGROUND LOCATION WORKS!");
+                    
+                    for(let item of lthis.itemsExhibition)
+                    {
+                       var distance = lthis.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
+
+                       var itemDisabled = lthis.disabledItems.find( obj => obj.id == item.id );
+                       
+
+                       if(itemDisabled)
+                       {
+                         console.log(itemDisabled, "BG ITEM DISABLED");
+
+                       }else{
+
+                            if(distance < 90  )
+                            {
+                                lthis.alertItem = item;
+                                lthis.setNotification();
+                                lthis.disabledItems.push(item);
+                            }
+                       }
+                    }  
+               });
          });
-
+         
+        
          // start recording location
-        lthis.backgroundGeolocation.start(); 
+      lthis.backgroundGeolocation.start(); 
 
-
-      setTimeout(runForever, 5000)
+      setTimeout(runForever, 2000)
     })()
+    
 
-
+   // this.backgroundGeolocation.start();
+    
 
    }
 
+
+    setNotification(){
+        
   
+        this.localNotifications.schedule({
+           text: 'Location Notification 2',
+           title: 'Design team meeting',
+           id: 1,
+          // trigger: { at:new Date(new Date().getTime()) },
+           sound:'file://assets/ring.mp3' ,
+           vibrate: true,
+           foreground: false
 
+        }); 
+      
+         
+   
+    }
+    
+    
+    playSound(){
 
+        return 'http://mattersofgrey.com/audio/DEX-Gen-MainThemeDing.mp3';
+    }
+
+    clearNotification(){
+        
+        this.localNotifications.clearAll();
+         
+    }
+  
 
 }
