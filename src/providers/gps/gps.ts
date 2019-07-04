@@ -66,7 +66,8 @@ export class GpsProvider {
         this.platform.ready().then(() => {
 
             this.localNotifications.on('trigger').subscribe((noti)=> { 
-
+                
+                //navigator.vibrate(1500);
                 console.log(noti , "notif triggered");
                 this.showOpenItemAlert(this.alertItem, this.exhibition.id );
 
@@ -75,16 +76,16 @@ export class GpsProvider {
     }
     
   
-   getItemLocation(){
+   getItemLocation()
+   {
               
     this.getLocation().then(
         (res: any) =>
         {
-
            for(let item of this.itemsExhibition)
             {
                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
-               console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
+              // console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
                  
                var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
                
@@ -96,7 +97,6 @@ export class GpsProvider {
                {
                  if(distance < 90 )
                  {
-
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.stopGps = true;
                      this.events.publish('stopGps', {stop:true , id: item.id})
@@ -422,8 +422,8 @@ export class GpsProvider {
    }
 
 
-    setNotification(){
-        
+    setNotification()
+    {    
         this.localNotifications.schedule({
            text: 'Location Notification ',
            title: 'You are near an exhibition',
@@ -433,7 +433,8 @@ export class GpsProvider {
            vibrate: true,
            foreground: false
 
-        }); 
+        });
+
     }
     
     

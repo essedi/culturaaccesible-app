@@ -76,14 +76,11 @@ export class PurchaseProvider {
           
           console.log(data, "restored purchases data");
 
-          for(let purchased of data){
-              
+          for(let purchased of data)
+          {
               lthis.events.publish('retrievePremiumExhibition', {id : purchased.productId })
-              
-
           }
-                 
-        })
+      })
   }
   
   
