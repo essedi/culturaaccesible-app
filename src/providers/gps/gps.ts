@@ -64,12 +64,10 @@ export class GpsProvider {
         
         
         this.platform.ready().then(() => {
-            
-           // this.setNotification();
-            console.log("1notificaionnnnn");
+
             this.localNotifications.on('trigger').subscribe((noti)=> { 
 
-                console.log(noti , "notiffff clicked");
+                console.log(noti , "notif triggered");
                 this.showOpenItemAlert(this.alertItem, this.exhibition.id );
 
             });
@@ -146,11 +144,11 @@ export class GpsProvider {
                     if (!opt)
                     {
                         opt =
-                            {
-                                maximumAge: 10000,
-                                enableHighAccuracy: res,
-                                timeout: 10000
-                            }
+                        {
+                            maximumAge: 10000,
+                            enableHighAccuracy: res,
+                            timeout: 10000
+                        }
                     }
                     lthis.geolocation.getCurrentPosition(opt).then(
                         (res) =>
