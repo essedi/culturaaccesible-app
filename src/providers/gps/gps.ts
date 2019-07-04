@@ -29,7 +29,6 @@ export class GpsProvider {
       stopOnTerminate: false, // enable this to clear background location settings when the app terminates
       // Android only section
       locationProvider: 1,
-      startForeground: true,
       interval: 3000,
       fastestInterval: 2000,
       activitiesInterval: 10000,
@@ -50,18 +49,17 @@ export class GpsProvider {
    ) {
         this.events.subscribe('stopGps', (data) => {
 
-                if(data.stop == true)
-                {
-                    const obj = this.itemsExhibition.find( item => item.id === data.id );
-                    const obj2 = this.disabledItems.find( item => item.id === obj.id );
+            if(data.stop == true)
+            {
+                const obj = this.itemsExhibition.find( item => item.id === data.id );
+                const obj2 = this.disabledItems.find( item => item.id === obj.id );
 
-                    if(!obj2)
-                    {
-                       this.disabledItems.push(obj);
-                    }
+                if(!obj2)
+                {
+                   this.disabledItems.push(obj);
                 }
+            }
         });
-        
         
         this.platform.ready().then(() => {
 
@@ -374,21 +372,21 @@ export class GpsProvider {
       var lthis = this;
       
       
-      (function runForever(){
+   //   (function runForever(){
         // Do something here
 
-        lthis.backgroundGeolocation.configure(lthis.config).then(() => {
-            lthis.backgroundGeolocation
+        this.backgroundGeolocation.configure(this.config).then(() => {
+            this.backgroundGeolocation
               .on(BackgroundGeolocationEvents.location)
               .subscribe((location: BackgroundGeolocationResponse) => {
 
                     console.log(location, "BACKGROUND LOCATION WORKS!");
                     
-                    for(let item of lthis.itemsExhibition)
+                    for(let item of this.itemsExhibition)
                     {
-                       var distance = lthis.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
+                       var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
 
-                       var itemDisabled = lthis.disabledItems.find( obj => obj.id == item.id );
+                       var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
                        
 
                        if(itemDisabled)
@@ -399,22 +397,25 @@ export class GpsProvider {
 
                             if(distance < 90  )
                             {
-                                lthis.alertItem = item;
-                                lthis.setNotification();
+                                this.alertItem = item;
+                                this.setNotification();
                                 console.log("PLAY SOUND");
-                                lthis.disabledItems.push(item);
+                                this.disabledItems.push(item);
                             }
                        }
                     }  
+                    
+                   this.backgroundGeolocation.finish(); // IOS Only
                });
          });
          
-        
-         // start recording location
-      lthis.backgroundGeolocation.start(); 
+         
+         
+      // start recording location
+      this.backgroundGeolocation.start(); 
 
-      setTimeout(runForever, 10000)
-    })()
+    //  setTimeout(runForever, 10000)
+    //  })()
     
 
    // this.backgroundGeolocation.start();
