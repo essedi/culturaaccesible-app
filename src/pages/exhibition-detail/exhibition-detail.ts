@@ -61,7 +61,7 @@ export class ExhibitionDetail {
                     this.platform.pause.subscribe((result)=>{//Background
                         console.log("platform pause");
                         this.gpsProvider.startBackgroundGeolocation();
-                        
+
                     })   
                }
             }
@@ -81,7 +81,6 @@ export class ExhibitionDetail {
        {
           this.gpsProvider.stopGps = false;
           this.gpsProvider.refreshTime();
-             
 
       }else{ 
       
@@ -90,7 +89,6 @@ export class ExhibitionDetail {
       }
        this.getExhibition(exhibition)
     }
-    
 
     
  ionViewWillLeave(){

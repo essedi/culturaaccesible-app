@@ -50,30 +50,29 @@ export class GpsProvider {
    ) {
         this.events.subscribe('stopGps', (data) => {
 
-             /*  if(data.stop == true)
-               {
-                   const obj = this.itemsExhibition.find( item => item.id === data.id );
-                   const obj2 = this.disabledItems.find( item => item.id === obj.id );
+                if(data.stop == true)
+                {
+                    const obj = this.itemsExhibition.find( item => item.id === data.id );
+                    const obj2 = this.disabledItems.find( item => item.id === obj.id );
 
-                   if(!obj2){
-                       
-                      this.disabledItems.push(obj);
-                   }
-               }*/
+                    if(!obj2)
+                    {
+                       this.disabledItems.push(obj);
+                    }
+                }
         });
         
         
         this.platform.ready().then(() => {
             
            // this.setNotification();
-            console.log( "1notificaionnnnn");
+            console.log("1notificaionnnnn");
             this.localNotifications.on('trigger').subscribe((noti)=> { 
 
                 console.log(noti , "notiffff clicked");
                 this.showOpenItemAlert(this.alertItem, this.exhibition.id );
 
             });
-           
         });
     }
     
@@ -95,8 +94,8 @@ export class GpsProvider {
                {
                    console.log(itemDisabled, "DISABLED");
                    
-               }else{
-
+               }else
+               {
                  if(distance < 90 )
                  {
 
@@ -166,7 +165,6 @@ export class GpsProvider {
 
                         }
                     );
-                    
                 },
                 () =>
                 {
@@ -174,8 +172,8 @@ export class GpsProvider {
                 }
             );
         });
-
     }
+    
     checkLocation()
     {
         let lthis = this;
@@ -366,16 +364,11 @@ export class GpsProvider {
     alert.present();
   }
   
-  
-  
- 
+
    stopBackgroundGeolocation()
   {   
     this.backgroundGeolocation.stop();
   }
-  
-  
- 
   
   
   startBackgroundGeolocation()
@@ -410,6 +403,7 @@ export class GpsProvider {
                             {
                                 lthis.alertItem = item;
                                 lthis.setNotification();
+                                console.log("PLAY SOUND");
                                 lthis.disabledItems.push(item);
                             }
                        }
@@ -421,22 +415,20 @@ export class GpsProvider {
          // start recording location
       lthis.backgroundGeolocation.start(); 
 
-      setTimeout(runForever, 2000)
+      setTimeout(runForever, 10000)
     })()
     
 
    // this.backgroundGeolocation.start();
-    
 
    }
 
 
     setNotification(){
         
-  
         this.localNotifications.schedule({
-           text: 'Location Notification 2',
-           title: 'Design team meeting',
+           text: 'Location Notification ',
+           title: 'You are near an exhibition',
            id: 1,
           // trigger: { at:new Date(new Date().getTime()) },
            sound:'file://assets/ring.mp3' ,
@@ -444,15 +436,12 @@ export class GpsProvider {
            foreground: false
 
         }); 
-      
-         
-   
     }
     
     
     playSound(){
 
-        return 'http://mattersofgrey.com/audio/DEX-Gen-MainThemeDing.mp3';
+        return 'file://assets/ring.mp3';
     }
 
     clearNotification(){

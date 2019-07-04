@@ -12,10 +12,10 @@
         <ion-card class="exhibition-item" *ngFor="let exhibition of exhibitions">
             <ion-grid>
               <ion-row>
-                <ion-col col-12 class="image-col">
+                <ion-col col-4 class="image-col">
                   <img (click)="goToDetail(exhibition)" src={{exhibition.image}}/>
                 </ion-col>
-                <ion-col col-12 class="info-col">
+                <ion-col col-8 class="info-col">
                   <h2 (click)="goToDetail(exhibition)">
                     {{exhibition.name}}
                   </h2>
@@ -29,7 +29,7 @@
                   <button ion-button clear color="background" *ngIf="isDownloaded(exhibition)" (click)="delete(exhibition)">
                       <ion-icon class="delete" name="ios-trash"></ion-icon>
                   </button>
-                </ion-col >
+                </ion-col>
                 
                 <ion-col col-6 class="right"  *ngIf="exhibition.premium != true">
                   <button ion-button  color="primary" *ngIf="!isDownloaded(exhibition)" (click)="goToDetail(exhibition)">
@@ -42,7 +42,6 @@
                 </ion-col>
                 
                 <ion-col col-6 class="right" *ngIf="exhibition.premium == true">
-                      
                   <button *ngIf="!checkIfPayed(exhibition)" ion-button  color="primary" (click)="purchaseExhibition(exhibition)">
                       Comprar <ion-icon name="card"></ion-icon> 
                   </button>
@@ -56,7 +55,7 @@
                 </ion-col>
               </ion-row>
 
-            <div  style="width: 100%; background-color: grey;">
+            <div style="width: 100%; background-color: grey;">
               <div id="myProgressBar{{exhibition.id}}" style="width: 1%; height: 26px; background-color: green; display:none; text-align:center; font-size: 16px; color: white ">
                   {{ loadProgress }} % 
               </div>
@@ -72,9 +71,7 @@
                           
         </ion-card>
     </ion-list>
-    
-
-    
+   
     <div *ngIf="!hasExhibitions" class="message-container">
         <img class="image" src="https://trello-attachments.s3.amazonaws.com/58e4c7c3c40db2d4f44c74aa/592d2b06ccd804051d2bd314/9126f357c17774b961ed645becdc6a0c/favicon.png">
         <div class="wrapper">
