@@ -12,10 +12,10 @@
         <ion-card class="exhibition-item" *ngFor="let exhibition of exhibitions">
             <ion-grid>
               <ion-row>
-                <ion-col col-4 class="image-col">
+                <ion-col col-12 class="image-col">
                   <img (click)="goToDetail(exhibition)" src={{exhibition.image}}/>
                 </ion-col>
-                <ion-col col-8 class="info-col">
+                <ion-col col-12 class="info-col">
                   <h2 (click)="goToDetail(exhibition)">
                     {{exhibition.name}}
                   </h2>

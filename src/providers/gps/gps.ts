@@ -48,8 +48,7 @@ export class GpsProvider {
 
    ) {
    
-
-   
+  
         this.events.subscribe('stopGps', (data) => {
 
             if(data.stop == true)
@@ -371,11 +370,7 @@ export class GpsProvider {
   
   startBackgroundGeolocation()
   {
-      var lthis = this;
-      
-      
-   //   (function runForever(){
-        // Do something here
+   
 
         this.backgroundGeolocation.configure(this.config).then(() => {
             this.backgroundGeolocation
@@ -416,11 +411,6 @@ export class GpsProvider {
       // start recording location
       this.backgroundGeolocation.start(); 
 
-    //  setTimeout(runForever, 10000)
-    //  })()
-    
-
-   // this.backgroundGeolocation.start();
 
    }
 
