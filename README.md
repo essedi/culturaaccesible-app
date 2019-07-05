@@ -1,9 +1,10 @@
 # culturaaccesible-app
 
 
-add  android:usesCleartextTraffic="true" in application tag of AndroidManifest.xml
+if list exhibition list is not showing add  android:usesCleartextTraffic="true" in application tag of AndroidManifest.xml
 
-
+ ios package bundle  com.itbook.audioguias
+android package com.essedi.itbook.audioguias
 
 <strong>Build with</strong>
 
