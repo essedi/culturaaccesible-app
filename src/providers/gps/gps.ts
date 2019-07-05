@@ -47,6 +47,9 @@ export class GpsProvider {
         private backgroundGeolocation: BackgroundGeolocation
 
    ) {
+   
+
+   
         this.events.subscribe('stopGps', (data) => {
 
             if(data.stop == true)
@@ -84,7 +87,6 @@ export class GpsProvider {
             {
                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
               // console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
-                 
                var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
                
                if(itemDisabled)
@@ -424,10 +426,17 @@ export class GpsProvider {
 
 
     setNotification()
-    {    
+    { 
+        
+        let messages;
+
+        this.translate.get('EXHIBITIONS.NOTIFICATION').subscribe(data => {
+          messages = data
+        })
+       
         this.localNotifications.schedule({
-           text: 'Location Notification ',
-           title: 'You are near an exhibition',
+           text: messages['TEXT'],
+           title: messages['TITLE'],
            id: 1,
           // trigger: { at:new Date(new Date().getTime()) },
            sound:'file://assets/ring.mp3' ,

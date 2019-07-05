@@ -310,11 +310,12 @@ export class ExhibitionList {
             barElement.style.width = width + '%';
 
           }
-        }
+      }
   }
   
   
-  goToDetail(exhibition) {
+  goToDetail(exhibition) 
+  {
     this.nativeStorage.getItem(exhibition.id)
       .then(
         exhibition => {
@@ -324,7 +325,6 @@ export class ExhibitionList {
       .catch(
         error => {
           this.askLanguage(exhibition)
-
         });
   }
 

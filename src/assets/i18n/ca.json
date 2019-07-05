@@ -31,6 +31,13 @@
         },
         "BUTTONS": {
             "MUSEUM": "Museu"
+        },
+         "NOTIFICATION":{
+            "TITLE":"Hi ha una exhibició prop",
+            "TEXT":"Feix click per a veure el vídeo"
+        },
+         "MAP":{
+            "LOCATION": " La teua localització "
         }
     },
     "MUSEUM": {

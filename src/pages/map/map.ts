@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import { TranslateService } from '@ngx-translate/core';
 
 
 //declare var google; 
@@ -31,6 +32,7 @@ export class MapPage {
         public navCtrl: NavController, 
         public navParams: NavParams,
         public platform: Platform,
+        public translate: TranslateService,
         private geolocation: Geolocation,
         public googleMaps: GoogleMaps,) {
       
@@ -64,6 +66,14 @@ export class MapPage {
          let latitude = position.coords.latitude;
          let longitude = position.coords.longitude;
          let map = GoogleMaps.create(this.element.nativeElement);
+         
+         let message;
+       
+         this.translate.get('EXHIBITIONS.MAP').subscribe(data => {
+             message = data
+         })
+
+         console.log(message , "messageeeeeeeeeeeeeeee");
 
          map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
             
@@ -80,7 +90,7 @@ export class MapPage {
 
            let markerOptions: MarkerOptions = {
              position: coordinates,
-             title: 'your location',
+             title: message["LOCATION"],
              icon: '../../../resources/red-circle.png',
            };
 

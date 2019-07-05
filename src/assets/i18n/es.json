@@ -31,6 +31,13 @@
         },
         "BUTTONS": {
             "MUSEUM": "Museo"
+        },
+        "NOTIFICATION":{
+            "TITLE":"Estas cerca de una exhibición",
+            "TEXT":"Clickea para ver el video"
+        },
+          "MAP":{
+            "LOCATION": " Tú ubicación "
         }
     },
     "MUSEUM": {
