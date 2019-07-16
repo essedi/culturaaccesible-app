@@ -87,11 +87,59 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>Se necesita acceso a tu ubicación para encontrar puntos de referencia cercanos.</string>
-        </edit-config>
+        <icon height="20" src="resources/ios/icon/icon-20.png" width="20" />
+        <icon height="40" src="resources/ios/icon/icon-20@2x.png" width="40" />
+        <icon height="60" src="resources/ios/icon/icon-20@3x.png" width="60" />
+        <icon height="29" src="resources/ios/icon/icon-29.png" width="29" />
+        <icon height="58" src="resources/ios/icon/icon-29@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/icon-29@3x.png" width="87" />
+        <icon height="48" src="resources/ios/icon/icon-24@2x.png" width="48" />
+        <icon height="55" src="resources/ios/icon/icon-27.5@2x.png" width="55" />
+        <icon height="88" src="resources/ios/icon/icon-44@2x.png" width="88" />
+        <icon height="172" src="resources/ios/icon/icon-86@2x.png" width="172" />
+        <icon height="196" src="resources/ios/icon/icon-98@2x.png" width="196" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+        <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
+        <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
+        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
         <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
             <string>Spanish</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Esta aplicación necesita acceso a tu ubicación para calcular la distancia de los puntos de interés.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>Esta aplicación necesita saber siempre tu ubicación, incluso estando en modo inactivo para calcular la distancia de los puntos de interés.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Esta App quiere saber tu ubicación cuando esta activa solamente. </string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothPeripheralUsageDescription">
+            <string> Esta aplicación necesita acceso a bluetooth para funcionar correctamente</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Esta App siempre requiere hacer seguimiento de tu localización.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>Esta App requiere acceso a tu camara para funcionar correctamente.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>Esta App requiere acceso a la librería de fotos para funcionar correctamente. </string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
+            <string>Esta App requiere acceso al microfono para funcionar correctamente.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSContactsUsageDescription">
+            <string>Esta App requiere acceso a tus contactos para funcionar correctamente.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSCalendarsUsageDescription">
+            <string>Esta App requiere acceso al calendario para funcionar correctamente.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSRemindersUsageDescription">
+            <string>Esta App requiere recordatorios de acceso para funcionar correctamente.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSMotionUsageDescription">
+            <string>Esta App requiere detector de movimiento.</string>
         </edit-config>
     </platform>
     <plugin name="com.unarin.cordova.beacon" spec="^3.5.2" />
