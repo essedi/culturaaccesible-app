@@ -51,16 +51,23 @@ export class ExhibitionDetail {
                     }
                   });
                }else if(exhibition.locationType == "gps"){
-                   
+               
                     this.platform.resume.subscribe((result)=>{//Foreground
                         console.log("platform resume");
+                        this.gpsProvider.stopGps = true;
                        this.gpsProvider.stopBackgroundGeolocation();
-
+                      
+                       
+                       console.log(this.gpsProvider.repeat , "this.gpsProvider.repeat ");
                     });
 
                     this.platform.pause.subscribe((result)=>{//Background
                         console.log("platform pause");
+                        this.gpsProvider.stopGps  = false;
                         this.gpsProvider.startBackgroundGeolocation();
+                        
+                        
+                        console.log(this.gpsProvider.repeat , "this.gpsProvider.repeat ");
 
                     })   
                }
@@ -169,7 +176,7 @@ export class ExhibitionDetail {
     
     viewMap()
     {
-        this.navCtrl.push('MapPage', {items: this.items })
+        this.navCtrl.push('MapPage', {items: this.items, exhibition: this.exhibition })
     }
 
     goToMuseum()

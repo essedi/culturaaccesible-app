@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform , Events} from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { TranslateService } from '@ngx-translate/core';
+import {GpsProvider} from '../../providers/gps/gps';
 
 
 //declare var google; 
@@ -32,11 +33,15 @@ export class MapPage {
         public navCtrl: NavController, 
         public navParams: NavParams,
         public platform: Platform,
+        public events: Events,
         public translate: TranslateService,
         private geolocation: Geolocation,
+        private gpsProvider: GpsProvider,
         public googleMaps: GoogleMaps,) {
       
         this.items= this.navParams.get('items');
+        this.exhibition= this.navParams.get('exhibition');
+
         console.log( this.items," this.items");
          
   }
@@ -45,10 +50,48 @@ export class MapPage {
   {
      this.platform.ready().then(() => {
        this.getPosition();
+       
+        this.gpsProvider.stopGps = false;
+        this.gpsProvider.itemsExhibition =  this.items;
+        this.gpsProvider.exhibition = this.exhibition;
+
+         if(this.exhibition.unlocked)
+        {
+           // move this Up if want to show items always
+          this.gpsProvider.unlockExhibition(this.exhibition.id);
+
+        }
+        this.gpsProvider.refreshTime();
     });
    
     
   }
+  
+   /*ionViewWillEnter() {
+
+        this.gpsProvider.stopGps = false;
+        this.gpsProvider.itemsExhibition = [];
+        this.gpsProvider.exhibition = this.exhibition;
+
+         if(this.exhibition.unlocked)
+        {
+           // move this Up if want to show items always
+          this.gpsProvider.unlockExhibition(this.exhibition.id);
+
+        }
+        this.gpsProvider.refreshTime();
+
+   }*/
+   
+     ionViewWillUnload() {
+        
+      this.gpsProvider.stopGps = true;
+
+      this.events.unsubscribe('goToItemDetail')
+      this.events.unsubscribe('exhibitionUnlocked')
+      
+    }
+
   
     getPosition():any{
         this.geolocation.getCurrentPosition().then(response => {

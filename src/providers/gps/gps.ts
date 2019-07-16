@@ -20,19 +20,17 @@ export class GpsProvider {
   disabledItems: any[] = [];
   isAndroid: boolean = true;
   alertItem: any;
+  repeat: boolean;
   
   config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      stationaryRadius: 20,
-      distanceFilter: 30,
-      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-      // Android only section
-      locationProvider: 1,
-      interval: 3000,
-      fastestInterval: 2000,
-      activitiesInterval: 10000,
-    };
+      
+        desiredAccuracy: 10,
+        stationaryRadius: 10,
+        distanceFilter: 0,
+        debug: false, //  enable this hear sounds for background-geolocation life-cycle.
+        interval: 5000
+
+  };
 
   constructor(
         public platform: Platform,
@@ -48,7 +46,6 @@ export class GpsProvider {
 
    ) {
    
-  
         this.events.subscribe('stopGps', (data) => {
 
             if(data.stop == true)
@@ -62,17 +59,18 @@ export class GpsProvider {
                 }
             }
         });
+      
         
-        this.platform.ready().then(() => {
+        console.log(this.backgroundGeolocation.checkStatus(), "checkstatus");
+                
+      //  this.platform.ready().then(() => {
 
             this.localNotifications.on('trigger').subscribe((noti)=> { 
-                
-                //navigator.vibrate(1500);
+
                 console.log(noti , "notif triggered");
                 this.showOpenItemAlert(this.alertItem, this.exhibition.id );
-
             });
-        });
+       // });
     }
     
   
@@ -85,7 +83,7 @@ export class GpsProvider {
            for(let item of this.itemsExhibition)
             {
                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
-              // console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
+               console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
                var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
                
                if(itemDisabled)
@@ -111,7 +109,7 @@ export class GpsProvider {
   }
   
   
-
+    
 
    refreshTime(lthis = this)
     {   
@@ -368,56 +366,83 @@ export class GpsProvider {
   }
   
   
-  startBackgroundGeolocation()
-  {
    
+     startBackgroundGeolocation(lthis = this)
+    {                
+          console.log( "OUT START");
+        
+         if(this.stopGps == false )
+        {
+           console.log( "IN START");
+           lthis.startBackgroundGeolocation2();  
 
+           setTimeout(function ()
+           {
+               lthis.startBackgroundGeolocation(lthis);
+
+           }, 10000);
+           
+        }
+        
+    }
+  
+  
+  startBackgroundGeolocation2()
+  {
+       // this.stopGps = false;
+      
+        this.backgroundGeolocation.stop(); 
+     
         this.backgroundGeolocation.configure(this.config).then(() => {
-            this.backgroundGeolocation
-              .on(BackgroundGeolocationEvents.location)
-              .subscribe((location: BackgroundGeolocationResponse) => {
+             this.backgroundGeolocation
+               .on(BackgroundGeolocationEvents.location)
+               .subscribe((location: BackgroundGeolocationResponse) => {
+               
+                         console.log(location, new Date(), "BACKGROUND LOCATION WORKS!");
 
-                    console.log(location, "BACKGROUND LOCATION WORKS!");
-                    
-                    for(let item of this.itemsExhibition)
-                    {
-                       var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
+                         for(let item of this.itemsExhibition)
+                         {
+                            var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
+                            console.log(distance, "BG ITEM distance");
 
-                       var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
-                       
+                            var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
 
-                       if(itemDisabled)
-                       {
-                         console.log(itemDisabled, "BG ITEM DISABLED");
+                          if(itemDisabled)
+                          {
+                              console.log(itemDisabled, "BG ITEM DISABLED");
 
-                       }else{
+                          }else{
 
-                            if(distance < 90  )
-                            {
-                                this.alertItem = item;
-                                this.setNotification();
-                                console.log("PLAY SOUND");
-                                this.disabledItems.push(item);
+                                if(distance < 90 )
+                                {
+                                    this.alertItem = item;
+                                    this.setNotification();
+                                    console.log("PLAY SOUND");
+                                    //this.disabledItems.push(item);
+                                    this.stopGps = true;
+                                    this.events.publish('stopGps', {stop:true , id: item.id})
+                                }
                             }
-                       }
-                    }  
+                        }  
+
+                        if (this.platform.is('ios')) {
+
+                            this.backgroundGeolocation.finish(); // IOS Only
+                        }
                     
-                   this.backgroundGeolocation.finish(); // IOS Only
-               });
-         });
-         
-         
-         
+                });
+                
+          });
+          
+
       // start recording location
       this.backgroundGeolocation.start(); 
-
 
    }
 
 
     setNotification()
     { 
-        
         let messages;
 
         this.translate.get('EXHIBITIONS.NOTIFICATION').subscribe(data => {
@@ -434,14 +459,9 @@ export class GpsProvider {
            foreground: false
 
         });
-
     }
     
     
-    playSound(){
-
-        return 'file://assets/ring.mp3';
-    }
 
     clearNotification(){
         
