@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 
 @Injectable()
@@ -21,18 +22,25 @@ export class GpsProvider {
   isAndroid: boolean = true;
   alertItem: any;
   repeat: boolean;
+  interval: any;
+  locationUpdated: any;
   
   config: BackgroundGeolocationConfig = {
       
         desiredAccuracy: 10,
-        stationaryRadius: 10,
+        stationaryRadius: 0,
         distanceFilter: 0,
-        debug: false, //  enable this hear sounds for background-geolocation life-cycle.
-        interval: 5000
+        debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+        interval: 6000,
+        fastestInterval: 2000,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        locationProvider: 1
 
   };
 
   constructor(
+  
         public platform: Platform,
         public events: Events,
         public translate: TranslateService,
@@ -42,10 +50,53 @@ export class GpsProvider {
         private diagnostic: Diagnostic,
         private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings,
-        private backgroundGeolocation: BackgroundGeolocation
+        private backgroundGeolocation: BackgroundGeolocation,
+        public backgroundMode: BackgroundMode
 
    ) {
-   
+
+         this.backgroundGeolocation.configure(this.config).then(() => {
+
+             this.backgroundGeolocation
+                 .on(BackgroundGeolocationEvents.activity)
+             .subscribe((location: BackgroundGeolocationResponse) => {
+
+                 console.log(this.backgroundGeolocation.getCurrentLocation(), new Date(), "BACKGROUND LOCATION WORKS!");
+                 this.backgroundGeolocation.getCurrentLocation().then((location) => {
+                       for(let item of this.itemsExhibition)
+                       {
+                            var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
+                              console.log(distance, "BG ITEM distance");
+
+                            var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
+
+                            if(itemDisabled)
+                            {
+                                 console.log(itemDisabled, "BG ITEM DISABLED");
+
+                             }else{
+
+                                if(distance < 90 )
+                                {
+                                    this.alertItem = item;
+                                    this.setNotification();
+                                    console.log("PLAY SOUND");
+                                    //this.disabledItems.push(item);
+                                   // this.stopGps = true;
+                                    this.events.publish('stopGps', { stop:true , id: item.id })
+                                }
+                            }
+                         }  
+                        console.log(location, new Date(), "process finished!");
+                          
+                       this.backgroundGeolocation.finish(); // IOS Only
+                 })
+                });
+         });
+            
+            
+            
+           
         this.events.subscribe('stopGps', (data) => {
 
             if(data.stop == true)
@@ -59,20 +110,17 @@ export class GpsProvider {
                 }
             }
         });
-      
         
-        console.log(this.backgroundGeolocation.checkStatus(), "checkstatus");
-                
-      //  this.platform.ready().then(() => {
 
-            this.localNotifications.on('trigger').subscribe((noti)=> { 
+                        
+        this.localNotifications.on('trigger').subscribe((noti)=> { 
 
-                console.log(noti , "notif triggered");
-                this.showOpenItemAlert(this.alertItem, this.exhibition.id );
-            });
-       // });
+            console.log(noti , "notif triggered");
+            this.showOpenItemAlert(this.alertItem, this.exhibition.id );
+        });
     }
     
+
   
    getItemLocation()
    {
@@ -94,6 +142,7 @@ export class GpsProvider {
                {
                  if(distance < 90 )
                  {
+                     
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.stopGps = true;
                      this.events.publish('stopGps', {stop:true , id: item.id})
@@ -106,7 +155,7 @@ export class GpsProvider {
             console.log(err, "<<<< err location");
 
         });
-  }
+    }
   
   
     
@@ -360,87 +409,20 @@ export class GpsProvider {
   }
   
 
-   stopBackgroundGeolocation()
-  {   
-    this.backgroundGeolocation.stop();
-  }
-  
-  
-   
-     startBackgroundGeolocation(lthis = this)
-    {                
-          console.log( "OUT START");
-        
-         if(this.stopGps == false )
-        {
-           console.log( "IN START");
-           lthis.startBackgroundGeolocation2();  
-
-           setTimeout(function ()
-           {
-               lthis.startBackgroundGeolocation(lthis);
-
-           }, 10000);
-           
-        }
-        
-    }
-  
-  
-  startBackgroundGeolocation2()
-  {
-       // this.stopGps = false;
-      
-        this.backgroundGeolocation.stop(); 
-     
-        this.backgroundGeolocation.configure(this.config).then(() => {
-             this.backgroundGeolocation
-               .on(BackgroundGeolocationEvents.location)
-               .subscribe((location: BackgroundGeolocationResponse) => {
-               
-                         console.log(location, new Date(), "BACKGROUND LOCATION WORKS!");
-
-                         for(let item of this.itemsExhibition)
-                         {
-                            var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
-                            console.log(distance, "BG ITEM distance");
-
-                            var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
-
-                          if(itemDisabled)
-                          {
-                              console.log(itemDisabled, "BG ITEM DISABLED");
-
-                          }else{
-
-                                if(distance < 90 )
-                                {
-                                    this.alertItem = item;
-                                    this.setNotification();
-                                    console.log("PLAY SOUND");
-                                    //this.disabledItems.push(item);
-                                    this.stopGps = true;
-                                    this.events.publish('stopGps', {stop:true , id: item.id})
-                                }
-                            }
-                        }  
-
-                        if (this.platform.is('ios')) {
-
-                            this.backgroundGeolocation.finish(); // IOS Only
-                        }
-                    
-                });
-                
-          });
-          
-
-      // start recording location
-      this.backgroundGeolocation.start(); 
-
+    stopBackgroundGeolocation()
+   {  
+      //this.backgroundGeolocation.stop();
    }
 
-
+   
+    startBackgroundGeolocation()
+    {   
+          console.log("starting geolocation");
+          this.backgroundGeolocation.start();  
+        
+      }
+   
+ 
     setNotification()
     { 
         let messages;
@@ -469,5 +451,25 @@ export class GpsProvider {
          
     }
   
+    
+    
+  
+   /*
+    startBackgroundGeolocation(lthis = this)
+   {   
+        if(this.stopGps == false )
+       {
+          console.log("IN START");
+          lthis.startBackgroundGeolocation2();  
+
+          setTimeout(function ()
+          {
+              lthis.startBackgroundGeolocation(lthis);
+
+          }, 10000);
+       }
+   }*/
+   
+   
 
 }

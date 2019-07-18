@@ -33,12 +33,10 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 //purchase provider
 import { InAppPurchase } from '@ionic-native/in-app-purchase';
-
-
 
 export function createTranslateLoader(http: Http) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,7 +85,8 @@ export function createTranslateLoader(http: Http) {
         InAppPurchase,
         GoogleMaps,
         BackgroundGeolocation,
-        LocalNotifications
+        LocalNotifications,
+        BackgroundMode
     
     ]
 })

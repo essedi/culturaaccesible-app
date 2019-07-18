@@ -3,7 +3,15 @@
 
 if list exhibition list is not showing add  android:usesCleartextTraffic="true" in application tag of AndroidManifest.xml
 
- ios package bundle  com.itbook.audioguias
+--------------------------------
+
+$root_dir/plugins/cordova-plugin-background-mode/plugin.xml delete line
+<engine name="windows-sdk" version=">=10.0.14393.0" />
+run: ionic cordova platform rm android ; ionic cordova platform add android
+
+----------------------------------
+
+ios package bundle  com.itbook.audioguias
 android package com.essedi.itbook.audioguias
 
 <strong>Build with</strong>
