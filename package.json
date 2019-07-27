@@ -61,7 +61,6 @@
     "cordova-plugin-ionic": "^4.2.0",
     "cordova-plugin-ionic-webview": "^4.1.1",
     "cordova-plugin-local-notification": "git+https://github.com/Steffaan/cordova-plugin-local-notifications.git",
-    "cordova-plugin-mauron85-background-geolocation": "^3.0.1",
     "cordova-plugin-nativestorage": "^2.3.2",
     "cordova-plugin-network-information": "^2.0.2",
     "cordova-plugin-splashscreen": "^5.0.3",
