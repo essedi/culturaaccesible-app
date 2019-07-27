@@ -7,7 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { BackgroundMode } from '@ionic-native/background-mode';
 
 
 @Injectable()
@@ -50,8 +49,7 @@ export class GpsProvider {
         private diagnostic: Diagnostic,
         private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings,
-        private backgroundGeolocation: BackgroundGeolocation,
-        public backgroundMode: BackgroundMode
+        private backgroundGeolocation: BackgroundGeolocation
 
    ) {
 

@@ -3,7 +3,6 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateService } from '@ngx-translate/core';
-import { BackgroundMode } from '@ionic-native/background-mode';
 
 
 @Component({
@@ -21,7 +20,6 @@ export class MyApp {
         public statusBar: StatusBar,
         public splashScreen: SplashScreen,
         public translate: TranslateService,
-        public backgroundMode: BackgroundMode,
 
 
         ) {
