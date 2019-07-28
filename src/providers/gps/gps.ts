@@ -52,7 +52,7 @@ export class GpsProvider {
         private backgroundGeolocation: BackgroundGeolocation
 
    ) {
-
+        /*
          this.backgroundGeolocation.configure(this.config).then(() => {
 
              this.backgroundGeolocation
@@ -91,7 +91,7 @@ export class GpsProvider {
                  })
                 });
          });
-            
+            */
             
             
            

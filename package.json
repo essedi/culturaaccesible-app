@@ -37,7 +37,7 @@
     "@ionic-native/splash-screen": "3.7.0",
     "@ionic-native/status-bar": "3.7.0",
     "@ionic/storage": "2.0.1",
-    "@mauron85/cordova-plugin-background-geolocation": "3.0.3",
+    "@mauron85/cordova-plugin-background-geolocation": "^3.0.3",
     "@ngx-translate/core": "^7.0.0",
     "@ngx-translate/http-loader": "^0.1.0",
     "cc.fovea.cordova.purchase": "^8.1.1",
@@ -138,14 +138,12 @@
       "cordova-plugin-mauron85-background-geolocation": {
         "GOOGLE_PLAY_SERVICES_VERSION": "11+",
         "ANDROID_SUPPORT_LIBRARY_VERSION": "26+",
-        "ICON": "@mipmap/ic_launcher",
-        "SMALL_ICON": "@mipmap/ic_launcher",
+        "ICON": "@mipmap/icon",
+        "SMALL_ICON": "@mipmap/icon",
         "ACCOUNT_NAME": "@string/app_name",
         "ACCOUNT_LABEL": "@string/app_name",
         "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
-        "CONTENT_AUTHORITY": "$PACKAGE_NAME",
-        "ALWAYS_USAGE_DESCRIPTION": "This app always requires location tracking",
-        "MOTION_USAGE_DESCRIPTION": "This app requires motion detection"
+        "CONTENT_AUTHORITY": "$PACKAGE_NAME"
       },
       "cordova-plugin-inapppurchase": {},
       "cordova-plugin-local-notification": {
