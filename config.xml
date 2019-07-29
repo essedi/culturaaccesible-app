@@ -149,23 +149,18 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSMotionUsageDescription">
             <string>Esta App requiere detector de movimiento.</string>
         </edit-config>
-        
-        
-        
-    <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
-        <string>Esta aplicación siempre necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
-    </config-file>
-    <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
-        <string>Esta aplicación necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
-    </config-file>
-    <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
-        <string>Esta aplicación necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
-    </config-file>
-    <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
-        <string>
-Las actualizaciones de movimiento del dispositivo ayudan a determinar cuándo el dispositivo está parado, por lo que la aplicación puede ahorrar energía al desactivar las actualizaciones de ubicación</string>
-    </config-file>
-    
+        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación siempre necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación necesita acceso a tu ubicación aún cuando esté inactiva para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
+            <string>Las actualizaciones de movimiento del dispositivo ayudan a determinar cuándo el dispositivo está parado, por lo que la aplicación puede ahorrar energía al desactivar las actualizaciones de ubicación</string>
+        </config-file>
     </platform>
     <plugin name="com.unarin.cordova.beacon" spec="^3.5.2" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />

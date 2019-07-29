@@ -136,11 +136,11 @@ export class GpsProvider {
 
                  var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
 
-                  /*if(itemDisabled)
+                  if(itemDisabled)
                  {
                       console.log(itemDisabled, "BG ITEM DISABLED");
 
-                  }else{*/
+                  }else{
 
                      if(distance < 90 )
                      {
@@ -150,7 +150,7 @@ export class GpsProvider {
                          //this.disabledItems.push(item);
                          this.events.publish('stopGps', { stop:true , id: item.id })
                      }
-                // }
+                 }
               }  
              console.log(location, new Date(), "process finished!");
         //  this.backgroundGeolocation.finish(); // IOS Only
