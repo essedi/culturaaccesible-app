@@ -31,10 +31,7 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 import { PurchaseProvider } from '../providers/purchase/purchase';
 import { GoogleMaps } from '@ionic-native/google-maps';
 
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { BackgroundMode } from '@ionic-native/background-mode';
-
 //purchase provider
 import { InAppPurchase } from '@ionic-native/in-app-purchase';
 
@@ -84,9 +81,7 @@ export function createTranslateLoader(http: Http) {
         PurchaseProvider,
         InAppPurchase,
         GoogleMaps,
-        BackgroundGeolocation,
         LocalNotifications,
-        BackgroundMode
     
     ]
 })

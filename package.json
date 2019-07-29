@@ -21,7 +21,6 @@
     "@angular/platform-browser": "4.1.0",
     "@angular/platform-browser-dynamic": "4.1.0",
     "@ionic-native/background-geolocation": "^4.20.0",
-    "@ionic-native/background-mode": "^4.20.0",
     "@ionic-native/core": "3.7.0",
     "@ionic-native/diagnostic": "^4.18.0",
     "@ionic-native/file": "^4.3.2",
@@ -37,7 +36,6 @@
     "@ionic-native/splash-screen": "3.7.0",
     "@ionic-native/status-bar": "3.7.0",
     "@ionic/storage": "2.0.1",
-    "@mauron85/cordova-plugin-background-geolocation": "^3.0.3",
     "@ngx-translate/core": "^7.0.0",
     "@ngx-translate/http-loader": "^0.1.0",
     "cc.fovea.cordova.purchase": "^8.1.1",
@@ -45,9 +43,11 @@
     "cordova": "9.0.0",
     "cordova-android": "^8.0.0",
     "cordova-android-support-gradle-release": "^3.0.1",
+    "cordova-background-geolocation-lt": "^3.0.8",
     "cordova-ios": "^5.0.0",
     "cordova-open-native-settings": "^1.5.2",
     "cordova-plugin-advanced-http": "^2.1.1",
+    "cordova-plugin-background-fetch": "^5.5.0",
     "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-compat": "^1.2.0",
@@ -61,7 +61,6 @@
     "cordova-plugin-ionic": "^4.2.0",
     "cordova-plugin-ionic-webview": "^4.1.1",
     "cordova-plugin-local-notification": "git+https://github.com/Steffaan/cordova-plugin-local-notifications.git",
-    "cordova-plugin-mauron85-background-geolocation": "^3.0.1",
     "cordova-plugin-nativestorage": "^2.3.2",
     "cordova-plugin-network-information": "^2.0.2",
     "cordova-plugin-splashscreen": "^5.0.3",
@@ -135,16 +134,6 @@
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
       },
-      "cordova-plugin-mauron85-background-geolocation": {
-        "GOOGLE_PLAY_SERVICES_VERSION": "11+",
-        "ANDROID_SUPPORT_LIBRARY_VERSION": "26+",
-        "ICON": "@mipmap/icon",
-        "SMALL_ICON": "@mipmap/icon",
-        "ACCOUNT_NAME": "@string/app_name",
-        "ACCOUNT_LABEL": "@string/app_name",
-        "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
-        "CONTENT_AUTHORITY": "$PACKAGE_NAME"
-      },
       "cordova-plugin-inapppurchase": {},
       "cordova-plugin-local-notification": {
         "ANDROID_SUPPORT_V4_VERSION": "26.+"
@@ -154,6 +143,12 @@
         "ANDROID_SUPPORT_V4_VERSION": "27.+",
         "LOCATION_WHEN_IN_USE_DESCRIPTION": "This app wants to get your location while this app runs only.",
         "LOCATION_ALWAYS_USAGE_DESCRIPTION": "This app wants to get your location always, even this app runs in background."
+      },
+      "cordova-background-geolocation-lt": {
+        "GOOGLE_API_VERSION": "16.+",
+        "APPCOMPAT_VERSION": "27.+",
+        "OKHTTP_VERSION": "3.12.+",
+        "EVENTBUS_VERSION": "3.0.0"
       }
     },
     "platforms": [
