@@ -63,6 +63,10 @@ export class GpsProvider {
             largeIcon: 'file://assets/icon.png'        
          },
          foregroundService: false,
+         // IOS only
+         preventSuspend: true,
+         // ----------
+         
          startOnBoot: true
        }, (state) => {
          console.log('[ready] BackgroundGeolocation is ready to use');
@@ -71,7 +75,7 @@ export class GpsProvider {
             BackgroundGeolocation.start();
          }
     });
-     
+    
     this.events.subscribe('stopGps', (data) => {
 
           if(data.stop == true)
