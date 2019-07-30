@@ -54,7 +54,7 @@ export class ExhibitionDetail {
                
                     this.platform.resume.subscribe((result)=>{//Foreground
                         console.log("platform resume");
-                      //  this.gpsProvider.stopGps = true;
+                      //  this.gpsProvider.stopGps = false;
                        this.gpsProvider.stopBackgroundGeolocation();
                        
                        console.log(this.gpsProvider.repeat , "this.gpsProvider.repeat ");
@@ -62,7 +62,7 @@ export class ExhibitionDetail {
 
                     this.platform.pause.subscribe((result)=>{//Background
                         console.log("platform pause");
-                       // this.gpsProvider.stopGps  = false;
+                       // this.gpsProvider.stopGps  = true;
                         this.gpsProvider.startBackgroundGeolocation();
                         
                         console.log(this.gpsProvider.repeat , "this.gpsProvider.repeat ");
