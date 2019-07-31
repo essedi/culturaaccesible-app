@@ -55,19 +55,18 @@ export class GpsProvider {
          distanceFilter: 0,
          autoSync: true,
          stopOnTerminate: false,
-         locationUpdateInterval: 2000,
+         locationUpdateInterval: 10000,
          notification: {
             title: 'Cultura Accesible',
             text: bgMessage["TEXT"] ,
             smallIcon : 'file://assets/icon.png',
             largeIcon: 'file://assets/icon.png'        
          },
-         foregroundService: false,
+          startOnBoot: true,
+          foregroundService: false,
          // IOS only
-         preventSuspend: true,
-         // ----------
-         
-         startOnBoot: true
+        // preventSuspend: true,
+        
        }, (state) => {
          console.log('[ready] BackgroundGeolocation is ready to use');
          if (!state.enabled) {
@@ -434,7 +433,6 @@ export class GpsProvider {
         this.localNotifications.schedule({
            text: messages['TEXT'],
            title: messages['TITLE'],
-         //  icon: 'file://assets/icon.png',
            id: 1,
            sound:'file://assets/ring.mp3' ,
            vibrate: true,

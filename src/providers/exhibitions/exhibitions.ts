@@ -12,12 +12,7 @@ export class ExhibitionsProvider {
     constructor(private http: Http,
                 private http2: HTTP,
                 public events: Events,
-                @Inject(EnvVariables) private envVariables) {
-                    
-             
-
-    
-    }
+                @Inject(EnvVariables) private envVariables) {}
 
     retrieveList() {
         let headers    = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});

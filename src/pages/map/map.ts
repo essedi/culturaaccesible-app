@@ -16,7 +16,6 @@ import {
 } from "@ionic-native/google-maps";
 
 
-
 @IonicPage()
 @Component({
   selector: 'page-map',
@@ -63,25 +62,8 @@ export class MapPage {
         }
         this.gpsProvider.refreshTime();
     });
-   
-    
   }
-  
-   /*ionViewWillEnter() {
 
-        this.gpsProvider.stopGps = false;
-        this.gpsProvider.itemsExhibition = [];
-        this.gpsProvider.exhibition = this.exhibition;
-
-         if(this.exhibition.unlocked)
-        {
-           // move this Up if want to show items always
-          this.gpsProvider.unlockExhibition(this.exhibition.id);
-
-        }
-        this.gpsProvider.refreshTime();
-
-   }*/
    
      ionViewWillUnload() {
         

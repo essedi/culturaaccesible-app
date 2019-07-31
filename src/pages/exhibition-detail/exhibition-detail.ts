@@ -50,7 +50,7 @@ export class ExhibitionDetail {
                     beaconProvider.isInitialized = true
                     }
                   });
-               }else if(exhibition.locationType == "gps"){
+               }/*else if(exhibition.locationType == "gps"){
                
                     this.platform.resume.subscribe((result)=>{//Foreground
                         console.log("platform resume");
@@ -68,7 +68,7 @@ export class ExhibitionDetail {
                         console.log(this.gpsProvider.repeat , "this.gpsProvider.repeat ");
 
                     })   
-               }
+               }*/
             }
         });
         

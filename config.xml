@@ -34,7 +34,6 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="com.unarin.cordova.beacon.android.altbeacon.ForegroundBetweenScanPeriod" value="1000" />
     <platform name="android">
-        <resource-file src="resources/icon.png" target="app/src/main/res/mipmap/icon.png" />
         <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission">
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
