@@ -118,9 +118,6 @@
         <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
             <string>Spanish</string>
         </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothPeripheralUsageDescription">
-            <string> Esta aplicación necesita acceso a bluetooth para funcionar correctamente</string>
-        </edit-config>
         <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
             <string>Esta aplicación siempre necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
         </config-file>
