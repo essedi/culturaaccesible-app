@@ -54,7 +54,7 @@ export class GpsProvider {
          desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
          distanceFilter: 0,
          autoSync: true,
-         stopOnTerminate: false,
+         stopOnTerminate: true,
          locationUpdateInterval: 10000,
          notification: {
             title: 'Cultura Accesible',
