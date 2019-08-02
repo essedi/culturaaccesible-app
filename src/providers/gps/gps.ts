@@ -35,45 +35,8 @@ export class GpsProvider {
         private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings
    ) {
-       
-    BackgroundGeolocation.onLocation(location => {
-          console.log('[location] - ', location);
-          this.searchItemsExhibition(location);
-     });
-     
-    let bgMessage: any;
-       
-    this.translate.get('EXHIBITIONS.BGNOTIF').subscribe(data => {
-        bgMessage = data
-    })
-
-    BackgroundGeolocation.ready({
-         reset: true,
-         debug: false,
-         logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-         distanceFilter: 0,
-         autoSync: true,
-         stopOnTerminate: true,
-         locationUpdateInterval: 10000,
-         notification: {
-            title: 'Cultura Accesible',
-            text: bgMessage["TEXT"] ,
-            smallIcon : 'file://assets/icon.png',
-            largeIcon: 'file://assets/icon.png'        
-         },
-          startOnBoot: true,
-          foregroundService: false,
-         // IOS only
-        // preventSuspend: true,
-        
-       }, (state) => {
-         console.log('[ready] BackgroundGeolocation is ready to use');
-         if (!state.enabled) {
-           // 3.  Start tracking.
-            BackgroundGeolocation.start();
-         }
-    });
+   
+    this.platform.ready().then(this.configureBackgroundGeolocation.bind(this));
     
     this.events.subscribe('stopGps', (data) => {
 
@@ -96,7 +59,49 @@ export class GpsProvider {
       });
    }
 
-  
+
+    configureBackgroundGeolocation(){
+
+         BackgroundGeolocation.onLocation(location => {
+             console.log('[location] - ', location);
+             this.searchItemsExhibition(location);
+        });
+
+       let bgMessage: any;
+
+       this.translate.get('EXHIBITIONS.BGNOTIF').subscribe(data => {
+           bgMessage = data
+       })
+
+       BackgroundGeolocation.ready({
+            reset: true,
+            debug: false,
+            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 0,
+            autoSync: true,
+            stopOnTerminate: true,
+            locationUpdateInterval: 10000,
+            notification: {
+               title: 'Cultura Accesible',
+               text: bgMessage["TEXT"] ,
+               smallIcon : 'file://assets/icon.png',
+               largeIcon: 'file://assets/icon.png'        
+            },
+             startOnBoot: true,
+             foregroundService: false,
+            // IOS only
+           // preventSuspend: true,
+
+          }, (state) => {
+            console.log('[ready] BackgroundGeolocation is ready to use');
+            if (!state.enabled) {
+              // 3.  Start tracking.
+               BackgroundGeolocation.start();
+            }
+       });
+    }
+
    getItemLocation()
    {
     this.getLocation().then(
