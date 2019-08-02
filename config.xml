@@ -12,6 +12,7 @@
     <allow-navigation href="http://192.168.1.45" />
     <allow-navigation href="http://localhost" />
     <allow-navigation href="http://localhost/* " />
+    <allow-navigation href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -33,7 +34,12 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="com.unarin.cordova.beacon.android.altbeacon.ForegroundBetweenScanPeriod" value="1000" />
+    <resource-file src="resources/ic_notificacion.png" target="app/src/main/res/drawable/ic_notification.png" />
     <platform name="android">
+        <resource-file src="resources/ic_notification.png" target="app/src/main/res/mipmap-hdpi-v26/ic_launcher.png" />
+        <resource-file src="resources/ic_notification.png" target="app/src/main/res/mipmap-hdpi/ic_launcher.png" />
+        <resource-file src="resources/ic_notification.png" target="app/src/main/res/mipmap-ldpi/ic_launcher.png" />
+        <resource-file src="resources/ic_notification.png" target="app/src/main/res/mipmap-mdpi/ic_launcher.png" />
         <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission">
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -112,39 +118,23 @@
         <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
             <string>Spanish</string>
         </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>Esta aplicación necesita acceso a tu ubicación para calcular la distancia de los puntos de interés.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
-            <string>Esta aplicación necesita saber siempre tu ubicación, incluso estando en modo inactivo para calcular la distancia de los puntos de interés.</string>
-        </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothPeripheralUsageDescription">
             <string> Esta aplicación necesita acceso a bluetooth para funcionar correctamente</string>
         </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
-            <string>Esta App siempre requiere hacer seguimiento de tu localización.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>Esta App requiere acceso a tu camara para funcionar correctamente.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>Esta App requiere acceso a la librería de fotos para funcionar correctamente. </string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
-            <string>Esta App requiere acceso al microfono para funcionar correctamente.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSContactsUsageDescription">
-            <string>Esta App requiere acceso a tus contactos para funcionar correctamente.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSCalendarsUsageDescription">
-            <string>Esta App requiere acceso al calendario para funcionar correctamente.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSRemindersUsageDescription">
-            <string>Esta App requiere recordatorios de acceso para funcionar correctamente.</string>
-        </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSMotionUsageDescription">
+          <!-- background-geolocation -->
+        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación siempre necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación siempre necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
             <string>Esta App requiere detector de movimiento.</string>
-        </edit-config>
+        </config-file>
+            <!-- /background-geolocation -->
     </platform>
     <plugin name="com.unarin.cordova.beacon" spec="^3.5.2" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />

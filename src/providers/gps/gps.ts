@@ -14,7 +14,7 @@ export class GpsProvider {
 
   itemsExhibition: any[] = [];
   exhibition: any;
-  stopGps: boolean ;
+  stopGps: boolean;
   logs: string[] = [];
   notification: any;
   disabledItems: any[] = [];
@@ -59,9 +59,10 @@ export class GpsProvider {
          notification: {
             title: 'Cultura Accesible',
             text: bgMessage["TEXT"] ,
-            smallIcon : 'file://assets/icon.png',
-            largeIcon: 'file://assets/icon.png'        
+            smallIcon : 'file://assets/ic_notification.png' ,
+            largeIcon: 'file://assets/ic_notification.png'       
          },
+       
           startOnBoot: true,
           foregroundService: false,
          // IOS only
@@ -434,6 +435,8 @@ export class GpsProvider {
            text: messages['TEXT'],
            title: messages['TITLE'],
            id: 1,
+           icon: 'file://assets/ic_notification.png' ,
+           smallIcon: 'file://assets/ic_notification.png' ,
            sound:'file://assets/ring.mp3' ,
            vibrate: true,
            foreground: false
