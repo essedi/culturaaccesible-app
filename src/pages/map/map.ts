@@ -26,7 +26,8 @@ export class MapPage {
     exhibition;
     items: Array<Object>;
     @ViewChild('map') element;
-
+    stopMapGps: boolean = false;
+    marker;
 
   constructor(
         public navCtrl: NavController, 
@@ -60,20 +61,28 @@ export class MapPage {
           this.gpsProvider.unlockExhibition(this.exhibition.id);
 
         }
-        this.gpsProvider.refreshTime();
+        
+        this.stopMapGps= false;
+        this.gpsProvider.stopGps = true;
+       
+       
     });
   }
 
    
      ionViewWillUnload() {
         
-      this.gpsProvider.stopGps = true;
 
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
       
     }
 
+
+    ionViewDidLeave() {
+        
+        this.stopMapGps= true;
+    }
   
     getPosition():any{
         this.geolocation.getCurrentPosition().then(response => {
@@ -103,30 +112,11 @@ export class MapPage {
          map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
             
            console.log(map, " MAP");
-           let coordinates: LatLng = new LatLng(latitude, longitude);
-
-           let position = {
-             target: coordinates,
-             zoom: 17
-           };
-           
-           map.animateCamera(position);
-
-
-           let markerOptions: MarkerOptions = {
-             position: coordinates,
-             title: message["LOCATION"],
-             icon: '../../../resources/red-circle.png',
-           };
-
-           const marker = map.addMarker(markerOptions)
-             .then((marker: Marker) => {
-               marker.showInfoWindow();
-           });
-           
+          
+          this.refreshTime(map, message);
 
             if(this.items.length){
-       
+
                 for(let item of this.items){
 
                     let coordinates: LatLng = new LatLng(item['lat'], item['lng']);
@@ -136,7 +126,7 @@ export class MapPage {
                       title: item['name']
                     };
 
-                    const marker = map.addMarker(markerOptions)
+                     const marker = map.addMarker(markerOptions)
                       .then((marker: Marker) => {
                         marker.showInfoWindow();
                     });
@@ -145,6 +135,69 @@ export class MapPage {
             }
 
         })
-      }
+    }
+    
+    mapData(map, message){
+        
+        console.log(this.marker, "this.marker");
+        
+         this.gpsProvider.getLocation().then(
+        (res: any) =>
+        {
+           
+            var latitude = res.latitude;
+            var longitude = res.longitude;
+            
+            let coordinates: LatLng = new LatLng(latitude, longitude);
+           
+            var position = {
+             target: coordinates,
+             zoom: 17
+           };
+           
+           map.animateCamera(position);
+
+           let markerOptions: MarkerOptions = {
+             position: coordinates,
+             title: message["LOCATION"],
+             icon: '../../../resources/red-circle.png',
+           };
+          
+            if (this.marker)
+            {
+              this.marker.remove(); 
+            }
+
+           var marker = map.addMarker(markerOptions)
+             .then((marker: Marker) => {
+               marker.showInfoWindow();
+                this.marker = marker;
+           });
+           
+                        
+        },(err: any)=>{
+        
+            
+        })
+        
+    }
+      
+      
+      
+     refreshTime(map, message , lthis = this)
+    {   
+        if(this.stopMapGps == false){
+            
+            lthis.mapData(map, message);
+            console.log("refreshed");  
+
+            setTimeout(function ()
+            {
+                lthis.refreshTime(map, message,lthis);
+
+            }, 10000);
+        }
+    }
+  
 
 }

@@ -36,6 +36,7 @@ export class GpsProvider {
         private openSettings: OpenNativeSettings
    ) {
    
+         
     this.platform.ready().then(this.configureBackgroundGeolocation.bind(this));
     
     this.events.subscribe('stopGps', (data) => {
@@ -50,13 +51,7 @@ export class GpsProvider {
                  this.disabledItems.push(obj);
               }
           }
-      });
-
-      this.localNotifications.on('trigger').subscribe((noti)=> { 
-
-           console.log(noti , "notif triggered");
-           this.showOpenItemAlert(this.alertItem, this.exhibition.id );
-      });
+      });      
    }
 
 
@@ -85,8 +80,8 @@ export class GpsProvider {
             notification: {
                title: 'Cultura Accesible',
                text: bgMessage["TEXT"] ,
-               smallIcon : 'file://assets/icon.png',
-               largeIcon: 'file://assets/icon.png'        
+               smallIcon : 'file://assets/ic_notification.png',
+               largeIcon:'file://assets/ic_notification.png'    
             },
              startOnBoot: true,
              foregroundService: false,
@@ -100,8 +95,25 @@ export class GpsProvider {
                BackgroundGeolocation.start();
             }
        });
+       
+       
+         this.localNotifications.on('trigger').subscribe((noti)=> { 
+
+         console.log(noti , "notif triggered");
+         this.showOpenItemAlert(this.alertItem, this.exhibition.id );
+        });
+      
     }
 
+
+    ionViewDidLeave()
+    {
+         BackgroundGeolocation.stop();
+         
+         this.stopGps = true;
+    }
+
+    
    getItemLocation()
    {
     this.getLocation().then(
@@ -119,7 +131,7 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance < 90 )
+                 if(distance <= 10 )
                  {
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.events.publish('stopGps', {stop:true , id: item.id})
@@ -133,6 +145,8 @@ export class GpsProvider {
 
         });
     }
+    
+
   
 
     searchItemsExhibition(location){
@@ -150,7 +164,7 @@ export class GpsProvider {
 
                   }else{
 
-                     if(distance < 90 )
+                     if(distance <= 10 )
                      {
                          this.alertItem = item;
                          this.setNotification();
@@ -439,6 +453,7 @@ export class GpsProvider {
            text: messages['TEXT'],
            title: messages['TITLE'],
            id: 1,
+           icon: 'file://assets/ic_notification.png',
            sound:'file://assets/ring.mp3' ,
            vibrate: true,
            foreground: false
