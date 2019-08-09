@@ -42,7 +42,7 @@ export class ExhibitionList {
             private purchaseProvider: PurchaseProvider,
             @Inject(EnvVariables) private envVariables) { 
             
-            this.purchaseProvider.queryPurchases();
+           
             
             this.events.subscribe('retrievePremiumExhibition', (data) => {
                 //console.log(data, "retrievePremiumExhibition")
@@ -71,7 +71,9 @@ export class ExhibitionList {
  
              
   ionViewWillEnter() {
-    this.getStoredData()
+    this.presentLoading();
+    this.purchaseProvider.queryPurchases();
+    this.getStoredData();
     this.events.publish('stopRanging')
     this.events.publish('cleanLastTriggeredBeacon')
     console.log("entered");
@@ -97,12 +99,16 @@ export class ExhibitionList {
       if(exhibitions.length > 0){
         this.hasExhibitions = true
         this.allExhibitions = exhibitions
-        console.log("show exibition ")
+        this.loading.dismiss();
+        console.log("show exibition ");
         this.filterExhibitions()
       }else {
         this.showNoExhibitionMessage()
       }
     })
+    
+    
+
   }
 
   showNoExhibitionMessage() {

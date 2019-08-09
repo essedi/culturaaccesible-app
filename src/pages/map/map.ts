@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform , Events} from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams, Platform , Events} from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { TranslateService } from '@ngx-translate/core';
 import {GpsProvider} from '../../providers/gps/gps';
@@ -28,12 +28,14 @@ export class MapPage {
     @ViewChild('map') element;
     stopMapGps: boolean = false;
     marker;
-
+    loading;
+ 
   constructor(
         public navCtrl: NavController, 
         public navParams: NavParams,
         public platform: Platform,
         public events: Events,
+        public loadingCtrl: LoadingController,
         public translate: TranslateService,
         private geolocation: Geolocation,
         private gpsProvider: GpsProvider,
@@ -49,9 +51,10 @@ export class MapPage {
   ionViewDidLoad() 
   {
      this.platform.ready().then(() => {
+         
+       this.presentLoading();
        this.getPosition();
        
-        this.gpsProvider.stopGps = false;
         this.gpsProvider.itemsExhibition =  this.items;
         this.gpsProvider.exhibition = this.exhibition;
 
@@ -63,13 +66,19 @@ export class MapPage {
         }
         
         this.stopMapGps= false;
-        this.gpsProvider.stopGps = true;
        
        
     });
   }
 
-   
+    presentLoading() {
+        this.loading = this.loadingCtrl.create({
+          content: 'Please wait...'
+        });
+
+        this.loading.present();
+     }
+
      ionViewWillUnload() {
         
 
@@ -86,7 +95,7 @@ export class MapPage {
   
     getPosition():any{
         this.geolocation.getCurrentPosition().then(response => {
-            
+           
             this.initMap(response);
         })
         .catch(error =>{
@@ -107,11 +116,9 @@ export class MapPage {
              message = data
          })
 
-         console.log(message , "messageeeeeeeeeeeeeeee");
-
          map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
             
-           console.log(map, " MAP");
+          console.log(map, " MAP");
           
           this.refreshTime(map, message);
 
@@ -133,13 +140,14 @@ export class MapPage {
 
                 }
             }
-
+            
         })
+        
+        this.loading.dismiss();
     }
     
     mapData(map, message){
         
-        console.log(this.marker, "this.marker");
         
          this.gpsProvider.getLocation().then(
         (res: any) =>
@@ -155,7 +163,12 @@ export class MapPage {
              zoom: 17
            };
            
-           map.animateCamera(position);
+           if (!this.marker)
+           {
+           
+             map.animateCamera(position);
+           
+           }
 
            let markerOptions: MarkerOptions = {
              position: coordinates,
@@ -170,14 +183,14 @@ export class MapPage {
 
            var marker = map.addMarker(markerOptions)
              .then((marker: Marker) => {
-               marker.showInfoWindow();
+                marker.showInfoWindow();
                 this.marker = marker;
            });
            
                         
         },(err: any)=>{
         
-            
+            console.log(err);
         })
         
     }

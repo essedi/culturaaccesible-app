@@ -51,7 +51,14 @@ export class GpsProvider {
                  this.disabledItems.push(obj);
               }
           }
-      });      
+      });
+      
+       this.localNotifications.on('trigger').subscribe((noti)=> { 
+
+         console.log(noti , "notif triggered");
+         this.showOpenItemAlert(this.alertItem, this.exhibition.id );
+        });
+              
    }
 
 
@@ -97,20 +104,16 @@ export class GpsProvider {
        });
        
        
-         this.localNotifications.on('trigger').subscribe((noti)=> { 
-
-         console.log(noti , "notif triggered");
-         this.showOpenItemAlert(this.alertItem, this.exhibition.id );
-        });
+        
       
     }
 
 
     ionViewDidLeave()
     {
-         BackgroundGeolocation.stop();
+        // BackgroundGeolocation.stop();
          
-         this.stopGps = true;
+         //this.stopGps = true;
     }
 
     
