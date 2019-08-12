@@ -31,6 +31,7 @@ export class ExhibitionDetail {
                 private storage: NativeStorage,
                 private gpsProvider: GpsProvider,
                 private itemService: ItemsProvider ) {
+                
         let lthis = this;
         let exhibition:any = navParams.get('exhibition')
         events.subscribe('goToItemDetail', (data) => {
@@ -102,9 +103,9 @@ export class ExhibitionDetail {
         this.beaconProvider.stopReadBeacon = true;
 
         console.log("ionViewDidLeave");
-    }
+  }
     
-    ionViewWillUnload() {
+ ionViewWillUnload() {
         
       this.gpsProvider.stopGps = true;
       this.beaconProvider.stopRanging();
@@ -112,9 +113,9 @@ export class ExhibitionDetail {
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
       
-    }
+  }
     
-     getExhibition(exhibition) {
+  getExhibition(exhibition) {
 
       this.storage.getItem(exhibition.id).then(exhibition => {
         console.log(exhibition, "exhibition info");
@@ -151,7 +152,7 @@ export class ExhibitionDetail {
 
     unlockExhibition(exhibition2) {
       this.storage.getItem(exhibition2.id).then(exhibition => 
-       {
+      {
         this.exhibition = null
         this.exhibition = exhibition
         this.beaconProvider.exhibition = exhibition

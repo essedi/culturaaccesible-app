@@ -57,6 +57,7 @@ export class GpsProvider {
 
          console.log(noti , "notif triggered");
          this.showOpenItemAlert(this.alertItem, this.exhibition.id );
+         
         });
               
    }
@@ -64,7 +65,7 @@ export class GpsProvider {
 
     configureBackgroundGeolocation(){
 
-         BackgroundGeolocation.onLocation(location => {
+        BackgroundGeolocation.onLocation(location => {
              console.log('[location] - ', location);
              this.searchItemsExhibition(location);
         });
@@ -87,13 +88,14 @@ export class GpsProvider {
             notification: {
                title: 'Cultura Accesible',
                text: bgMessage["TEXT"] ,
-               smallIcon : 'file://assets/ic_notification.png',
-               largeIcon:'file://assets/ic_notification.png'    
+               smallIcon : 'icon',
+               largeIcon:'icon'    
             },
              startOnBoot: true,
-             foregroundService: false,
+             foregroundService: true,
             // IOS only
-           // preventSuspend: true,
+            // res://icon
+            // preventSuspend: true,
 
           }, (state) => {
             console.log('[ready] BackgroundGeolocation is ready to use');
@@ -103,17 +105,13 @@ export class GpsProvider {
             }
        });
        
-       
-        
-      
     }
 
 
     ionViewDidLeave()
     {
         // BackgroundGeolocation.stop();
-         
-         //this.stopGps = true;
+        // this.stopGps = true;
     }
 
     
@@ -134,8 +132,9 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance <= 10 )
+                 if(distance <= 12 )
                  {
+                     this.alertItem = item;
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.events.publish('stopGps', {stop:true , id: item.id})
                  }
@@ -162,12 +161,12 @@ export class GpsProvider {
                  var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
 
                   if(itemDisabled)
-                 {
+                  {
                       console.log(itemDisabled, "BG ITEM DISABLED");
 
                   }else{
 
-                     if(distance <= 10 )
+                     if(distance <= 12 )
                      {
                          this.alertItem = item;
                          this.setNotification();
@@ -185,8 +184,7 @@ export class GpsProvider {
    refreshTime(lthis = this)
     {   
         
-        if(this.stopGps == false )
-        {
+        //if(this.stopGps == false ) {
 
            lthis.getItemLocation();  
 
@@ -196,7 +194,7 @@ export class GpsProvider {
 
            }, 10000);
 
-        }
+       // }
     }
   
   
@@ -213,9 +211,7 @@ export class GpsProvider {
                     {
                         opt =
                         {
-                            maximumAge: 10000,
-                            enableHighAccuracy: res,
-                            timeout: 10000
+                            enableHighAccuracy: false
                         }
                     }
                     lthis.geolocation.getCurrentPosition(opt).then(
@@ -336,7 +332,6 @@ export class GpsProvider {
                                         (err) =>
                                         {
                                             console.error('Location: openSettings error', err);
-
                                         }
                                     );
                                     
@@ -456,7 +451,7 @@ export class GpsProvider {
            text: messages['TEXT'],
            title: messages['TITLE'],
            id: 1,
-           icon: 'file://assets/ic_notification.png',
+           icon: 'icon',
            sound:'file://assets/ring.mp3' ,
            vibrate: true,
            foreground: false

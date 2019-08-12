@@ -3,6 +3,7 @@ import { IonicPage, LoadingController, NavController, NavParams, Platform , Even
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { TranslateService } from '@ngx-translate/core';
 import {GpsProvider} from '../../providers/gps/gps';
+import BackgroundGeolocation from "cordova-background-geolocation-lt";
 
 
 //declare var google; 
@@ -11,7 +12,11 @@ import {
   GoogleMap,
   GoogleMapsEvent,
   LatLng,
+  LocationService,
   MarkerOptions,
+  MyLocation,
+  GoogleMapOptions,
+  GoogleMapControlOptions,
   Marker
 } from "@ionic-native/google-maps";
 
@@ -39,37 +44,39 @@ export class MapPage {
         public translate: TranslateService,
         private geolocation: Geolocation,
         private gpsProvider: GpsProvider,
-        public googleMaps: GoogleMaps,) {
+        public googleMaps: GoogleMaps) {
       
         this.items= this.navParams.get('items');
         this.exhibition= this.navParams.get('exhibition');
 
         console.log( this.items," this.items");
-         
-  }
-
-  ionViewDidLoad() 
-  {
-     this.platform.ready().then(() => {
-         
-       this.presentLoading();
-       this.getPosition();
-       
-        this.gpsProvider.itemsExhibition =  this.items;
-        this.gpsProvider.exhibition = this.exhibition;
-
-         if(this.exhibition.unlocked)
-        {
-           // move this Up if want to show items always
-          this.gpsProvider.unlockExhibition(this.exhibition.id);
-
-        }
         
-        this.stopMapGps= false;
-       
-       
-    });
-  }
+        this.platform.ready().then(() => {
+         
+            this.presentLoading();
+            this.getPosition();
+
+            this.gpsProvider.itemsExhibition =  this.items;
+            this.gpsProvider.exhibition = this.exhibition;
+
+             if(this.exhibition.unlocked)
+            {
+               // move this Up if want to show items always
+               this.gpsProvider.unlockExhibition(this.exhibition.id);
+
+            }
+
+            this.stopMapGps= false;
+            
+            this.platform.resume.subscribe((result)=>{
+
+                 if (this.marker)
+                {
+                  this.marker.remove(); 
+                }
+            });
+        });
+    }
 
     presentLoading() {
         this.loading = this.loadingCtrl.create({
@@ -81,12 +88,10 @@ export class MapPage {
 
      ionViewWillUnload() {
         
-
       this.events.unsubscribe('goToItemDetail')
       this.events.unsubscribe('exhibitionUnlocked')
       
     }
-
 
     ionViewDidLeave() {
         
@@ -94,34 +99,57 @@ export class MapPage {
     }
   
     getPosition():any{
-        this.geolocation.getCurrentPosition().then(response => {
-           
-            this.initMap(response);
-        })
-        .catch(error =>{
-          console.log(error);
-        })
+        
+        let options = {
+            enableHighAccuracy: false
+            //timeout: 10000
+          };
+          
+        LocationService.getMyLocation().then((myLocation: MyLocation) => {
+
+      
+          this.initMap(myLocation);
+
+      });
+
     }
     
     
-    initMap(position: Geoposition) {
+    initMap(position: MyLocation) {
 
-         let latitude = position.coords.latitude;
-         let longitude = position.coords.longitude;
-         let map = GoogleMaps.create(this.element.nativeElement);
+         let latitude = position.latLng.lat;
+         let longitude = position.latLng.lng;
          
+         let options: GoogleMapOptions = {
+          camera: {
+            target: position.latLng,
+            zoom: 10,
+            tilt: 30,
+          },
+          controls: {
+            zoom: true,
+            myLocationButton : true,
+            myLocation: true,
+            
+          }
+        };
+
+         let map = GoogleMaps.create(this.element.nativeElement, options);
          let message;
+         
+        
        
          this.translate.get('EXHIBITIONS.MAP').subscribe(data => {
              message = data
          })
 
+
          map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
             
-          console.log(map, " MAP");
+            console.log(map, " MAP");
           
-          this.refreshTime(map, message);
-
+            //this.refreshTime(map, message);
+                       
             if(this.items.length){
 
                 for(let item of this.items){
@@ -137,7 +165,6 @@ export class MapPage {
                       .then((marker: Marker) => {
                         marker.showInfoWindow();
                     });
-
                 }
             }
             
@@ -146,71 +173,8 @@ export class MapPage {
         this.loading.dismiss();
     }
     
-    mapData(map, message){
-        
-        
-         this.gpsProvider.getLocation().then(
-        (res: any) =>
-        {
-           
-            var latitude = res.latitude;
-            var longitude = res.longitude;
-            
-            let coordinates: LatLng = new LatLng(latitude, longitude);
-           
-            var position = {
-             target: coordinates,
-             zoom: 17
-           };
-           
-           if (!this.marker)
-           {
-           
-             map.animateCamera(position);
-           
-           }
-
-           let markerOptions: MarkerOptions = {
-             position: coordinates,
-             title: message["LOCATION"],
-             icon: '../../../resources/red-circle.png',
-           };
-          
-            if (this.marker)
-            {
-              this.marker.remove(); 
-            }
-
-           var marker = map.addMarker(markerOptions)
-             .then((marker: Marker) => {
-                marker.showInfoWindow();
-                this.marker = marker;
-           });
-           
-                        
-        },(err: any)=>{
-        
-            console.log(err);
-        })
-        
-    }
+ 
       
       
-      
-     refreshTime(map, message , lthis = this)
-    {   
-        if(this.stopMapGps == false){
-            
-            lthis.mapData(map, message);
-            console.log("refreshed");  
-
-            setTimeout(function ()
-            {
-                lthis.refreshTime(map, message,lthis);
-
-            }, 10000);
-        }
-    }
-  
 
 }
