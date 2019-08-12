@@ -142,7 +142,6 @@ export class ExhibitionDetail {
             this.beaconProvider.unlockExhibition(exhibition.id);
 
           }
-
           this.beaconProvider.listenToBeaconEvents(exhibition)
          
         }
@@ -150,25 +149,25 @@ export class ExhibitionDetail {
     }
 
 
-    unlockExhibition(exhibition2) {
+    unlockExhibition(exhibition2) 
+    {
       this.storage.getItem(exhibition2.id).then(exhibition => 
       {
         this.exhibition = null
         this.exhibition = exhibition
         this.beaconProvider.exhibition = exhibition
         this.gpsProvider.exhibition = exhibition
-
       })
 
       this.storage.getItem(this.exhibition.id + '-items').then(items => {
         console.log(items);
-        if(items.length > 0){
+        if(items.length > 0)
+        {
           this.items = items
           this.hasItems = true
         }
         this.beaconProvider.itemsExhibition = items;
         this.gpsProvider.itemsExhibition = items;
-
         this.changeDetector.detectChanges();
       })
     }
@@ -183,11 +182,12 @@ export class ExhibitionDetail {
         this.navCtrl.push('MuseumDetail', {id: this.exhibition.museum_id})
     }
 
-    goToItemView(index) {
+    goToItemView(index) 
+    {
         //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
         let activePage = this.navCtrl.getActive().component.name
-        if('ItemDetail' == activePage){
-          //this.events.publish('refreshItemPage', {index: index})
+        if('ItemDetail' == activePage)
+        {
           this.navCtrl.pop();
         }
         this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})

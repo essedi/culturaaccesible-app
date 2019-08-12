@@ -59,13 +59,13 @@ export class GpsProvider {
          this.showOpenItemAlert(this.alertItem, this.exhibition.id );
          
         });
-              
-   }
+
+    }
 
 
     configureBackgroundGeolocation(){
 
-        BackgroundGeolocation.onLocation(location => {
+       BackgroundGeolocation.onLocation(location => {
              console.log('[location] - ', location);
              this.searchItemsExhibition(location);
         });
@@ -88,8 +88,8 @@ export class GpsProvider {
             notification: {
                title: 'Cultura Accesible',
                text: bgMessage["TEXT"] ,
-               smallIcon : 'icon',
-               largeIcon:'icon'    
+               smallIcon : 'res://icon',
+               largeIcon:'res://icon'    
             },
              startOnBoot: true,
              foregroundService: true,
@@ -108,13 +108,6 @@ export class GpsProvider {
     }
 
 
-    ionViewDidLeave()
-    {
-        // BackgroundGeolocation.stop();
-        // this.stopGps = true;
-    }
-
-    
    getItemLocation()
    {
     this.getLocation().then(
@@ -123,7 +116,7 @@ export class GpsProvider {
            for(let item of this.itemsExhibition)
             {
                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
-               console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
+               console.log(distance, "<<<< PLAY VIDEO AT 10 MTRS");
                var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
                
                if(itemDisabled)
@@ -132,11 +125,12 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance <= 12 )
+                 if(distance <= 15 )
                  {
                      this.alertItem = item;
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.events.publish('stopGps', {stop:true , id: item.id})
+
                  }
                }
             }
@@ -148,42 +142,39 @@ export class GpsProvider {
         });
     }
     
-
   
 
     searchItemsExhibition(location){
         
-          for(let item of this.itemsExhibition)
-            {
-                 var distance = this.getDistance(location.coords.latitude, item["lat"], location.coords.longitude , item["lng"]);
-                 console.log(distance, "BG ITEM distance");
+        for(let item of this.itemsExhibition)
+        {
+             var distance = this.getDistance(location.coords.latitude, item["lat"], location.coords.longitude , item["lng"]);
+             console.log(distance, "BG ITEM distance");
 
-                 var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
+             var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
 
-                  if(itemDisabled)
-                  {
-                      console.log(itemDisabled, "BG ITEM DISABLED");
+              if(itemDisabled)
+              {
+                  console.log(itemDisabled, "BG ITEM DISABLED");
 
-                  }else{
+              }else{
 
-                     if(distance <= 12 )
-                     {
-                         this.alertItem = item;
-                         this.setNotification();
-                         console.log("PLAY SOUND");
-                         //this.disabledItems.push(item);
-                         this.events.publish('stopGps', { stop:true , id: item.id })
-                     }
+                 if(distance <= 15 )
+                 {
+                     this.alertItem = item;
+                     this.setNotification();
+                     console.log("PLAY SOUND");
+                     this.events.publish('stopGps', { stop:true , id: item.id })
                  }
-              }  
-             console.log(location, new Date(), "process finished!");
+             }
+          }  
+         console.log(location, new Date(), "process finished!");
         //  this.backgroundGeolocation.finish(); // IOS Only
     }
 
 
    refreshTime(lthis = this)
     {   
-        
         //if(this.stopGps == false ) {
 
            lthis.getItemLocation();  
@@ -207,13 +198,12 @@ export class GpsProvider {
                 (res: boolean) =>
                 {
                     //if options not passed, use default
-                    if (!opt)
+                 
+                    opt =
                     {
-                        opt =
-                        {
-                            enableHighAccuracy: false
-                        }
+                        enableHighAccuracy: false
                     }
+                    
                     lthis.geolocation.getCurrentPosition(opt).then(
                         (res) =>
                         {
@@ -388,7 +378,7 @@ export class GpsProvider {
   }
 
 
-
+    
   showOpenItemAlert(item, exhibitionId) 
    {
     let messages;
@@ -404,10 +394,7 @@ export class GpsProvider {
           text: messages['BUTTONS']['NO'],
           role: 'cancel',
           handler: () => {
-           // this.events.publish('startRanging')
-            //this.stopGps = true;
             console.log('Cancel clicked');
-           // this.events.publish('stopGps', {stop:true , id: item.id})
           }
         },
         {
@@ -415,9 +402,6 @@ export class GpsProvider {
           handler: () => {
            
             this.retrieveItemByCoords(item.lat, item.lng, exhibitionId)
-            //this.stopGps = true;
-           // this.events.publish('startRanging')
-
           }
         }
       ]

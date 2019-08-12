@@ -31,9 +31,8 @@ export class MapPage {
     exhibition;
     items: Array<Object>;
     @ViewChild('map') element;
-    stopMapGps: boolean = false;
-    marker;
     loading;
+    marker;
  
   constructor(
         public navCtrl: NavController, 
@@ -65,16 +64,6 @@ export class MapPage {
                this.gpsProvider.unlockExhibition(this.exhibition.id);
 
             }
-
-            this.stopMapGps= false;
-            
-            this.platform.resume.subscribe((result)=>{
-
-                 if (this.marker)
-                {
-                  this.marker.remove(); 
-                }
-            });
         });
     }
 
@@ -88,30 +77,26 @@ export class MapPage {
 
      ionViewWillUnload() {
         
-      this.events.unsubscribe('goToItemDetail')
-      this.events.unsubscribe('exhibitionUnlocked')
+         console.log("ionViewWillUnload on map");
+      //this.events.unsubscribe('goToItemDetail')
+     // this.events.unsubscribe('exhibitionUnlocked')
       
     }
 
-    ionViewDidLeave() {
-        
-        this.stopMapGps= true;
-    }
+   
   
     getPosition():any{
         
-        let options = {
+        var opt =
+        {
             enableHighAccuracy: false
-            //timeout: 10000
-          };
-          
-        LocationService.getMyLocation().then((myLocation: MyLocation) => {
+        }
+                  
+        LocationService.getMyLocation(opt).then((myLocation: MyLocation) => {
 
-      
           this.initMap(myLocation);
 
-      });
-
+        });
     }
     
     
@@ -127,54 +112,50 @@ export class MapPage {
             tilt: 30,
           },
           controls: {
-            zoom: true,
             myLocationButton : true,
             myLocation: true,
-            
           }
         };
-
+        
          let map = GoogleMaps.create(this.element.nativeElement, options);
          let message;
          
-        
-       
          this.translate.get('EXHIBITIONS.MAP').subscribe(data => {
              message = data
          })
 
-
          map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
             
-            console.log(map, " MAP");
-          
-            //this.refreshTime(map, message);
-                       
+            console.log(data, " MAP");
+                  
             if(this.items.length){
+                
+                console.log(this.items, "this.items");
 
-                for(let item of this.items){
-
+                for(let item of this.items)
+                {
                     let coordinates: LatLng = new LatLng(item['lat'], item['lng']);
-
+                 
                     let markerOptions: MarkerOptions = {
+                        
                       position: coordinates,
                       title: item['name']
                     };
 
                      const marker = map.addMarker(markerOptions)
                       .then((marker: Marker) => {
-                        marker.showInfoWindow();
+                                                  
+                          marker.showInfoWindow();
                     });
                 }
             }
-            
+            this.loading.dismiss();
         })
         
-        this.loading.dismiss();
+      
     }
     
  
-      
       
 
 }
