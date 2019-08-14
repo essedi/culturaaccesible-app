@@ -1,11 +1,12 @@
 <ion-header no-border>
-    <ion-navbar>
-        <button ion-button menuToggle>
+    <ion-navbar >
+        <button ion-button menuToggle >
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>{{'ITEM.DETAIL.TITLE' | translate}}</ion-title>
+        <ion-title>{{'ITEM.DETAIL.TITLE' | translate}}   </ion-title>
     </ion-navbar>
 </ion-header>
+
 
 
 <ion-content padding class="blue-background no-scroll">
@@ -13,7 +14,7 @@
   <video id="myVideo" controls webkit-playsinline>
       <source src="{{item?.video}}" type='video/mp4' />
   </video>
-<!--   <div class="media-controls">
+<!--<div class="media-controls">
     <button ion-button round outline color="light" class="previous" (click)="goToPreviewItem()"><ion-icon name="rewind"></ion-icon></button>
     <button ion-button round outline color="light" class="toggle-play {{action}}" (click)="togglePlay()">  <ion-icon name="{{action}}"></ion-icon>
     </button>

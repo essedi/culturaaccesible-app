@@ -31,6 +31,7 @@ export class ItemDetail {
               private downloader: DownloadProvider,
               public navParams: NavParams,
               private service: ItemsProvider) {
+              
     this.ngZone = new NgZone({enableLongStackTrace: false})
 
     events.subscribe('refreshItemPage', (data) => {
@@ -47,12 +48,16 @@ export class ItemDetail {
       })
     })
 
+           
     events.subscribe('stopVideo', (data) => {
       //this.viewCtrl.dismiss()
       this.pause();
       this.video.webkitExitFullScreen();
     })
   }
+  
+  
+
 
   ionViewDidLoad() {
     this.exhibitionId = this.navParams.get("exhibitionId")
@@ -80,6 +85,9 @@ export class ItemDetail {
       this.video.load()
     }, 500)
   }
+  
+  
+
 
   play() {
     this.video.play()

@@ -48,6 +48,13 @@ export class MapPage {
         this.items= this.navParams.get('items');
         this.exhibition= this.navParams.get('exhibition');
 
+        events.subscribe('goToItemDetail', (data) => {
+          this.goToItemView(data.index)
+        })
+        
+        
+       events.publish('videoParent', { page: "map"})
+
         console.log( this.items," this.items");
         
         this.platform.ready().then(() => {
@@ -62,9 +69,10 @@ export class MapPage {
             {
                // move this Up if want to show items always
                this.gpsProvider.unlockExhibition(this.exhibition.id);
-
+               
             }
         });
+        
     }
 
     presentLoading() {
@@ -78,12 +86,20 @@ export class MapPage {
      ionViewWillUnload() {
         
          console.log("ionViewWillUnload on map");
-      //this.events.unsubscribe('goToItemDetail')
-     // this.events.unsubscribe('exhibitionUnlocked')
       
     }
 
-   
+     goToItemView(index) 
+    {
+        //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
+        let activePage = this.navCtrl.getActive().component.name
+        if('ItemDetail' == activePage)
+        {
+          this.navCtrl.pop();
+        }
+        this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})
+
+    }
   
     getPosition():any{
         
@@ -152,7 +168,6 @@ export class MapPage {
             this.loading.dismiss();
         })
         
-      
     }
     
  

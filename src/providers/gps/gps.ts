@@ -35,7 +35,6 @@ export class GpsProvider {
         private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings
    ) {
-   
          
     this.platform.ready().then(this.configureBackgroundGeolocation.bind(this));
     
@@ -125,7 +124,7 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance <= 15 )
+                 if(distance <= 10 )
                  {
                      this.alertItem = item;
                      this.showOpenItemAlert(item, this.exhibition.id );
@@ -159,7 +158,7 @@ export class GpsProvider {
 
               }else{
 
-                 if(distance <= 15 )
+                 if(distance <= 10 )
                  {
                      this.alertItem = item;
                      this.setNotification();
@@ -169,21 +168,21 @@ export class GpsProvider {
              }
           }  
          console.log(location, new Date(), "process finished!");
-        //  this.backgroundGeolocation.finish(); // IOS Only
+        //this.backgroundGeolocation.finish(); // IOS Only
     }
 
 
-   refreshTime(lthis = this)
+    refreshTime(lthis = this)
     {   
         //if(this.stopGps == false ) {
 
-           lthis.getItemLocation();  
+            lthis.getItemLocation();  
 
-           setTimeout(function ()
-           {
-               lthis.refreshTime(lthis);
+            setTimeout(function ()
+            {
+                lthis.refreshTime(lthis);
 
-           }, 10000);
+            }, 10000);
 
        // }
     }
@@ -358,7 +357,8 @@ export class GpsProvider {
     
     
  
-    unlockExhibition(exhibitionId) {
+    unlockExhibition(exhibitionId) 
+    {
       this.storage.getItem(exhibitionId).then(exhibition => {
         //let isunlock = exhibition.unlocked;
         this.exhibition.unlocked = true;
