@@ -21,6 +21,8 @@ export class ItemDetail {
   video;
   action = 'play';
   ngZone;
+  parentPage;
+  exhibition;
 
   constructor(public navCtrl: NavController,
               public viewCtrl: ViewController,
@@ -48,16 +50,48 @@ export class ItemDetail {
       })
     })
 
-           
     events.subscribe('stopVideo', (data) => {
       //this.viewCtrl.dismiss()
       this.pause();
       this.video.webkitExitFullScreen();
     })
+        
+   console.log(this.navCtrl, "DATA navCtrl");
+
+    events.subscribe('videoParent', (data) => {
+        
+        console.log( "in item event");
+
+        if(data.page == "map")
+        {
+            console.log( "event page map");
+            this.parentPage = "map";
+            this.exhibition = data.exhibition;
+            //this.navCtrl.insert(insertIndex, page)
+            
+        }else
+        {
+            console.log( "event page exhibition");
+            this.parentPage = "exhibition";
+        }
+    })
+    
+    
   }
   
-  
+  ionViewDidLeave()
+  {
+     //this.navCtrl.push('MapPage', {items: this.items, exhibition: this.exhibition })
+    //this.events.unsubscribe('videoParent');
+      console.log("LEaving");
+      console.log(this.items, "L items");
+       
+      if( this.parentPage == "map"){
+           
+             this.navCtrl.insert(-1, 'MapPage', {items: this.items, exhibition: this.exhibition })
+      }
 
+  }
 
   ionViewDidLoad() {
     this.exhibitionId = this.navParams.get("exhibitionId")

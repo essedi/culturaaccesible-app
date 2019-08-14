@@ -9,7 +9,6 @@ import { IonicPage, NavController, AlertController, Platform, Events } from 'ion
 })
 export class HomePage {
     
-  tasks: any[] = [];
 
 
   constructor(public navCtrl: NavController,
@@ -17,7 +16,7 @@ export class HomePage {
               public platform: Platform,
               public events: Events) {
               
-                console.log("in home tasks", this.tasks);
+                console.log("in home tasks");
   }
   
 

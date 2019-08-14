@@ -58,7 +58,7 @@ export class GpsProvider {
          this.showOpenItemAlert(this.alertItem, this.exhibition.id );
          
         });
-
+        
     }
 
 
@@ -124,19 +124,18 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance <= 10 )
+                 if(distance <= 20 )
                  {
                      this.alertItem = item;
                      this.showOpenItemAlert(item, this.exhibition.id );
                      this.events.publish('stopGps', {stop:true , id: item.id})
-
                  }
                }
             }
         },
         (err: any) =>
         {
-            console.log(err, "<<<< err location");
+            console.log(err, "<<<< location");
 
         });
     }
@@ -158,7 +157,7 @@ export class GpsProvider {
 
               }else{
 
-                 if(distance <= 10 )
+                 if(distance <= 20 )
                  {
                      this.alertItem = item;
                      this.setNotification();
@@ -184,7 +183,7 @@ export class GpsProvider {
 
             }, 10000);
 
-       // }
+     //   }
     }
   
   

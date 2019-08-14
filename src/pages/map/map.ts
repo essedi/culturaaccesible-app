@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, LoadingController, NavController, NavParams, Platform , Events} from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams, Platform , Events ,AlertController} from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { TranslateService } from '@ngx-translate/core';
 import {GpsProvider} from '../../providers/gps/gps';
@@ -39,23 +39,16 @@ export class MapPage {
         public navParams: NavParams,
         public platform: Platform,
         public events: Events,
+        public alertCtrl: AlertController,
         public loadingCtrl: LoadingController,
         public translate: TranslateService,
-        private geolocation: Geolocation,
         private gpsProvider: GpsProvider,
         public googleMaps: GoogleMaps) {
       
         this.items= this.navParams.get('items');
         this.exhibition= this.navParams.get('exhibition');
-
-        events.subscribe('goToItemDetail', (data) => {
-          this.goToItemView(data.index)
-        })
         
-        
-       events.publish('videoParent', { page: "map"})
-
-        console.log( this.items," this.items");
+      
         
         this.platform.ready().then(() => {
          
@@ -64,7 +57,9 @@ export class MapPage {
 
             this.gpsProvider.itemsExhibition =  this.items;
             this.gpsProvider.exhibition = this.exhibition;
-
+            
+             events.publish('videoParent', { page: "map", exhibition : this.exhibition });
+   
              if(this.exhibition.unlocked)
             {
                // move this Up if want to show items always
@@ -72,9 +67,9 @@ export class MapPage {
                
             }
         });
-        
     }
-
+    
+  
     presentLoading() {
         this.loading = this.loadingCtrl.create({
           content: 'Please wait...'
@@ -83,24 +78,7 @@ export class MapPage {
         this.loading.present();
      }
 
-     ionViewWillUnload() {
-        
-         console.log("ionViewWillUnload on map");
-      
-    }
 
-     goToItemView(index) 
-    {
-        //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
-        let activePage = this.navCtrl.getActive().component.name
-        if('ItemDetail' == activePage)
-        {
-          this.navCtrl.pop();
-        }
-        this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})
-
-    }
-  
     getPosition():any{
         
         var opt =
@@ -157,7 +135,7 @@ export class MapPage {
                       position: coordinates,
                       title: item['name']
                     };
-
+                    
                      const marker = map.addMarker(markerOptions)
                       .then((marker: Marker) => {
                                                   

@@ -48,6 +48,8 @@ export class ExhibitionList {
                 //console.log(data, "retrievePremiumExhibition")
                 this.purchases.push(data);
             }) 
+            
+
           
    }
    
