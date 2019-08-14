@@ -91,7 +91,7 @@ export class GpsProvider {
                largeIcon:'res://icon'    
             },
              startOnBoot: true,
-             foregroundService: true,
+             foregroundService: false,
             // IOS only
             // res://icon
             // preventSuspend: true,
@@ -124,7 +124,7 @@ export class GpsProvider {
                    
                }else
                {
-                 if(distance <= 20 )
+                 if(distance <= 10 )
                  {
                      this.alertItem = item;
                      this.showOpenItemAlert(item, this.exhibition.id );
@@ -157,7 +157,7 @@ export class GpsProvider {
 
               }else{
 
-                 if(distance <= 20 )
+                 if(distance <= 10 )
                  {
                      this.alertItem = item;
                      this.setNotification();

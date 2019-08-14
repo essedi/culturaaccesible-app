@@ -44,11 +44,9 @@ export class MapPage {
         public translate: TranslateService,
         private gpsProvider: GpsProvider,
         public googleMaps: GoogleMaps) {
-      
+        
         this.items= this.navParams.get('items');
         this.exhibition= this.navParams.get('exhibition');
-        
-      
         
         this.platform.ready().then(() => {
          
@@ -134,6 +132,13 @@ export class MapPage {
                         
                       position: coordinates,
                       title: item['name']
+                     /* icon: {
+                        url: item["image"],
+                        size: {
+                          width: 32,
+                          height: 24
+                        }
+                      }*/
                     };
                     
                      const marker = map.addMarker(markerOptions)

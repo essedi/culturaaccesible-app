@@ -83,12 +83,11 @@ export class ItemDetail {
   {
      //this.navCtrl.push('MapPage', {items: this.items, exhibition: this.exhibition })
     //this.events.unsubscribe('videoParent');
-      console.log("LEaving");
-      console.log(this.items, "L items");
+      console.log("Leaving");
        
       if( this.parentPage == "map"){
            
-             this.navCtrl.insert(-1, 'MapPage', {items: this.items, exhibition: this.exhibition })
+            this.navCtrl.insert(-1, 'MapPage', {items: this.items, exhibition: this.exhibition })
       }
 
   }
