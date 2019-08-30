@@ -126,24 +126,32 @@ export class MapPage {
 
                 for(let item of this.items)
                 {
+                    
                     let coordinates: LatLng = new LatLng(item['lat'], item['lng']);
-                 
+                    
                     let markerOptions: MarkerOptions = {
-                        
                       position: coordinates,
-                      title: item['name']
-                     /* icon: {
+                      title: item['name'],
+                      /*icon: {
                         url: item["image"],
                         size: {
-                          width: 32,
-                          height: 24
+                          width: 52,
+                          height: 44
                         }
-                      }*/
+                      },*/
+                        infoWindowAnchor: [16, 0],
+
+                        anchor: [16, 32],
+                        
+                        styles: {
+                          'text-align': 'center',
+                          'font-weight': 'bold',
+                        },
                     };
-                    
-                     const marker = map.addMarker(markerOptions)
+                
+                    const marker = map.addMarker(markerOptions)
                       .then((marker: Marker) => {
-                                                  
+                          
                           marker.showInfoWindow();
                     });
                 }
@@ -152,6 +160,10 @@ export class MapPage {
         })
         
     }
+    
+    
+    
+
     
  
       
