@@ -91,7 +91,7 @@ export class GpsProvider {
                largeIcon:'res://icon'    
             },
              startOnBoot: true,
-             foregroundService: false,
+             foregroundService: true,
             // IOS only
             // res://icon
             // preventSuspend: true,
