@@ -33,6 +33,12 @@ export class ItemDetail {
               private downloader: DownloadProvider,
               public navParams: NavParams,
               private service: ItemsProvider) {
+          
+    let lthis = this;
+    events.subscribe('goToItemDetail', (data) => {
+          lthis.goToItemView(data.index)
+     })
+    
               
     this.ngZone = new NgZone({enableLongStackTrace: false})
 
@@ -55,45 +61,53 @@ export class ItemDetail {
       this.pause();
       this.video.webkitExitFullScreen();
     })
-        
-   console.log(this.navCtrl, "DATA navCtrl");
+    
 
-    events.subscribe('videoParent', (data) => {
-        
-        console.log( "in item event");
+    console.log(this.navCtrl, "DATA navCtrl");
 
-        if(data.page == "map")
-        {
-            console.log( "event page map");
-            this.parentPage = "map";
-            this.exhibition = data.exhibition;
-            //this.navCtrl.insert(insertIndex, page)
-            
-        }else
-        {
-            console.log( "event page exhibition");
-            this.parentPage = "exhibition";
-        }
+     events.subscribe('videoParent', (data) => {
+
+         console.log( "in item event");
+
+         if(data.page == "map")
+         {
+             console.log( "event page map");
+             this.parentPage = "map";
+             this.exhibition = data.exhibition;
+             //this.navCtrl.insert(insertIndex, page)
+
+         }else
+         {
+             console.log( "event page exhibition");
+             this.parentPage = "exhibition";
+         }
     })
-    
-    
+
   }
   
   ionViewDidLeave()
   {
-     //this.navCtrl.push('MapPage', {items: this.items, exhibition: this.exhibition })
-    //this.events.unsubscribe('videoParent');
-      console.log("Leaving");
-       
       if( this.parentPage == "map"){
            
             this.navCtrl.insert(-1, 'MapPage', {items: this.items, exhibition: this.exhibition })
       }
-
+  }
+  
+  ionViewWillEnter(){
+      
+          this.beaconProvider.stopReadBeacon = false;   
+       this.beaconProvider.startRanging();
+   // this.exhibitionId = this.navParams.get("exhibitionId");
+   // this.getExhibition(this.exhibitionId);
+      
   }
 
   ionViewDidLoad() {
-    this.exhibitionId = this.navParams.get("exhibitionId")
+      
+    
+    this.exhibitionId = this.navParams.get("exhibitionId");
+    this.getExhibition(this.exhibitionId);
+    
     let index = this.navParams.get("index")
 
     if(index){
@@ -120,7 +134,35 @@ export class ItemDetail {
   }
   
   
+  
+  getExhibition(exhibitionId) {
 
+      this.storage.getItem(exhibitionId).then(exhibition => {
+           console.log(exhibition, "exhibition info");
+           
+        this.beaconProvider.initialise().then((isInitialised) => {
+          if (isInitialised) {
+            this.beaconProvider.listenToBeaconEvents(exhibition);
+            this.beaconProvider.isInitialized = true
+            }
+          });
+              
+               
+          this.beaconProvider.stopReadBeacon = false;   
+          this.beaconProvider.startRanging();
+
+          if(exhibition.unlocked)
+          {
+            this.beaconProvider.unlockExhibition(exhibition.id);
+
+          }
+          this.beaconProvider.exhibition = exhibition;
+          this.beaconProvider.itemsExhibition = exhibition.items;
+                  
+    
+      })
+   }
+   
 
   play() {
     this.video.play()
@@ -174,5 +216,16 @@ export class ItemDetail {
     this.item = this.items[this.position]
     this.video.load()
   }
+  
+  goToItemView(index) 
+    {
+        //this.beaconProvider.stopReadBeacon = true; // El refresh nunca pasara
+      /*  let activePage = this.navCtrl.getActive().component.name
+        if('ItemDetail' == activePage)
+        {
+          this.navCtrl.pop();
+        }
+        this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.navParams.get("exhibitionId") })*/
+    }
 
 }

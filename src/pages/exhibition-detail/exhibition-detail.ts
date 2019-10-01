@@ -44,8 +44,8 @@ export class ExhibitionDetail {
         
        events.publish('videoParent', { page: "exhibition"});
 
-       
-        platform.ready().then(() => {
+      
+       platform.ready().then(() => {
           if(exhibition){
                 if(!beaconProvider.isInitialized && exhibition.locationType != "gps"){
                 beaconProvider.initialise().then((isInitialised) => {
@@ -56,7 +56,7 @@ export class ExhibitionDetail {
                   });
                }
             }
-        });
+        }); 
         
         this.notification = this.gpsProvider.notification;
         console.log(this.notification, "notification");
@@ -75,7 +75,7 @@ export class ExhibitionDetail {
 
       }else{ 
       
-         this.beaconProvider.startRanging() 
+        this.beaconProvider.startRanging() 
          
       }
        this.getExhibition(exhibition)
@@ -83,19 +83,22 @@ export class ExhibitionDetail {
 
     
  ionViewWillLeave(){
-        
-        this.beaconProvider.stopRanging();
-        this.beaconProvider.stopReadBeacon = true;
-
-        console.log("ionViewDidLeave");
+     
+     
+       //this.beaconProvider.stopRanging();
+       this.beaconProvider.stopReadBeacon = true;
+      // this.events.unsubscribe('didRangeBeaconsInRegion');
+      // this.events.unsubscribe('goToItemDetail')
+       console.log("ionViewDidLeave");
   }
     
  ionViewWillUnload() {
         
       this.gpsProvider.stopGps = true;
       this.beaconProvider.stopRanging();
-
+      this.beaconProvider.stopReadBeacon = true; 
       this.events.unsubscribe('goToItemDetail')
+         console.log("ionViewWill Unload");
       this.events.unsubscribe('exhibitionUnlocked')
       
   }
@@ -176,7 +179,6 @@ export class ExhibitionDetail {
           this.navCtrl.pop();
         }
         this.navCtrl.push('ItemDetail', {index: index, exhibitionId: this.exhibition.id})
-
     }
 }
     

@@ -92,6 +92,7 @@ export class BeaconProvider {
   listenToBeaconEvents(exhibition) {
     this.exhibition = exhibition
     this.events.subscribe('didRangeBeaconsInRegion', (data) => {
+      console.log(data, "LISTENIG TO BEACON EVENTS");
       this.initializeBeacons(data)
       this.chooseListenAction(parseInt(exhibition.beacon))
     });
@@ -143,17 +144,24 @@ export class BeaconProvider {
       }
     //  this.closestBeacon = this.beacons.filter(beacon => beacon.proximity == 'ProximityImmediate')[0]
     }
-
   }
 
   presentItem() {
     console.log("presentItem: "+this.triggeredBeaconNumber.indexOf(this.closestBeacon.minor));
+    
     if(this.exhibition.unlocked && this.isAvailablepresentItem(this.closestBeacon.minor) && !this.stopReadBeacon){
-      this.setLastTriggeredBeacon()
-      this.showOpenItemAlert(this.closestBeacon.minor, this.exhibition.id)
-      this.stopItemBeaconActions()
+        
+      this.setLastTriggeredBeacon();
+      this.showOpenItemAlert(this.closestBeacon.minor, this.exhibition.id);
+      // eliminar esto para probar continuacion de video >>
+      this.stopItemBeaconActions();
+      
     }
   }
+  
+  
+ 
+  
   getPresentItem(minorId){
     let idx = this.itemsExhibition.findIndex(d =>{
       return d.beacon == minorId;
@@ -251,7 +259,7 @@ export class BeaconProvider {
 
   showOpenItemAlert(beaconNumber, exhibitionId) {
     let messages;
-
+    
     this.translate.get('BEACONS.ALERT').subscribe(data => {
       messages = data
     })
@@ -265,6 +273,7 @@ export class BeaconProvider {
           role: 'cancel',
           handler: () => {
             this.events.publish('startRanging')
+         //   this.stopReadBeacon = false;
             console.log('Cancel clicked');
 
           }
@@ -272,7 +281,7 @@ export class BeaconProvider {
         {
           text: messages['BUTTONS']['YES'],
           handler: () => {
-            //this.stopReadBeacon = true;
+           // this.stopReadBeacon = false;
             this.retrieveItemByBeacon(beaconNumber, exhibitionId)
             this.events.publish('startRanging')
 

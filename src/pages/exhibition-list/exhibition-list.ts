@@ -41,16 +41,12 @@ export class ExhibitionList {
             private downloader: DownloadProvider,
             private purchaseProvider: PurchaseProvider,
             @Inject(EnvVariables) private envVariables) { 
-            
-           
-            
+                        
             this.events.subscribe('retrievePremiumExhibition', (data) => {
                 //console.log(data, "retrievePremiumExhibition")
                 this.purchases.push(data);
             }) 
-            
-
-          
+                      
    }
    
    checkIfPayed(exhibition){

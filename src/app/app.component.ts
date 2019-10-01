@@ -20,7 +20,6 @@ export class MyApp {
         public splashScreen: SplashScreen,
         public translate: TranslateService,
 
-
         ) {
 
         var language = navigator.language.split('-')[0]
@@ -34,7 +33,6 @@ export class MyApp {
           this.pages = [
               { title: data['EXHIBITIONS'], component: 'ExhibitionList', id: 'exhibitions' }
           ];
-          
         });
     }
 
@@ -45,10 +43,11 @@ export class MyApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             this.statusBar.styleDefault();
-		if(this.platform.is('ios'))
-{
-this.nav.setRoot('ExhibitionList');
-}            
+            
+            if(this.platform.is('ios'))
+            {
+            this.nav.setRoot('ExhibitionList');
+            }            
         });
     }
     
