@@ -115,6 +115,9 @@
         <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
             <string>Spanish</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothAlwaysUsageDescription">
+            <string> Esta aplicación necesita siempre acceso a bluetooth para funcionar correctamente</string>
+        </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothPeripheralUsageDescription">
             <string> Esta aplicación necesita acceso a bluetooth para funcionar correctamente</string>
         </edit-config>
