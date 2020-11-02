@@ -104,9 +104,6 @@ export class ExhibitionList {
         this.showNoExhibitionMessage()
       }
     })
-    
-    
-
   }
 
   showNoExhibitionMessage() {
@@ -146,7 +143,7 @@ export class ExhibitionList {
     
     console.log(exhibition.id, isoCode, "in download");
     
-    this.service.download2(exhibition.id, isoCode).subscribe((exhibition:any) => 
+    /*this.service.download2(exhibition.id, isoCode).subscribe((exhibition:any) => 
     {
       console.log(exhibition,"in service download");
       this.extractItems(exhibition);
@@ -154,10 +151,10 @@ export class ExhibitionList {
     }, error =>
     {
       lthis.loading.dismiss();
-    })
+    })*/
     
     
-  /*  this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
+    this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
       let object1 = JSON.parse(exhibition.data);
       console.log("in service download");
       this.extractItems(object1);
@@ -165,7 +162,7 @@ export class ExhibitionList {
       console.log(error, "<< errorrr");
       console.log(JSON.stringify(error))
       lthis.loading.dismiss();
-    })*/
+    })
   }
 
   saveInLocal(exhibition) {
@@ -251,6 +248,7 @@ export class ExhibitionList {
     var isoCodeTranslations = {
       'es': 'Castellano',
       'cat': 'Valencià',
+      'it': 'Italiano',
       'en': 'English'
     }
 
@@ -307,7 +305,7 @@ export class ExhibitionList {
         const tag = document.createElement('script');
         const xhr = new XMLHttpRequest();
         var url = `${this.envVariables.baseUrl}/api/exhibition/download`;
-
+        
         xhr.open('POST', url , true);
         xhr.responseType = 'arraybuffer';
         xhr.onloadend = (e) => document.head.appendChild(tag);
@@ -318,7 +316,6 @@ export class ExhibitionList {
         barElement.style.display = "block";
  
         xhr.onprogress = (e) => {
-            console.log(e, "MEHHH");
 
           if (e.lengthComputable) {
               

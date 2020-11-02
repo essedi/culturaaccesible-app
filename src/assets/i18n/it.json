@@ -1,0 +1,83 @@
+{
+    "MENU": {
+      "TITLE": "Menu",
+      "HOME": "Home",
+      "EXHIBITIONS": "Mostre"
+    },
+    "HOME": {
+      "TITLE": "Inicio"
+    },
+    "EXHIBITIONS": {
+        "DETAIL": {
+            "TITLE": "Informazione sulla mostra",
+            "FROM": "Dal:",
+            "TO": "Al:",
+            "BUTTONS": {
+                "MUSEUM": "Info museo",
+                "MAP": "Vedi Mappa"
+            }
+        },
+        "LIST": {
+            "TITLE": "Lista mostre",
+            "EMPTY_ALERT": "Non ci sono mostre",
+            "ALERT": {
+              "TITLE": "Scegli la lingua",
+              "BODY": "nella quale vuoi ascoltare le descrizioni",
+              "BUTTONS": {
+                "YES": "Scegli",
+                "NO": "Annulla"
+              }
+            }
+        },
+        "BUTTONS": {
+            "MUSEUM": "Museo"
+        },
+        "NOTIFICATION":{
+            "TITLE":"Ti trovi vicino ad una mostra,
+            "TEXT":"Fai click per vedere il video"
+        },
+          "MAP":{
+            "LOCATION": " La tua ubicazione "
+        }
+    },
+    "MUSEUM": {
+        "DETAIL" : {
+            "TITLE": "Informazione sul museo",
+            "MAP": "Vedi mappa",
+            "DAYS": {
+                "MONDAY": "Lunedì:",
+                "TUESDAY": "Martedì:",
+                "WEDNESDAY": "Mercoledì:",
+                "THURSDAY": "Giovedì:",
+                "FRIDAY": "Venerdì:",
+                "SATURDAY": "Sabato:",
+                "SUNDAY": "Domenica:"
+            },
+            "PRICE": {
+                "FREE": "Entrata gratuita:",
+                "GENERAL": "Generale:",
+                "REDUCED": "Ridotta:"
+            },
+            "BUTTONS": {
+                "ENTER": "Entrare"
+            }
+        }
+    },
+    "ITEM": {
+      "DETAIL": {
+        "TITLE" : "Opera"
+      }
+    },
+    "BEACONS": {
+        "ALERT": {
+            "TITLE": "Ti trovi vicino ad un0opera",
+            "BODY": "¿Vuoi saperne di pù?",
+            "BUTTONS": {
+              "YES": "Si",
+              "NO": "No"
+            },
+            "BLUETOOTH": "Per veder il contenuto devi attivare il bluetooth e posizionarti all'entrata della mostra",
+            "NAVIGATE": "Muoviti per la sala ed aspetta che l'opera ti parli di sè"
+        }
+    }
+}
