@@ -139,6 +139,7 @@ export class ExhibitionList {
   download(exhibition, isoCode) {
     let lthis = this;
     //this.presentLoading()
+    console.log("isocode: "+isoCode)
     this.loaderBarFunction(exhibition);
 
     this.service.download(exhibition.id, isoCode).then((exhibition:any) => {
@@ -146,7 +147,7 @@ export class ExhibitionList {
       
       this.extractItems(object);
     }, error => {
-      console.log(error);
+      console.error(error);
       console.log(JSON.stringify(error))
       lthis.loading.dismiss();
     })
@@ -235,6 +236,7 @@ export class ExhibitionList {
     var isoCodeTranslations = {
       'es': 'Castellano',
       'cat': 'Valencià',
+      'it': 'Italiano',
       'en': 'English'
     }
 
