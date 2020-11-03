@@ -42,9 +42,10 @@
     "cc.fovea.cordova.purchase": "^8.1.1",
     "com.unarin.cordova.beacon": "^3.7.0",
     "cordova": "9.0.0",
-    "cordova-android": "8.0.0",
+    "cordova-android": "^8.0.0",
     "cordova-android-support-gradle-release": "3.0.1",
-    "cordova-ios": "^5.0.0",
+    "cordova-background-geolocation-lt": "^3.2.0",
+    "cordova-ios": "^5.0.1",
     "cordova-open-native-settings": "^1.5.2",
     "cordova-plugin-advanced-http": "2.0.6",
     "cordova-plugin-badge": "^0.8.8",
@@ -122,10 +123,14 @@
         "ROLLBACK_TIMEOUT": "10",
         "MIN_BACKGROUND_DURATION": "30"
       },
-      "cordova-plugin-advanced-http": {},
+      "cordova-plugin-advanced-http": {
+        "OKHTTP_VERSION": "3.10.0"
+      },
       "cordova-plugin-geolocation": {},
       "cordova-plugin-network-information": {},
-      "cordova.plugins.diagnostic": {},
+      "cordova.plugins.diagnostic": {
+        "ANDROID_SUPPORT_VERSION": "28.+"
+      },
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
       },
@@ -147,8 +152,18 @@
       },
       "cordova-plugin-googlemaps": {
         "PLAY_SERVICES_VERSION": "15.0.1",
-        "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+        "ANDROID_SUPPORT_V4_VERSION": "27.+",
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "This app wants to get your location while this app runs only.",
+        "LOCATION_ALWAYS_USAGE_DESCRIPTION": "This app wants to get your location always, even this app runs in background."
+      },
+      "cordova-background-geolocation-lt": {
+        "GOOGLE_API_VERSION": "16.+",
+        "APPCOMPAT_VERSION": "27.+",
+        "OKHTTP_VERSION": "3.12.+",
+        "EVENTBUS_VERSION": "3.0.0",
+        "BACKGROUND_MODE_LOCATION": "<string>location</string>"
+      },
+      "cordova-plugin-ionic-webview": {}
     },
     "platforms": [
       "ios",

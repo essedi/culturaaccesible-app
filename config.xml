@@ -34,7 +34,17 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="com.unarin.cordova.beacon.android.altbeacon.ForegroundBetweenScanPeriod" value="1000" />
     <platform name="android">
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+        </edit-config>
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
         <allow-intent href="market:*" />
+        <config-file parent="/manifest/application" target="app/src/main/AndroidManifest.xml">
+            <meta-data android:name="com.transistorsoft.locationmanager.license_key" android:value="4e26645f31b51c3d4f6fe9bfe4c3dc77425668aa2186f17a66bfb12157802481" />
+        </config-file>
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -87,6 +97,45 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <icon height="20" src="resources/ios/icon/icon-20.png" width="20" />
+        <icon height="40" src="resources/ios/icon/icon-20@2x.png" width="40" />
+        <icon height="60" src="resources/ios/icon/icon-20@3x.png" width="60" />
+        <icon height="29" src="resources/ios/icon/icon-29.png" width="29" />
+        <icon height="58" src="resources/ios/icon/icon-29@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/icon-29@3x.png" width="87" />
+        <icon height="48" src="resources/ios/icon/icon-24@2x.png" width="48" />
+        <icon height="55" src="resources/ios/icon/icon-27.5@2x.png" width="55" />
+        <icon height="88" src="resources/ios/icon/icon-44@2x.png" width="88" />
+        <icon height="172" src="resources/ios/icon/icon-86@2x.png" width="172" />
+        <icon height="196" src="resources/ios/icon/icon-98@2x.png" width="196" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+        <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
+        <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
+        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
+        <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
+            <string>Spanish</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothAlwaysUsageDescription">
+            <string> Esta aplicación necesita siempre acceso a bluetooth para calcular la distancia de los beacon</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothPeripheralUsageDescription">
+            <string> Esta aplicación necesita acceso a bluetooth para funcionar calcular la distancia de los beacon</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="CFBundleDevelopmentRegion">
+            <string>Spanish</string>
+        </edit-config>
+        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación siempre necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación siempre necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Esta aplicación necesita acceso a tu ubicación para calcular la distancia de los puntos de interés</string>
+        </config-file>
+        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
+            <string>Esta App requiere detector de movimiento.</string>
+        </config-file>
     </platform>
     <plugin name="com.unarin.cordova.beacon" spec="^3.5.2" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
