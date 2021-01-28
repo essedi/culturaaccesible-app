@@ -21,6 +21,7 @@ export class ItemDetail {
   video;
   action = 'play';
   ngZone;
+  fullscreenAux = false;
 
   constructor(public navCtrl: NavController,
               public viewCtrl: ViewController,
@@ -49,9 +50,24 @@ export class ItemDetail {
 
     events.subscribe('stopVideo', (data) => {
       //this.viewCtrl.dismiss()
+      this.fullscreenAux = this.video?
+        this.video.webkitFullscreenElement !== null :
+        false;
       this.pause();
       this.video.webkitExitFullScreen();
     })
+    events.subscribe('startVideo', (data) => {
+      //this.viewCtrl.dismiss()
+      if(this.fullscreenAux){
+        this.video.webkitRequestFullscreen();
+      }
+      this.play();
+    })
+  }
+
+  ionViewWillLeave(){
+    this.events.unsubscribe('stopVideo')
+    this.events.unsubscribe('startVideo')
   }
 
   ionViewDidLoad() {

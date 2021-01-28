@@ -250,7 +250,7 @@ export class BeaconProvider {
   }
 
   showOpenItemAlert(beaconNumber, exhibitionId) {
-    let messages;
+    let messages; 
 
     this.translate.get('BEACONS.ALERT').subscribe(data => {
       messages = data
@@ -264,6 +264,7 @@ export class BeaconProvider {
           text: messages['BUTTONS']['NO'],
           role: 'cancel',
           handler: () => {
+            this.events.publish('startVideo')
             this.events.publish('startRanging')
             console.log('Cancel clicked');
 
