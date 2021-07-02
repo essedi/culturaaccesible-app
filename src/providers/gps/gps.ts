@@ -5,7 +5,7 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings';
 import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
+//import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse ,BackgroundGeolocationEvents} from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
@@ -20,8 +20,8 @@ export class GpsProvider {
   disabledItems: any[] = [];
   isAndroid: boolean = true;
   alertItem: any;
-  
-  config: BackgroundGeolocationConfig = {
+
+  config: any = {
       desiredAccuracy: 10,
       stationaryRadius: 20,
       distanceFilter: 30,
@@ -34,6 +34,8 @@ export class GpsProvider {
       activitiesInterval: 10000,
     };
 
+  backgroundGeolocation: any;
+
   constructor(
         public platform: Platform,
         public events: Events,
@@ -44,11 +46,11 @@ export class GpsProvider {
         private diagnostic: Diagnostic,
         private localNotifications: LocalNotifications,
         private openSettings: OpenNativeSettings,
-        private backgroundGeolocation: BackgroundGeolocation
+        //private backgroundGeolocation: BackgroundGeolocation
 
    ) {
-   
-  
+
+
         this.events.subscribe('stopGps', (data) => {
 
             if(data.stop == true)
@@ -62,11 +64,11 @@ export class GpsProvider {
                 }
             }
         });
-        
+
         this.platform.ready().then(() => {
 
-            this.localNotifications.on('trigger').subscribe((noti)=> { 
-                
+            this.localNotifications.on('trigger').subscribe((noti)=> {
+
                 //navigator.vibrate(1500);
                 console.log(noti , "notif triggered");
                 this.showOpenItemAlert(this.alertItem, this.exhibition.id );
@@ -74,11 +76,11 @@ export class GpsProvider {
             });
         });
     }
-    
-  
+
+
    getItemLocation()
    {
-              
+
     this.getLocation().then(
         (res: any) =>
         {
@@ -87,11 +89,11 @@ export class GpsProvider {
                var distance = this.getDistance(res.latitude, item["lat"], res.longitude , item["lng"]);
               // console.log(distance, "<<<< PLAY VIDEO AT 90 MTRS");
                var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
-               
+
                if(itemDisabled)
                {
                    console.log(itemDisabled, "DISABLED");
-                   
+
                }else
                {
                  if(distance < 90 )
@@ -109,17 +111,17 @@ export class GpsProvider {
 
         });
   }
-  
-  
+
+
 
 
    refreshTime(lthis = this)
-    {   
-        
+    {
+
         if(this.stopGps == false )
         {
 
-           lthis.getItemLocation();  
+           lthis.getItemLocation();
 
            setTimeout(function ()
            {
@@ -129,8 +131,8 @@ export class GpsProvider {
 
         }
     }
-  
-  
+
+
    getLocation(opt: GeolocationOptions = null)
     {
         let lthis = this;
@@ -170,7 +172,7 @@ export class GpsProvider {
             );
         });
     }
-    
+
     checkLocation()
     {
         let lthis = this;
@@ -270,7 +272,7 @@ export class GpsProvider {
 
                                         }
                                     );
-                                    
+
                                 }
 
                             },
@@ -301,9 +303,9 @@ export class GpsProvider {
         let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
         return Math.floor(dis * 1000);
     }
-    
-    
- 
+
+
+
     unlockExhibition(exhibitionId) {
       this.storage.getItem(exhibitionId).then(exhibition => {
         //let isunlock = exhibition.unlocked;
@@ -316,16 +318,16 @@ export class GpsProvider {
     }
 
 
-  retrieveItemByCoords(lat, lng, exhibitionId) 
+  retrieveItemByCoords(lat, lng, exhibitionId)
   {
-      
+
     this.events.publish('retrieveItemByCoords', {lat:lat , lng: lng, exhibitionId: exhibitionId})
-    
+
   }
 
 
 
-  showOpenItemAlert(item, exhibitionId) 
+  showOpenItemAlert(item, exhibitionId)
    {
     let messages;
 
@@ -349,7 +351,7 @@ export class GpsProvider {
         {
           text: messages['BUTTONS']['YES'],
           handler: () => {
-           
+
             this.retrieveItemByCoords(item.lat, item.lng, exhibitionId)
             //this.stopGps = true;
            // this.events.publish('startRanging')
@@ -360,31 +362,32 @@ export class GpsProvider {
     });
     alert.present();
   }
-  
+
 
    stopBackgroundGeolocation()
-  {   
-    this.backgroundGeolocation.stop();
+  {
+    return;
+    //this.backgroundGeolocation.stop();
   }
-  
-  
+
+
   startBackgroundGeolocation()
   {
-   
-
+    return;
+      /*
         this.backgroundGeolocation.configure(this.config).then(() => {
             this.backgroundGeolocation
               .on(BackgroundGeolocationEvents.location)
               .subscribe((location: BackgroundGeolocationResponse) => {
 
                     console.log(location, "BACKGROUND LOCATION WORKS!");
-                    
+
                     for(let item of this.itemsExhibition)
                     {
                        var distance = this.getDistance(location.latitude, item["lat"], location.longitude , item["lng"]);
 
                        var itemDisabled = this.disabledItems.find( obj => obj.id == item.id );
-                       
+
 
                        if(itemDisabled)
                        {
@@ -400,30 +403,30 @@ export class GpsProvider {
                                 this.disabledItems.push(item);
                             }
                        }
-                    }  
-                    
+                    }
+
                    this.backgroundGeolocation.finish(); // IOS Only
                });
          });
-         
-         
-         
-      // start recording location
-      this.backgroundGeolocation.start(); 
 
+
+
+      // start recording location
+      this.backgroundGeolocation.start();
+      */
 
    }
 
 
     setNotification()
-    { 
-        
+    {
+
         let messages;
 
         this.translate.get('EXHIBITIONS.NOTIFICATION').subscribe(data => {
           messages = data
         })
-       
+
         this.localNotifications.schedule({
            text: messages['TEXT'],
            title: messages['TITLE'],
@@ -436,18 +439,18 @@ export class GpsProvider {
         });
 
     }
-    
-    
+
+
     playSound(){
 
         return 'file://assets/ring.mp3';
     }
 
     clearNotification(){
-        
+
         this.localNotifications.clearAll();
-         
+
     }
-  
+
 
 }
