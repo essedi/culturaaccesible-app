@@ -14,9 +14,9 @@ import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { Platform, Events, AlertController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { BackgroundGeolocation, BackgroundGeolocationEvents } from '@ionic-native/background-geolocation';
+//import { BackgroundGeolocation, BackgroundGeolocationEvents } from '@ionic-native/background-geolocation';
 var GpsProvider = /** @class */ (function () {
-    function GpsProvider(platform, events, translate, alertCtrl, storage, geolocation, diagnostic, openSettings, backgroundGeolocation) {
+    function GpsProvider(platform, events, translate, alertCtrl, storage, geolocation, diagnostic, openSettings, backgroundGeolocation = null) {
         var _this = this;
         this.platform = platform;
         this.events = events;
