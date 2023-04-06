@@ -3,7 +3,7 @@ module Page
     include Capybara::DSL
 
     def initialize
-      url='localhost:4567/'
+      url='culturaaccesible.essedi.es/'
       visit(url)
     end
 

@@ -16,7 +16,7 @@ class Fixture
     end
 
     def self.pristine
-      url='localhost:4567/api/exhibition/flush'
+      url='culturaaccesible.essedi.es/api/exhibition/flush'
       visit(url)
       self
     end
