@@ -34,6 +34,7 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 //import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions'
 
 //purchase provider
 import { InAppPurchase } from '@ionic-native/in-app-purchase';
@@ -87,7 +88,8 @@ export function createTranslateLoader(http: Http) {
         InAppPurchase,
         GoogleMaps,
         //BackgroundGeolocation,
-        LocalNotifications
+        LocalNotifications,
+        AndroidPermissions
 
     ]
 })

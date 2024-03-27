@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.essedi.itbook.audioguias" version="1.3.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.essedi.itbook.audioguias" version="1.5.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Cultura Accesible</name>
     <description>Cultura accesible para todos</description>
     <author email="hola@devscola.org" href="http://devscola.org/">Devscola</author>
@@ -27,11 +27,14 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="auto-hide-splash-screen" value="true" />
     <preference name="FadeSplashScreenDuration" value="300" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="com.unarin.cordova.beacon.android.altbeacon.ForegroundBetweenScanPeriod" value="1000" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -52,9 +55,12 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-        <preference name="android-minSdkVersion" value="19" />
-        <preference name="android-targetSdkVersion" value="29" />
+        <preference name="android-minSdkVersion" value="21" />
+        <preference name="android-compileSdkVersion" value="33" />
+        <preference name="android-targetSdkVersion" value="33" />
+        <resource-file src="resources/android/icon/drawable-hdpi-icon.png" target="app/src/main/res/mipmap/icon.png" />
         <preference name="android:usesCleartextTraffic" value="true" />
+        <preference name="AndroidGradlePluginVersion" value="3.2.0" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
