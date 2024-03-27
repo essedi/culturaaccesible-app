@@ -8,6 +8,14 @@ android package com.essedi.itbook.audioguias
 
 <strong>Build with</strong>
 
+ionic cordova platform rm android && ionic cordova platform add android && ionic cordova prepare android
+
+
+Add this package when npm i if not installed  "com.unarin.cordova.beacon": "^3.8.1", and then rename it to to `cordova-plugin-ibeacon` (Based on docs of the plugin) 
+   
+
+
+
 <p>
 
 If the build fails on adroid:: 
@@ -50,8 +58,4 @@ In case you try to biuld adn it fails due to node-ssass not found:
 Download github version 5: 
 wget https://github.com/sass/node-sass/releases/download/v5.0.0/linux-x64-83_binding.node
 export SASS_BINARY_PATH=~/somepath/linux-x64-11_binding.node
-
-
-Add this package when npm i and then rename it to to `cordova-plugin-ibeacon` (Based on docs of the plugin) 
-    "com.unarin.cordova.beacon": "^3.8.1",
 
